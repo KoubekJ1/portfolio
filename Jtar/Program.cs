@@ -1,126 +1,101 @@
-﻿using System.Formats.Tar;
-using System.IO.Compression;
+using System;
+using System.IO;
 using System.Text;
 using ZstdNet;
 
-namespace Jtar;
+// This creates .tar.zst where each file is stored
+// as its own independent Zstd frame.
+// Decompressed output is a valid tar archive.
 
 class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        string[] filesToAdd = { "file1.txt", "file2.txt" };
-        string outputTarGz = "output.tar.zlib";
+        string output = "independent.tar.zst";
+        string[] files = { "file1.txt", "file2.txt" };
 
-        using (FileStream fsOut = new FileStream(outputTarGz, FileMode.Create))
-        using (CompressionStream gz = new CompressionStream(fsOut))
+        using var outFile = new FileStream(output, FileMode.Create);
+
+        foreach (string file in files)
         {
-            foreach (var file in filesToAdd)
+            byte[] tarHeader = BuildTarHeader(file);
+            byte[] fileBytes = File.ReadAllBytes(file);
+
+            // Build the *raw tar segment* for this file
+            using var segment = new MemoryStream();
+            segment.Write(tarHeader, 0, tarHeader.Length);
+            segment.Write(fileBytes, 0, fileBytes.Length);
+
+            // Pad file to 512-byte TAR block
+            long rem = fileBytes.Length % 512;
+            if (rem != 0)
             {
-                AddFileToTarStream(file, gz);
+                int padding = (int)(512 - rem);
+                segment.Write(new byte[padding], 0, padding);
             }
 
-            // Write two 512-byte blocks of zeros to mark the end of the tar archive
-            gz.Write(new byte[1024], 0, 1024);
+            segment.Position = 0;
+
+            // Now compress this segment as a *fully independent ZSTD frame*
+            using var compressor = new Compressor();
+            byte[] compressed = compressor.Wrap(segment.ToArray());
+
+            outFile.Write(compressed, 0, compressed.Length);
+        }
+
+        // Write FINAL 1024 zero bytes as a final tar footer (also compressed)
+        {
+            byte[] endBlock = new byte[1024];
+
+            using var compressor = new Compressor();
+            byte[] compressedEnd = compressor.Wrap(endBlock);
+
+            outFile.Write(compressedEnd, 0, compressedEnd.Length);
         }
     }
 
-    static void AddFileToTarStream(string filePath, Stream outStream)
+
+    static byte[] BuildTarHeader(string path)
     {
         byte[] header = new byte[512];
 
-        string fileName = Path.GetFileName(filePath);
-        long fileSize = new FileInfo(filePath).Length;
+        string name = Path.GetFileName(path);
+        long size = new FileInfo(path).Length;
+        long mtime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-        // Name (100 bytes)
-        Encoding.ASCII.GetBytes(fileName).CopyTo(header, 0);
+        void WriteOctal(long value, int offset, int length)
+        {
+            string octal = Convert.ToString(value, 8).PadLeft(length - 1, '0');
+            Encoding.ASCII.GetBytes(octal).CopyTo(header, offset);
+        }
 
-        // File mode (8 bytes)
-        Encoding.ASCII.GetBytes("0000777").CopyTo(header, 100);
+        Encoding.ASCII.GetBytes(name).CopyTo(header, 0); // file name
+        WriteOctal(Convert.ToInt32("644", 8), 100, 8);     // mode
+        WriteOctal(0, 108, 8);         // uid
+        WriteOctal(0, 116, 8);         // gid
+        WriteOctal(size, 124, 12);     // size
+        WriteOctal(mtime, 136, 12);    // mtime
 
-        // Owner numeric ID (8 bytes)
-        Encoding.ASCII.GetBytes("0000000").CopyTo(header, 108);
+        // type flag: '0' = file
+        header[156] = (byte)'0';
 
-        // Group numeric ID (8 bytes)
-        Encoding.ASCII.GetBytes("0000000").CopyTo(header, 116);
+        // magic "ustar"
+        Encoding.ASCII.GetBytes("ustar").CopyTo(header, 257);
 
-        // File size in octal (12 bytes)
-        string sizeOctal = Convert.ToString(fileSize, 8).PadLeft(11, '0');
-        Encoding.ASCII.GetBytes(sizeOctal).CopyTo(header, 124);
-        header[135] = 0; // Null terminator
+        // checksum field: fill with spaces first
+        for (int i = 148; i < 156; i++)
+            header[i] = 0x20;
 
-        // Last modification time in octal (12 bytes)
-        long mTime = new FileInfo(filePath).LastWriteTimeUtc.ToUnixTimeSeconds();
-        string mTimeOctal = Convert.ToString(mTime, 8).PadLeft(11, '0');
-        Encoding.ASCII.GetBytes(mTimeOctal).CopyTo(header, 136);
-        header[147] = 0;
+        // compute checksum
+        int chk = 0;
+        foreach (byte b in header)
+            chk += b;
 
-        // Checksum (will calculate after filling the rest)
-        for (int i = 148; i < 156; i++) header[i] = 0x20; // spaces for checksum
-
-        header[156] = (byte)'0'; // Type flag: normal file
-
-        // Calculate checksum
-        int checksum = 0;
-        foreach (byte b in header) checksum += b;
-        string checksumOctal = Convert.ToString(checksum, 8).PadLeft(6, '0');
-        Encoding.ASCII.GetBytes(checksumOctal).CopyTo(header, 148);
-        header[154] = 0; // Null
+        string chkOct = Convert.ToString(chk, 8).PadLeft(6, '0');
+        Encoding.ASCII.GetBytes(chkOct).CopyTo(header, 148);
+        header[154] = 0;
         header[155] = (byte)' ';
 
-        // Write header
-        //outStream.Write(header, 0, 512);
-
-        // Write file data
-        using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-        {
-            // Read the file bytes
-            byte[] fileBytes = new byte[fileSize];
-            int read = 0;
-            while (read < fileBytes.Length)
-            {
-                int r = fs.Read(fileBytes, read, fileBytes.Length - read);
-                if (r == 0) break;
-                read += r;
-            }
-
-            // Combine header + file content into a single in-memory stream
-            using (var combined = new MemoryStream())
-            {
-                combined.Write(header, 0, header.Length);
-                combined.Write(fileBytes, 0, fileBytes.Length);
-                combined.Position = 0;
-                long remainder = combined.Length % 512;
-                if (remainder != 0)
-                {
-                    int padding = (int)(512 - remainder);
-                    outStream.Write(new byte[padding], 0, padding);
-                }
-
-                // Compress the combined stream (header + file data) using ZstdNet
-                MemoryStream stream = new MemoryStream();
-                using (var compressor = new CompressionStream(stream))
-                {
-                    //byte[] compressed = compressor.Write(combined, 0, (int)combined.Length);
-                    combined.CopyTo(compressor);
-
-                    // Write compressed block to the output stream
-                    //outStream.Write(compressed, 0, compressed.Length);
-                    compressor.CopyTo(outStream);
-
-                    // Pad the compressed block to a 512-byte boundary
-
-                }
-                stream.Close();
-            }
-        }
-    }
-}
-
-static class DateTimeExtensions
-{
-    public static long ToUnixTimeSeconds(this DateTime dt)
-    {
-        return (long)(dt - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+        return header;
     }
 }
