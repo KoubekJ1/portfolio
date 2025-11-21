@@ -20,7 +20,7 @@ public class FileSeekerManager
         _fileSeekerThread = new Thread(new ThreadStart(worker.Run));
     }
 
-    public void Start()
+    public void Run()
     {
         _fileSeekerThread.Start();
     }

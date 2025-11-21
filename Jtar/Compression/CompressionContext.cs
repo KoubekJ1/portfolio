@@ -1,20 +1,32 @@
+using Jtar.Compression.FileLoader;
+using Jtar.Compression.FileSeeker;
+using Jtar.Logging;
+
 namespace Jtar.Compression;
 
 public class CompressionContext
 {
-    public readonly int _threadCount;
+    private readonly int _threadCount;
     private readonly IEnumerable<string> _inputFiles;
-    public readonly string _outputFile;
+    private readonly string _outputFile;
+
+    private readonly FileLoaderManager _fileLoaderManager;
+    private readonly FileSeekerManager _fileSeekerManager;
 
     public CompressionContext(int threadCount, IEnumerable<string> inputFiles, string outputFile)
     {
         _threadCount = threadCount;
         _inputFiles = inputFiles;
         _outputFile = outputFile;
+
+        _fileLoaderManager = new FileLoaderManager();
+        _fileSeekerManager = new FileSeekerManager(_inputFiles, _fileLoaderManager.Filepaths);
     }
 
     public void Compress()
     {
-        throw new NotImplementedException();
+        Logger.Log(LogType.Debug, "Starting compression process...");
+        _fileSeekerManager.Run();
+        _fileLoaderManager.Run();
     }
 }

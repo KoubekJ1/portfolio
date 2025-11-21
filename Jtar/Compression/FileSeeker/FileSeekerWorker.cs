@@ -39,6 +39,13 @@ public class FileSeekerWorker
                 {
                     _outputQueue.Add(path);
                 }
+
+                if (_pathQueue.Count == 0)
+                {
+                    // ! Terrible !!!!!
+                    _pathQueue.CompleteAdding();
+                    Logger.Log(LogType.Debug, "Seeking completed!.");
+                }
             }
             catch (InvalidOperationException)
             {
