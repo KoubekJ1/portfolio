@@ -44,6 +44,7 @@ public class FileSeekerWorker
                 {
                     // ! Terrible !!!!!
                     _pathQueue.CompleteAdding();
+                    _outputQueue.CompleteAdding();
                     Logger.Log(LogType.Debug, "Seeking completed!.");
                 }
             }

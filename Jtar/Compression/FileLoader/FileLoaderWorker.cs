@@ -13,7 +13,7 @@ public class FileLoaderWorker
 
     public void Run()
     {
-        while (!_filepaths.IsCompleted)
+        while (_filepaths.Count > 0 || !_filepaths.IsCompleted)
         {
             try
             {
