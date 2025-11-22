@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using System.Text;
-using Jtar.Compression.ChunkCompresser;
+using Jtar.Compression.ChunkCompressor;
 using Jtar.Logging;
 
 namespace Jtar.Compression.FileLoader;
@@ -35,7 +35,7 @@ public class FileLoaderWorker
                     byte[] chunkData = new byte[chunkSize];
                     Array.Copy(data, i * MAX_CHUNK_SIZE_BYTES, chunkData, 0, chunkSize);
 
-                    var chunk = new Chunk(filepath, i, chunkData);
+                    var chunk = new Chunk(filepath, i, totalChunks, chunkData);
                 }
             }
             catch (InvalidOperationException)
