@@ -61,7 +61,8 @@ public class FileOutputWorker
                 chunkList = new List<Chunk>(newChunk.ChunkCount);
                 _fileChunks.Add(newChunk.Filepath, chunkList);
             }
-            chunkList.Insert(newChunk.Order, newChunk);
+            chunkList.Add(newChunk);
+            chunkList.Sort((a, b) => a.Order.CompareTo(b.Order));
         }
     }
 

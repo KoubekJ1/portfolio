@@ -8,11 +8,13 @@ class Program
     {
         Logger.ShowDebugMessages = true;
         // TODO: Block absolute paths
-        var context = new Compression.CompressionContext(
-            4,
-            new List<string> { "obj" },
-            "output.tar"
-        );
+        
+        Compression.CompressionContextBuilder builder = new Compression.CompressionContextBuilder();
+        Compression.CompressionContext context = builder
+            .SetInputFiles(new string[] { "obj" })
+            .SetOutputFile("output.tar.zstd")
+            .SetThreadCount(11)
+            .Build();
 
         context.Compress();
     }
