@@ -11,10 +11,12 @@ public class FileLoaderWorker
 
     private readonly BlockingCollection<string> _filepaths;
     private readonly FileTarFormatter _fileTarFormatter;
-    public FileLoaderWorker(BlockingCollection<string> filepaths)
+    private readonly BlockingCollection<Chunk> _outputCollection;
+    public FileLoaderWorker(BlockingCollection<string> filepaths, BlockingCollection<Chunk> outputCollection)
     {
         _filepaths = filepaths;
         _fileTarFormatter = new FileTarFormatter();
+        _outputCollection = outputCollection;
     }
 
     public void Run()
@@ -36,6 +38,8 @@ public class FileLoaderWorker
                     Array.Copy(data, i * MAX_CHUNK_SIZE_BYTES, chunkData, 0, chunkSize);
 
                     var chunk = new Chunk(filepath, i, totalChunks, chunkData);
+
+                    _outputCollection.Add(chunk);
                 }
             }
             catch (InvalidOperationException)

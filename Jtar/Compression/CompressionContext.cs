@@ -1,3 +1,4 @@
+using Jtar.Compression.ChunkCompressor;
 using Jtar.Compression.FileLoader;
 using Jtar.Compression.FileSeeker;
 using Jtar.Logging;
@@ -10,6 +11,7 @@ public class CompressionContext
     private readonly IEnumerable<string> _inputFiles;
     private readonly string _outputFile;
 
+    private readonly ChunkCompressorManager _chunkCompressorManager;
     private readonly FileLoaderManager _fileLoaderManager;
     private readonly FileSeekerManager _fileSeekerManager;
 
@@ -19,7 +21,8 @@ public class CompressionContext
         _inputFiles = inputFiles;
         _outputFile = outputFile;
 
-        _fileLoaderManager = new FileLoaderManager();
+        _chunkCompressorManager = new ChunkCompressorManager(Math.Max(1, threadCount-3));
+        _fileLoaderManager = new FileLoaderManager(_chunkCompressorManager.Chunks);
         _fileSeekerManager = new FileSeekerManager(_inputFiles, _fileLoaderManager.Filepaths);
     }
 
