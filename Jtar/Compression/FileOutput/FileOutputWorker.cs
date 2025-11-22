@@ -21,11 +21,6 @@ public class FileOutputWorker
         _outputStream = outputStream;
     }
 
-    ~FileOutputWorker()
-    {
-        Logger.Log(LogType.Debug, "Disposing FileOutputWorker output stream.");
-    }
-
     public void Run()
     {
         // TODO: Write file exactly where it belongs in the final file
