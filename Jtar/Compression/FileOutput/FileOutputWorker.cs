@@ -74,12 +74,12 @@ public class FileOutputWorker
 
     private List<Chunk>? PopCompleteList()
     {
-        foreach (var pair in _fileChunks)
+        foreach (var key in _fileChunks.Keys.ToList())
         {
-            var chunkList = pair.Value;
+            var chunkList = _fileChunks[key];
             if (chunkList.Count >= chunkList.First().ChunkCount)
             {
-                _fileChunks.Remove(pair.Key);
+                _fileChunks.Remove(key);
                 return chunkList;
             }
         }
