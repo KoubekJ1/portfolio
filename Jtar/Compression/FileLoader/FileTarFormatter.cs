@@ -32,7 +32,8 @@ public class FileTarFormatter
         if (data.Length < 512)
             throw new ArgumentException("Data array must be at least 512 bytes long.");
 
-        string name = Path.GetFileName(path);
+        //string name = Path.GetFileName(path);
+        string name = path;
         long size = new FileInfo(path).Length;
         long mtime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 

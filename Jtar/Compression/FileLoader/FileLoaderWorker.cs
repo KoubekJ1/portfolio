@@ -42,7 +42,7 @@ public class FileLoaderWorker
                     _outputCollection.Add(chunk);
                 }
 
-                if (_filepaths.IsCompleted && _filepaths.Count <= 0)
+                if (_filepaths.IsCompleted)
                 {
                     _outputCollection.CompleteAdding();
                 }

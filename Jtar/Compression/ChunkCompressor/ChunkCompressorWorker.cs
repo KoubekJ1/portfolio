@@ -34,6 +34,11 @@ public class ChunkCompressorWorker
                 var compressedData = _compressor.Wrap(chunk.Data);
                 Chunk compressedChunk = new Chunk(chunk.Filepath, chunk.Order, chunk.ChunkCount, compressedData);
                 _outputCollection.Add(compressedChunk);
+
+                if (_chunks.IsCompleted)
+                {
+                    _outputCollection.CompleteAdding();
+                }
             }
             catch (InvalidOperationException)
             {

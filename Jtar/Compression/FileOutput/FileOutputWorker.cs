@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using Jtar.Compression.ChunkCompressor;
+using Jtar.Logging;
 using ZstdNet;
 
 namespace Jtar.Compression.FileOutput;
@@ -19,16 +20,7 @@ public class FileOutputWorker
 
     ~FileOutputWorker()
     {
-        // Write final empty block to signify end of TAR archive as per the specification
-        byte[] endBlock = new byte[1024];
-
-        // TODO: Implement compressor abstaction
-        using var compressor = new Compressor();
-        byte[] compressedEnd = compressor.Wrap(endBlock);
-
-        _outputStream.Write(compressedEnd, 0, compressedEnd.Length);
-
-        _outputStream.Close();
+        Logger.Log(LogType.Debug, "Disposing FileOutputWorker output stream.");
     }
 
     public void Run()
@@ -48,7 +40,7 @@ public class FileOutputWorker
             if (_fileChunks.ContainsKey(newChunk.Filepath))
             {
                 chunkList = _fileChunks[newChunk.Filepath];
-                
+
                 // Check object integrity
                 var expectedChunkCount = chunkList.First().ChunkCount;
                 if (newChunk.ChunkCount != expectedChunkCount)
@@ -64,6 +56,18 @@ public class FileOutputWorker
             chunkList.Add(newChunk);
             chunkList.Sort((a, b) => a.Order.CompareTo(b.Order));
         }
+
+        // Write final empty block to signify end of TAR archive as per the specification
+        byte[] endBlock = new byte[1024];
+
+        // TODO: Implement compressor abstaction
+        using var compressor = new Compressor();
+        byte[] compressedEnd = compressor.Wrap(endBlock);
+        Logger.Log(LogType.Debug, "CompressedEnd Length: " + compressedEnd.Length);
+
+        _outputStream.Write(compressedEnd, 0, compressedEnd.Length);
+
+        _outputStream.Dispose();
     }
 
     private List<Chunk>? PopCompleteList()
@@ -82,6 +86,7 @@ public class FileOutputWorker
 
     private void WriteChunks(List<Chunk> chunks)
     {
+        Logger.Log(LogType.Debug, $"FileOutputWorker {Environment.CurrentManagedThreadId} writing file: " + chunks.First().Filepath);
         foreach (var chunk in chunks)
         {
             _outputStream.Write(chunk.Data, 0, chunk.Data.Length);
