@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using Jtar.Compression.ChunkCompressor;
+using Jtar.Compression.Compressor;
 using Jtar.Logging;
 using ZstdNet;
 
@@ -8,14 +9,16 @@ namespace Jtar.Compression.FileOutput;
 public class FileOutputWorker
 {
     private readonly BlockingCollection<Chunk> _chunks;
-    private readonly FileStream _outputStream;
+    private readonly Stream _outputStream;
 
     private readonly Dictionary<string, List<Chunk>> _fileChunks = new Dictionary<string, List<Chunk>>();
+    private readonly ICompressor _compressor;
 
-    public FileOutputWorker(BlockingCollection<Chunk> chunks, string outputFilepath)
+    public FileOutputWorker(BlockingCollection<Chunk> chunks, ICompressor compressor, Stream outputStream)
     {
         _chunks = chunks;
-        _outputStream = new FileStream(outputFilepath, FileMode.Create, FileAccess.Write);
+        _compressor = compressor;
+        _outputStream = outputStream;
     }
 
     ~FileOutputWorker()
@@ -61,8 +64,7 @@ public class FileOutputWorker
         byte[] endBlock = new byte[1024];
 
         // TODO: Implement compressor abstaction
-        using var compressor = new Compressor();
-        byte[] compressedEnd = compressor.Wrap(endBlock);
+        byte[] compressedEnd = _compressor.Compress(endBlock);
         Logger.Log(LogType.Debug, "CompressedEnd Length: " + compressedEnd.Length);
 
         _outputStream.Write(compressedEnd, 0, compressedEnd.Length);

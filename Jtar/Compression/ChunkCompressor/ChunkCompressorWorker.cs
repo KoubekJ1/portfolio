@@ -1,5 +1,5 @@
 using System.Collections.Concurrent;
-using ZstdNet;
+using Jtar.Compression.Compressor;
 
 namespace Jtar.Compression.ChunkCompressor;
 
@@ -7,19 +7,14 @@ public class ChunkCompressorWorker
 {
     private readonly BlockingCollection<Chunk> _chunks;
     private readonly BlockingCollection<Chunk> _outputCollection;
-    private readonly Compressor _compressor;
+    private readonly ICompressor _compressor;
 
     // TODO: Compression level configuration
-    public ChunkCompressorWorker(BlockingCollection<Chunk> chunks, BlockingCollection<Chunk> outputCollection)
+    public ChunkCompressorWorker(BlockingCollection<Chunk> chunks, ICompressor compressor, BlockingCollection<Chunk> outputCollection)
     {
         _chunks = chunks;
-        _compressor = new Compressor();
+        _compressor = compressor;
         _outputCollection = outputCollection;
-    }
-
-    ~ChunkCompressorWorker()
-    {
-        _compressor.Dispose();
     }
 
     public void Run()
@@ -31,7 +26,7 @@ public class ChunkCompressorWorker
                 // TODO: Combine multiple small chunks into one for better compression ratio
                 Chunk chunk = _chunks.Take();
                 
-                var compressedData = _compressor.Wrap(chunk.Data);
+                var compressedData = _compressor.Compress(chunk.Data);
                 Chunk compressedChunk = new Chunk(chunk.Filepath, chunk.Order, chunk.ChunkCount, compressedData);
                 _outputCollection.Add(compressedChunk);
 

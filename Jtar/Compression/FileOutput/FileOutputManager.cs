@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using Jtar.Compression.ChunkCompressor;
+using Jtar.Compression.Compressor;
 
 namespace Jtar.Compression.FileOutput;
 
@@ -7,17 +8,19 @@ public class FileOutputManager
 {
     public BlockingCollection<Chunk> Chunks { get; private set; }
 
-    private readonly string _outputFilepath;
+    private readonly Stream _outputStream;
+    private readonly ICompressor _compressor;
 
-    public FileOutputManager(string outputFilepath)
+    public FileOutputManager(ICompressor compressor, Stream outputStream)
     {
-        _outputFilepath = outputFilepath;
+        _outputStream = outputStream;
+        _compressor = compressor;
         Chunks = new BlockingCollection<Chunk>(new ConcurrentQueue<Chunk>());
     }
 
     public void Run()
     {
-        FileOutputWorker worker = new FileOutputWorker(Chunks, _outputFilepath);
+        FileOutputWorker worker = new FileOutputWorker(Chunks, (ICompressor)_compressor.Clone(), _outputStream);
         Thread thread = new Thread(new ThreadStart(worker.Run));
         thread.Start();
     }

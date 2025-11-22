@@ -1,4 +1,5 @@
 using Jtar.Compression.ChunkCompressor;
+using Jtar.Compression.Compressor;
 using Jtar.Compression.FileLoader;
 using Jtar.Compression.FileOutput;
 using Jtar.Compression.FileSeeker;
@@ -23,8 +24,10 @@ public class CompressionContext
         _inputFiles = inputFiles;
         _outputFile = outputFile;
 
-        _fileOutputManager = new FileOutputManager(_outputFile);
-        _chunkCompressorManager = new ChunkCompressorManager(Math.Max(1, threadCount-3), _fileOutputManager.Chunks);
+        ICompressor compressor = new ZstdCompressor();
+    
+        _fileOutputManager = new FileOutputManager(compressor, new FileStream(_outputFile, FileMode.Create, FileAccess.Write));
+        _chunkCompressorManager = new ChunkCompressorManager(Math.Max(1, threadCount-3), compressor, _fileOutputManager.Chunks);
         _fileLoaderManager = new FileLoaderManager(_chunkCompressorManager.Chunks);
         _fileSeekerManager = new FileSeekerManager(_inputFiles, _fileLoaderManager.Filepaths);
     }
