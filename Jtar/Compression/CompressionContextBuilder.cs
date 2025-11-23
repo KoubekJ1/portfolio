@@ -1,3 +1,5 @@
+using Jtar.Compression.Compressor;
+
 namespace Jtar.Compression;
 
 public class CompressionContextBuilder
@@ -5,6 +7,7 @@ public class CompressionContextBuilder
     private int _threadCount = Environment.ProcessorCount - 1;
     private IEnumerable<string> _inputFiles = Array.Empty<string>();
     private string _outputFile = "output.tar.zstd";
+    private ICompressor _compressor = new NoCompressor();
 
     public CompressionContextBuilder SetThreadCount(int threadCount)
     {
@@ -24,8 +27,14 @@ public class CompressionContextBuilder
         return this;
     }
 
+    public CompressionContextBuilder SetCompressor(ICompressor compressor)
+    {
+        _compressor = compressor;
+        return this;
+    }
+
     public CompressionContext Build()
     {
-        return new CompressionContext(_threadCount, _inputFiles, _outputFile);
+        return new CompressionContext(_threadCount, _inputFiles, _outputFile, _compressor);
     }
 }

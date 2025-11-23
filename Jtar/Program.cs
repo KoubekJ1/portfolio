@@ -1,4 +1,5 @@
-﻿using Jtar.Logging;
+﻿using Jtar.Compression.Compressor;
+using Jtar.Logging;
 
 namespace Jtar;
 
@@ -13,6 +14,7 @@ class Program
         Compression.CompressionContext context = builder
             .SetInputFiles(new string[] { "obj" })
             .SetOutputFile("output.tar")
+            //.SetCompressor(new ZstdCompressor())
             .SetThreadCount(11)
             .Build();
 

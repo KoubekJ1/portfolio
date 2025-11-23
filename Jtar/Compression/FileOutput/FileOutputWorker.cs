@@ -24,16 +24,9 @@ public class FileOutputWorker
     public void Run()
     {
         // TODO: Write file exactly where it belongs in the final file
-        List<Chunk>? completeChunkList = null;
         while (!_chunks.IsCompleted || _fileChunks.Count > 0)
         {
             //var completeChunkList = PopCompleteList();
-            if (completeChunkList != null)
-            {
-                WriteChunks(completeChunkList);
-                completeChunkList = null;
-                continue;
-            }
 
             try
             {
@@ -58,7 +51,7 @@ public class FileOutputWorker
                 chunkList.Add(newChunk);
                 if (chunkList.Count >= newChunk.ChunkCount)
                 {
-                    completeChunkList = chunkList;
+                    WriteChunks(chunkList);
                 }
             }
             catch (InvalidOperationException)
