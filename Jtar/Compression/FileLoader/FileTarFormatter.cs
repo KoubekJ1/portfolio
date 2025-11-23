@@ -35,8 +35,10 @@ public class FileTarFormatter
 
         //string name = Path.GetFileName(path);
         string name = path;
-        long size = new FileInfo(path).Length;
-        long mtime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var fileInfo = new FileInfo(path);
+        long size = fileInfo.Length;
+        //long mtime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        long mtime = fileInfo.LastWriteTime.ToFileTime();
 
         Encoding.ASCII.GetBytes(name).CopyTo(data, 0); // file name
         WriteOctal(data, Convert.ToInt32("644", 8), 100, 8);     // mode

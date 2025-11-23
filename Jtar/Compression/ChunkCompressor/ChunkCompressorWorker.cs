@@ -10,7 +10,6 @@ public class ChunkCompressorWorker
     private readonly BlockingCollection<Chunk> _outputCollection;
     private readonly ICompressor _compressor;
 
-    // TODO: Compression level configuration
     public ChunkCompressorWorker(BlockingCollection<Chunk> chunks, ICompressor compressor, BlockingCollection<Chunk> outputCollection)
     {
         _chunks = chunks;
@@ -24,7 +23,6 @@ public class ChunkCompressorWorker
         {
             try
             {
-                // TODO: Combine multiple small chunks into one for better compression ratio
                 Chunk chunk = _chunks.Take();
 
                 var compressedData = _compressor.Compress(chunk.Data);

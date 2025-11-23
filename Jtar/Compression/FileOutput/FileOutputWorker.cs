@@ -63,8 +63,7 @@ public class FileOutputWorker
 
         // Write final empty block to signify end of TAR archive as per the specification
         byte[] endBlock = new byte[1024];
-
-        // TODO: Implement compressor abstaction
+        
         byte[] compressedEnd = _compressor.Compress(endBlock);
         Logger.Log(LogType.Debug, "CompressedEnd Length: " + compressedEnd.Length);
 
