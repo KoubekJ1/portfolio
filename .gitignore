@@ -2,3 +2,6 @@
 Jtar/bin
 Jtar/obj
 global.json
+
+PackagingTests/bin
+PackagingTests/obj

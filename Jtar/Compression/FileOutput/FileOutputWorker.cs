@@ -63,8 +63,6 @@ public class FileOutputWorker
         Logger.Log(LogType.Debug, "CompressedEnd Length: " + compressedEnd.Length);
 
         _outputStream.Write(compressedEnd, 0, compressedEnd.Length);
-
-        _outputStream.Dispose();
     }
 
     private List<Chunk>? PopCompleteList()
