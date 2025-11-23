@@ -18,6 +18,13 @@ public class FileSeekerWorker
     {
         while (!_pathQueue.IsCompleted)
         {
+            if (_pathQueue.Count == 0)
+            {
+                _pathQueue.CompleteAdding();
+                _outputQueue.CompleteAdding();
+                Logger.Log(LogType.Debug, "Seeking completed!.");
+                break;
+            }
             try
             {
                 var path = _pathQueue.Take();
@@ -27,7 +34,7 @@ public class FileSeekerWorker
                     continue;
                 }
 
-                if (IsDirectory(path))
+                if (Directory.Exists(path))
                 {
                     var files = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
                     foreach (var file in files)
@@ -39,14 +46,6 @@ public class FileSeekerWorker
                 {
                     _outputQueue.Add(path);
                 }
-
-                if (_pathQueue.Count == 0)
-                {
-                    // ! Terrible !!!!!
-                    _pathQueue.CompleteAdding();
-                    _outputQueue.CompleteAdding();
-                    Logger.Log(LogType.Debug, "Seeking completed!.");
-                }
             }
             catch (InvalidOperationException)
             {
@@ -54,10 +53,5 @@ public class FileSeekerWorker
                 break;
             }
         }
-    }
-
-    private bool IsDirectory(string path)
-    {
-        return Directory.Exists(path);
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using Jtar.Compression.Compressor;
+using Jtar.Logging;
 
 namespace Jtar.Compression.ChunkCompressor;
 
@@ -38,6 +39,8 @@ public class ChunkCompressorWorker
             catch (InvalidOperationException)
             {
                 // The collection has been marked as complete for adding and is empty.
+                Logger.Log(LogType.Debug, $"ChunkCompressorWorker {Environment.CurrentManagedThreadId} interrupted and finishing");
+                _outputCollection.CompleteAdding();
                 break;
             }
         }

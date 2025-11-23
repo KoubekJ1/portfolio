@@ -50,6 +50,8 @@ public class FileLoaderWorker
             catch (InvalidOperationException)
             {
                 // The collection has been marked as complete for adding and is empty.
+                Logger.Log(LogType.Debug, $"FileLoaderWorker {Environment.CurrentManagedThreadId} interrupted and finishing");
+                _outputCollection.CompleteAdding();
                 break;
             }
         }

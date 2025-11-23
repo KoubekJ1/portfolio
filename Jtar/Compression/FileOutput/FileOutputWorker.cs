@@ -24,35 +24,48 @@ public class FileOutputWorker
     public void Run()
     {
         // TODO: Write file exactly where it belongs in the final file
+        List<Chunk>? completeChunkList = null;
         while (!_chunks.IsCompleted || _fileChunks.Count > 0)
         {
-            var completeChunkList = PopCompleteList();
+            //var completeChunkList = PopCompleteList();
             if (completeChunkList != null)
             {
                 WriteChunks(completeChunkList);
+                completeChunkList = null;
                 continue;
             }
 
-            var newChunk = _chunks.Take();
-            List<Chunk> chunkList;
-            if (_fileChunks.ContainsKey(newChunk.Filepath))
+            try
             {
-                chunkList = _fileChunks[newChunk.Filepath];
-
-                // Check object integrity
-                var expectedChunkCount = chunkList.First().ChunkCount;
-                if (newChunk.ChunkCount != expectedChunkCount)
+                var newChunk = _chunks.Take();
+                List<Chunk> chunkList;
+                if (_fileChunks.ContainsKey(newChunk.Filepath))
                 {
-                    throw new InvalidDataException($"Chunk count mismatch for file {newChunk.Filepath}: expected {expectedChunkCount}, got {newChunk.ChunkCount}");
+                    chunkList = _fileChunks[newChunk.Filepath];
+
+                    // Check object integrity
+                    var expectedChunkCount = chunkList.First().ChunkCount;
+                    if (newChunk.ChunkCount != expectedChunkCount)
+                    {
+                        throw new InvalidDataException($"Chunk count mismatch for file {newChunk.Filepath}: expected {expectedChunkCount}, got {newChunk.ChunkCount}");
+                    }
+                }
+                else
+                {
+                    chunkList = new List<Chunk>(newChunk.ChunkCount);
+                    _fileChunks.Add(newChunk.Filepath, chunkList);
+                }
+                chunkList.Add(newChunk);
+                if (chunkList.Count >= newChunk.ChunkCount)
+                {
+                    completeChunkList = chunkList;
                 }
             }
-            else
+            catch (InvalidOperationException)
             {
-                chunkList = new List<Chunk>(newChunk.ChunkCount);
-                _fileChunks.Add(newChunk.Filepath, chunkList);
+                Logger.Log(LogType.Debug, $"FileOutputWorker {Environment.CurrentManagedThreadId} interrupted and finishing");
+                break;
             }
-            chunkList.Add(newChunk);
-            chunkList.Sort((a, b) => a.Order.CompareTo(b.Order));
         }
 
         // Write final empty block to signify end of TAR archive as per the specification
@@ -82,7 +95,7 @@ public class FileOutputWorker
     private void WriteChunks(List<Chunk> chunks)
     {
         Logger.Log(LogType.Debug, $"FileOutputWorker {Environment.CurrentManagedThreadId} writing file: " + chunks.First().Filepath);
-        foreach (var chunk in chunks)
+        foreach (var chunk in chunks.OrderBy(x => x.Order))
         {
             //Logger.Log(LogType.Debug, $"FileOutputWorker {Environment.CurrentManagedThreadId} writing data {string.Join(",", chunk.Data)}");
             _outputStream.Write(chunk.Data, 0, chunk.Data.Length);
