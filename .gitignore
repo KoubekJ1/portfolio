@@ -5,3 +5,6 @@ global.json
 
 PackagingTests/bin
 PackagingTests/obj
+
+Decompressor/bin
+Decompressor/obj
