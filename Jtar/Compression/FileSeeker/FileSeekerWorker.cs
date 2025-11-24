@@ -21,7 +21,6 @@ public class FileSeekerWorker
             if (_pathQueue.Count == 0)
             {
                 _pathQueue.CompleteAdding();
-                _outputQueue.CompleteAdding();
                 Logger.Log(LogType.Debug, "Seeking completed!.");
                 break;
             }

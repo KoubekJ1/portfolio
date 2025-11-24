@@ -69,20 +69,6 @@ public class FileOutputWorker
         _outputStream.Write(compressedEnd, 0, compressedEnd.Length);
     }
 
-    private List<Chunk>? PopCompleteList()
-    {
-        foreach (var key in _fileChunks.Keys.ToList())
-        {
-            var chunkList = _fileChunks[key];
-            if (chunkList.Count >= chunkList.First().ChunkCount)
-            {
-                _fileChunks.Remove(key);
-                return chunkList;
-            }
-        }
-        return null;
-    }
-
     private void WriteChunks(List<Chunk> chunks)
     {
         Logger.Log(LogType.Debug, $"FileOutputWorker {Environment.CurrentManagedThreadId} writing file: " + chunks.First().Filepath);

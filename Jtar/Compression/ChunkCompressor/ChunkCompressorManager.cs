@@ -27,9 +27,7 @@ public class ChunkCompressorManager
             Task thread = Task.Run(worker.Run);
             tasks[i] = thread;
         }
-
         await Task.WhenAll(tasks);
         _outputCollection.CompleteAdding();
-
     }
 }

@@ -28,17 +28,11 @@ public class ChunkCompressorWorker
                 var compressedData = _compressor.Compress(chunk.Data);
                 Chunk compressedChunk = new Chunk(chunk.Filepath, chunk.Order, chunk.ChunkCount, compressedData);
                 _outputCollection.Add(compressedChunk);
-
-                if (_chunks.IsCompleted)
-                {
-                    //_outputCollection.CompleteAdding();
-                }
             }
             catch (InvalidOperationException)
             {
                 // The collection has been marked as complete for adding and is empty.
                 Logger.Log(LogType.Debug, $"ChunkCompressorWorker {Environment.CurrentManagedThreadId} interrupted and finishing");
-                //_outputCollection.CompleteAdding();
                 break;
             }
         }

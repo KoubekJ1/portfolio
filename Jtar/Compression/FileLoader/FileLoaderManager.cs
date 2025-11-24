@@ -19,5 +19,6 @@ public class FileLoaderManager
     {
         var worker = new FileLoaderWorker(Filepaths, _outputCollection);
         await Task.Run(worker.Run);
+        _outputCollection.CompleteAdding();
     }
 }

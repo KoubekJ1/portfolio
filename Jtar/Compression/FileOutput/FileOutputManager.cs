@@ -22,5 +22,6 @@ public class FileOutputManager
     {
         FileOutputWorker worker = new FileOutputWorker(Chunks, (ICompressor)_compressor.Clone(), _outputStream);
         await Task.Run(worker.Run);
+        _outputStream.Close();
     }
 }

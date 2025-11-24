@@ -21,5 +21,6 @@ public class FileSeekerManager
     {
         var worker = new FileSeekerWorker(_pathQueue, _outputQueue);
         await Task.Run(worker.Run);
+        _outputQueue.CompleteAdding();
     }
 }

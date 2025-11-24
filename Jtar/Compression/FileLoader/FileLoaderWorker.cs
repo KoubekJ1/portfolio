@@ -41,17 +41,11 @@ public class FileLoaderWorker
 
                     _outputCollection.Add(chunk);
                 }
-
-                if (_filepaths.IsCompleted)
-                {
-                    _outputCollection.CompleteAdding();
-                }
             }
             catch (InvalidOperationException)
             {
                 // The collection has been marked as complete for adding and is empty.
                 Logger.Log(LogType.Debug, $"FileLoaderWorker {Environment.CurrentManagedThreadId} interrupted and finishing");
-                _outputCollection.CompleteAdding();
                 break;
             }
         }
