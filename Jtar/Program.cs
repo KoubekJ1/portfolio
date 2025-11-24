@@ -12,7 +12,7 @@ class Program
     {
         RootCommand rootCommand = new("jtar");
 
-        Option<int> threadCountOption = new("--threadCount", "-t")
+        Option<int> threadCountOption = new("--thread-count", "-t")
         {
             Description = "The amount of threads used for compression"
         };
@@ -36,7 +36,7 @@ class Program
         };
         rootCommand.Options.Add(debugOption);
 
-        var noCompressionOption = new Option<bool>("--noCompression", "-n")
+        var noCompressionOption = new Option<bool>("--no-compress", "-n")
         {
             Description = "Disables compression"
         };
