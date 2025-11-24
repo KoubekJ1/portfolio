@@ -12,7 +12,7 @@ public class ChunkCompressorManager
 
     public ChunkCompressorManager(int workerCount, ICompressor compressor, BlockingCollection<Chunk> outputCollection)
     {
-        Chunks = new BlockingCollection<Chunk>(new ConcurrentQueue<Chunk>());
+        Chunks = new BlockingCollection<Chunk>(new ConcurrentQueue<Chunk>(), 800); // 800 chunks ... 100 MB
         _workerCount = workerCount;
         _outputCollection = outputCollection;
         _compressor = compressor;
