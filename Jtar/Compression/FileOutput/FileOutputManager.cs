@@ -18,10 +18,9 @@ public class FileOutputManager
         Chunks = new BlockingCollection<Chunk>(new ConcurrentQueue<Chunk>());
     }
 
-    public void Run()
+    public async Task Run()
     {
         FileOutputWorker worker = new FileOutputWorker(Chunks, (ICompressor)_compressor.Clone(), _outputStream);
-        Thread thread = new Thread(new ThreadStart(worker.Run));
-        thread.Start();
+        await Task.Run(worker.Run);
     }
 }

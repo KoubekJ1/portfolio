@@ -1,11 +1,11 @@
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace Jtar.Compression.FileSeeker;
 
 public class FileSeekerManager
 {
     private readonly IEnumerable<string> _inputFiles;
-    private readonly Thread _fileSeekerThread;
 
     private readonly BlockingCollection<string> _pathQueue;
     private readonly BlockingCollection<string> _outputQueue;
@@ -15,13 +15,11 @@ public class FileSeekerManager
         _pathQueue = new BlockingCollection<string>(new ConcurrentBag<string>(inputFiles));
         _outputQueue = outputQueue;
         _inputFiles = inputFiles;
-
-        var worker = new FileSeekerWorker(_pathQueue, _outputQueue);
-        _fileSeekerThread = new Thread(new ThreadStart(worker.Run));
     }
 
-    public void Run()
+    public async Task Run()
     {
-        _fileSeekerThread.Start();
+        var worker = new FileSeekerWorker(_pathQueue, _outputQueue);
+        await Task.Run(worker.Run);
     }
 }

@@ -18,24 +18,18 @@ public class ChunkCompressorManager
         _compressor = compressor;
     }
 
-    public void Run()
+    public async Task Run()
     {
-        Thread[] threads = new Thread[_workerCount];
+        Task[] tasks = new Task[_workerCount];
         for (int i = 0; i < _workerCount; i++)
         {
             ChunkCompressorWorker worker = new ChunkCompressorWorker(Chunks, (ICompressor)_compressor.Clone(), _outputCollection);
-            Thread thread = new Thread(new ThreadStart(worker.Run));
-            threads[i] = thread;
-            thread.Start();
+            Task thread = Task.Run(worker.Run);
+            tasks[i] = thread;
         }
 
-        Task.Run(() =>
-        {
-            foreach (var thread in threads)
-            {
-                thread.Join();
-            }
-            _outputCollection.CompleteAdding();
-        });
+        await Task.WhenAll(tasks);
+        _outputCollection.CompleteAdding();
+
     }
 }

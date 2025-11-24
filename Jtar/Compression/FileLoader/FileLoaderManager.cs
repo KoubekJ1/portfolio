@@ -15,10 +15,9 @@ public class FileLoaderManager
         _outputCollection = outputCollection;
     }
 
-    public void Run()
+    public async Task Run()
     {
         var worker = new FileLoaderWorker(Filepaths, _outputCollection);
-        var workerThread = new Thread(new ThreadStart(worker.Run));
-        workerThread.Start();
+        await Task.Run(worker.Run);
     }
 }

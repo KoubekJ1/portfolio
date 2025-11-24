@@ -32,12 +32,16 @@ public class CompressionContext
         _fileSeekerManager = new FileSeekerManager(_inputFiles, _fileLoaderManager.Filepaths);
     }
 
-    public void Compress()
+    public async Task Compress()
     {
         Logger.Log(LogType.Debug, "Starting compression process...");
-        _fileSeekerManager.Run();
-        _fileLoaderManager.Run();
-        _chunkCompressorManager.Run();
-        _fileOutputManager.Run();
+
+        LinkedList<Task> tasks = new LinkedList<Task>();
+        tasks.AddLast(Task.Run(_fileSeekerManager.Run));
+        tasks.AddLast(Task.Run(_fileLoaderManager.Run));
+        tasks.AddLast(Task.Run(_chunkCompressorManager.Run));
+        tasks.AddLast(Task.Run(_fileOutputManager.Run));
+
+        await Task.WhenAll(tasks);
     }
 }

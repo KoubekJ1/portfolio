@@ -1,4 +1,5 @@
 ﻿using System.CommandLine;
+using System.Threading.Tasks;
 using Jtar.Compression;
 using Jtar.Compression.Compressor;
 using Jtar.Logging;
@@ -7,7 +8,7 @@ namespace Jtar;
 
 class Program
 {
-    static int Main(string[] args)
+    static async Task<int> Main(string[] args)
     {
         RootCommand rootCommand = new("jtar");
 
@@ -76,7 +77,7 @@ class Program
             builder.SetOutputFile(outputName);
 
             var context = builder.Build();
-            context.Compress();
+            await context.Compress();
             return 0;
         }
         return 1;
