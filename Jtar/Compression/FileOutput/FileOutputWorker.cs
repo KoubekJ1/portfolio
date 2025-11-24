@@ -26,8 +26,6 @@ public class FileOutputWorker
         // TODO: Write file exactly where it belongs in the final file
         while (!_chunks.IsCompleted || _fileChunks.Count > 0)
         {
-            //var completeChunkList = PopCompleteList();
-
             try
             {
                 var newChunk = _chunks.Take();
@@ -52,6 +50,7 @@ public class FileOutputWorker
                 if (chunkList.Count >= newChunk.ChunkCount)
                 {
                     WriteChunks(chunkList);
+                    _fileChunks.Remove(newChunk.Filepath);
                 }
             }
             catch (InvalidOperationException)

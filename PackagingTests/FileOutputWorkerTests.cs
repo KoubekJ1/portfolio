@@ -77,34 +77,6 @@ public class FileOutputWorkerTests
     }
 
     [TestMethod]
-    public void TestPopCompleteListReturnsListAndRemovesIt()
-    {
-        // Arrange
-        var bc = new BlockingCollection<Chunk>();
-        var worker = new FileOutputWorker(bc, new NoCompressor(), new MemoryStream());
-
-        var dictField = typeof(FileOutputWorker)
-            .GetField("_fileChunks", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        var dict = new Dictionary<string, List<Chunk>>();
-        dict["test"] = new List<Chunk>()
-    {
-        new Chunk("test", 0, 1, new byte[]{99})
-    };
-        dictField.SetValue(worker, dict);
-
-        var method = typeof(FileOutputWorker)
-            .GetMethod("PopCompleteList", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        // Act
-        var result = (List<Chunk>)method.Invoke(worker, null)!;
-
-        // Assert
-        Assert.IsNotNull(result);
-        Assert.IsTrue(((Dictionary<string, List<Chunk>>)dictField.GetValue(worker)!).Count == 0);
-    }
-
-    [TestMethod]
     public void TestAppendsCompressedEndBlock()
     {
         // Arrange
