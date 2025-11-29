@@ -27,7 +27,7 @@ public class FileSeekerWorkerTests
             var outputQueue = new BlockingCollection<string>();
 
             dirQueue.Add(tempDir);
-            dirQueue.CompleteAdding();
+            //dirQueue.CompleteAdding();
 
             var seeker = new FileSeekerWorker(dirQueue, outputQueue);
 
@@ -41,12 +41,10 @@ public class FileSeekerWorkerTests
 
             // Assert – outputQueue should contain the files
             var filesFound = outputQueue.ToList();
-            /*var a = outputQueue.Take();
-            Console.WriteLine($"a: {a}");*/
             Console.WriteLine($"Files found: {string.Join(", ", filesFound)}");
-            //CollectionAssert.Contains(filesFound, file1);
-            //CollectionAssert.Contains(filesFound, file2);
-            //Assert.AreEqual(2, filesFound.Count, "Expected exactly 2 files in the output queue.");
+            CollectionAssert.Contains(filesFound, file1);
+            CollectionAssert.Contains(filesFound, file2);
+            Assert.AreEqual(2, filesFound.Count, "Expected exactly 2 files in the output queue.");
         }
         finally
         {
@@ -58,16 +56,17 @@ public class FileSeekerWorkerTests
     public void Run_EmitsSingleFilePath()
     {
         // Arrange – single file, not a directory
-        string tempFile = Path.GetTempFileName();
+        //string tempFile = Path.GetTempFileName();
         try
         {
-            File.WriteAllText(tempFile, "test");
+            var path = "temp.txt";
+            File.WriteAllText(path, "test");
 
             var inputQueue = new BlockingCollection<string>();
             var outputQueue = new BlockingCollection<string>();
 
-            inputQueue.Add(tempFile);
-            inputQueue.CompleteAdding();
+            inputQueue.Add(path);
+            //inputQueue.CompleteAdding();
 
             var seeker = new FileSeekerWorker(inputQueue, outputQueue);
 
@@ -77,11 +76,11 @@ public class FileSeekerWorkerTests
             // Assert
             var output = outputQueue.ToList();
             Assert.AreEqual(1, output.Count, "Expected exactly 1 file in output queue.");
-            Assert.AreEqual(tempFile, output[0], "Output file path does not match input.");
+            Assert.AreEqual(path, output[0], "Output file path does not match input.");
         }
         finally
         {
-            File.Delete(tempFile);
+            //File.Delete(tempFile);
         }
     }
 

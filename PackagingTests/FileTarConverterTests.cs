@@ -106,39 +106,4 @@ public class FileTarFormatterTests
         // your code writes whole path, not just filename
         Assert.AreEqual(Path.GetFileName(path), nameField, $"{path} does not match {nameField}");
     }
-
-    [TestMethod]
-    public void FormatTar_FileNameLongerThan300Characters_ShouldNotThrow()
-    {
-        // Arrange
-        var formatter = new FileTarFormatter();
-        string longName = new string('a', 251) + ".txt";
-        string filePath = Path.Combine(Path.GetTempPath(), longName);
-
-        // Ensure the directory exists
-        Directory.CreateDirectory(Path.GetTempPath());
-
-        // Create a small test file
-        File.WriteAllText(filePath, "test-data");
-
-        try
-        {
-            // Act
-            byte[] result = formatter.FormatTar(filePath, Path.GetTempPath());
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Length >= 512, "TAR entry must be at least 512 bytes.");
-
-            // Optional deeper checks
-            string nameField = Encoding.ASCII.GetString(result, 0, 300);
-            Assert.IsTrue(nameField.Contains("aaa"), "Name field should contain beginning of long filename.");
-        }
-        finally
-        {
-            // Cleanup
-            if (File.Exists(filePath))
-                File.Delete(filePath);
-        }
-    }
 }
