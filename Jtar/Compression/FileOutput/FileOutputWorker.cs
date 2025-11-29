@@ -2,7 +2,6 @@ using System.Collections.Concurrent;
 using Jtar.Compression.ChunkCompressor;
 using Jtar.Compression.Compressor;
 using Jtar.Logging;
-using ZstdNet;
 
 namespace Jtar.Compression.FileOutput;
 
