@@ -37,12 +37,10 @@ public class FileTarFormatter
         if (data.Length < 512)
             throw new ArgumentException("Data array must be at least 512 bytes long.");
 
-        //string name = Path.GetFileName(path);
         string name = path;
         var fileInfo = new FileInfo(path);
         long size = fileInfo.Length;
-        //long mtime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        long mtime = fileInfo.LastWriteTime.ToFileTime();
+        long mtime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
         Encoding.ASCII.GetBytes(name).CopyTo(data, 0); // file name
         WriteOctal(data, Convert.ToInt32("644", 8), 100, 8);     // mode
