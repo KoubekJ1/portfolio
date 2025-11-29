@@ -61,6 +61,8 @@ class Program
             {
                 if (!File.Exists(file) && !Directory.Exists(file))
                     continue;
+                if (Path.IsPathRooted(file))
+                    continue;
                 outputName = file + ".tar";
             }
             if (string.IsNullOrWhiteSpace(outputName))
