@@ -27,8 +27,23 @@ public class FileLoaderWorker
             {
                 string filepath = _filepaths.Take();
                 Logger.Log(LogType.Debug, $"FileLoaderWorker {Environment.CurrentManagedThreadId} received: " + filepath);
-                
-                var data = _fileTarFormatter.FormatTar(filepath, ".");
+
+                byte[] data;
+                try
+                {
+                    data = _fileTarFormatter.FormatTar(filepath, ".");
+                }
+                catch (PathTooLongException)
+                {
+                    Logger.Log(LogType.Error, $"File path is too long: {filepath}");
+                    continue;
+                }
+                catch (Exception e)
+                {
+                    Logger.Log(LogType.Error, $"Unknown error while loading: {filepath}");
+                    Logger.Log(LogType.Debug, e.ToString());
+                    continue;
+                }
 
                 int totalChunks = (int)Math.Ceiling((double)data.Length / MAX_CHUNK_SIZE_BYTES);
                 for (int i = 0; i < totalChunks; i++)
@@ -41,13 +56,13 @@ public class FileLoaderWorker
 
                     _outputCollection.Add(chunk);
                 }
+                }
+                catch (InvalidOperationException)
+                {
+                    // The collection has been marked as complete for adding and is empty.
+                    Logger.Log(LogType.Debug, $"FileLoaderWorker {Environment.CurrentManagedThreadId} interrupted and finishing");
+                    break;
+                }
             }
-            catch (InvalidOperationException)
-            {
-                // The collection has been marked as complete for adding and is empty.
-                Logger.Log(LogType.Debug, $"FileLoaderWorker {Environment.CurrentManagedThreadId} interrupted and finishing");
-                break;
-            }
-        }
     }
-}
+    }

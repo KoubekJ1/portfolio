@@ -1,4 +1,6 @@
+using System.Formats.Tar;
 using System.Text;
+using Jtar.Logging;
 
 namespace Jtar.Compression.FileLoader;
 
@@ -6,7 +8,7 @@ public class FileTarFormatter
 {
     public FileTarFormatter()
     {
-        
+
     }
 
     public byte[] FormatTar(string path, string rootDir)
@@ -33,43 +35,57 @@ public class FileTarFormatter
         if (data.Length < 512)
             throw new ArgumentException("Data array must be at least 512 bytes long.");
 
-        // Ensure path is in the correct format
-        path = Path.GetRelativePath(rootDir, path);
-        path = path.Replace("\\", "/");
+        // Normalize
+        path = Path.GetRelativePath(rootDir, path).Replace("\\", "/");
 
-        string name = path;
-        var fileInfo = new FileInfo($"{rootDir}/{path}");
-        long size = fileInfo.Length;
-        long mtime = new DateTimeOffset(File.GetLastWriteTimeUtc($"{rootDir}/{path}")).ToUnixTimeSeconds();
+        var filename = Path.GetFileName(path);
+        var prefix = Path.GetDirectoryName(path)?.Replace("\\", "/") ?? "";
 
-        //var prefix;
-        //var actualName;
+        // Byte-accurate checks
+        var filenameBytes = Encoding.ASCII.GetBytes(filename);
+        var prefixBytes = Encoding.ASCII.GetBytes(prefix);
 
-        Encoding.ASCII.GetBytes(name).CopyTo(data, 0); // file name
-        WriteOctal(data, Convert.ToInt32("644", 8), 100, 8);     // mode
-        WriteOctal(data, 0, 108, 8);         // uid
-        WriteOctal(data, 0, 116, 8);         // gid
-        WriteOctal(data, size, 124, 12);     // size
-        WriteOctal(data, mtime, 136, 12);    // mtime
+        if (filenameBytes.Length > 100)
+            throw new PathTooLongException("USTAR filename too long (max 100 bytes)");
 
-        // type flag: '0' = file
+        if (prefixBytes.Length > 155)
+            throw new PathTooLongException("USTAR prefix too long (max 155 bytes)");
+
+        var info = new FileInfo(Path.Combine(rootDir, path));
+        long size = info.Length;
+        long mtime = new DateTimeOffset(info.LastWriteTimeUtc).ToUnixTimeSeconds();
+
+        // Zero critical fields
+        Array.Clear(data, 0, 100);
+        Array.Clear(data, 345, 155);
+
+        // Write name + prefix
+        filenameBytes.CopyTo(data, 0);
+        prefixBytes.CopyTo(data, 345);
+
+        // Mode, uid, gid, size, mtime
+        WriteOctal(data, Convert.ToInt32("644", 8), 100, 8);
+        WriteOctal(data, 0, 108, 8);
+        WriteOctal(data, 0, 116, 8);
+        WriteOctal(data, size, 124, 12);
+        WriteOctal(data, mtime, 136, 12);
+
+        // type flag
         data[156] = (byte)'0';
 
-        // magic "ustar"
+        // ustar magic + version
         Encoding.ASCII.GetBytes("ustar").CopyTo(data, 257);
+        data[262] = 0; // null after magic
+        Encoding.ASCII.GetBytes("00").CopyTo(data, 263);
 
-        // checksum field: fill with spaces first
-        for (int i = 148; i < 156; i++)
-            data[i] = 0x20;
+        // checksum field = spaces
+        for (int i = 148; i < 156; i++) data[i] = 0x20;
 
-        // compute checksum
+        // Compute checksum LAST
         int chk = 0;
-        for (int i = 0; i < 512; i++)
-            chk += data[i];
+        for (int i = 0; i < 512; i++) chk += data[i];
 
-        string chkOct = Convert.ToString(chk, 8).PadLeft(6, '0');
+        var chkOct = Convert.ToString(chk, 8).PadLeft(6, '0');
         Encoding.ASCII.GetBytes(chkOct).CopyTo(data, 148);
-        data[154] = 0;
-        data[155] = (byte)' ';
     }
 }
