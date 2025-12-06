@@ -1,4 +1,4 @@
-namespace Jtar.Compression.Compressor;
+namespace Jtar.Compressor;
 
 /// <summary>
 /// Zstandard (Zstd) compressor implementation.

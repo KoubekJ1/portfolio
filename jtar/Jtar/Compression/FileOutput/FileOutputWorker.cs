@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using Jtar.Compression.ChunkCompressor;
-using Jtar.Compression.Compressor;
+using Jtar.Compressor;
 using Jtar.Logging;
 
 namespace Jtar.Compression.FileOutput;

@@ -1,5 +1,5 @@
 using System.Collections.Concurrent;
-using Jtar.Compression.Compressor;
+using Jtar.Compressor;
 
 namespace Jtar.Compression.ChunkCompressor;
 

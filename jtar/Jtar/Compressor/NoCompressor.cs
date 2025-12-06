@@ -1,4 +1,4 @@
-namespace Jtar.Compression.Compressor;
+namespace Jtar.Compressor;
 
 /// <summary>
 /// A compressor that performs no compression or decompression.

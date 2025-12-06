@@ -1,8 +1,6 @@
 ﻿using System.CommandLine;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using Jtar.Compression;
-using Jtar.Compression.Compressor;
+using Jtar.Compressor;
 using Jtar.Compression.FileLoader;
 using Jtar.Exceptions;
 using Jtar.Logging;

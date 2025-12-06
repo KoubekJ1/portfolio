@@ -1,4 +1,4 @@
-using Jtar.Compression.Compressor;
+using Jtar.Compressor;
 using Jtar.Compression.FileLoader;
 
 namespace Jtar.Compression;

@@ -1,5 +1,5 @@
 using Jtar.Compression.ChunkCompressor;
-using Jtar.Compression.Compressor;
+using Jtar.Compressor;
 using Jtar.Compression.FileLoader;
 using Jtar.Compression.FileOutput;
 using Jtar.Compression.FileSeeker;
