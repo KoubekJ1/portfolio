@@ -14,3 +14,4 @@ jtar/*.tar
 *.DS_Store
 *.vscode
 *.vs
+*.drawio.bkp
