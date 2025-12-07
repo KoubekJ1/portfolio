@@ -2,7 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Concurrent;
 using System.Linq;
 using Jtar.Compression.ChunkCompressor;
-using Jtar.Compression.Compressor;
+using Jtar.Compressor;
 
 [TestClass]
 public class ChunkCompressorWorkerTests

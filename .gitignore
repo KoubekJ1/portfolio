@@ -2,8 +2,8 @@ jtar/Jtar/bin
 jtar/Jtar/obj
 jtar/global.json
 
-jtar/PackagingTests/bin
-jtar/PackagingTests/obj
+jtar/Tests/bin
+jtar/Tests/obj
 
 jtar/Decompressor/bin
 jtar/Decompressor/obj

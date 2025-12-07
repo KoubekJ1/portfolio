@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Reflection;
 using Jtar.Compression.ChunkCompressor;
-using Jtar.Compression.Compressor;
+using Jtar.Compressor;
 using Jtar.Compression.FileOutput;
 
 namespace PackagingTests;

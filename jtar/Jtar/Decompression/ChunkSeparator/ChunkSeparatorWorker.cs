@@ -44,7 +44,7 @@ public class ChunkSeparatorWorker
                 {
                     order = 0;
                     dataBeginningOffset = i + _magicString.Length - 1;
-                    return;
+                    continue;
                 }
 
                 // Index where the raw data ends

@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackagingTests", "PackagingTests\PackagingTests.csproj", "{91BAD030-F4F0-38BD-4035-297AA00A4C25}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{91BAD030-F4F0-38BD-4035-297AA00A4C25}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jtar", "Jtar\Jtar.csproj", "{D7506522-AAD9-2C13-AC3C-39BE3CE59A56}"
 EndProject
