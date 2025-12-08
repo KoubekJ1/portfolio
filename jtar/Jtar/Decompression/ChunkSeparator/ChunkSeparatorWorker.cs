@@ -19,52 +19,67 @@ public class ChunkSeparatorWorker
     public void Run()
     {
         Logger.Log(LogType.Debug, "ChunkSeparatorWorker started!");
-        
-        // ! Change int to long !
 
-        // The order of the current chunk
         int order = -1;
 
-        // Index of where the next chunk of raw data starts (excluding the magic string)
-        int dataBeginningOffset = -1;
+        long dataBegin = -1;
+        long dataLength = _data.LongLength;
+        long magicLength = _magicString.LongLength;
 
-        // ! include last chunk!
-
-        for (int i = 0; i <= _data.Length - _magicString.Length; i++)
+        for (long i = 0; i <= dataLength - magicLength; i++)
         {
-            // Check if the following bytes match the magic string
-            bool magicStringValid = true;
-            for (int j = 0; j < _magicString.Length; j++)
+            bool match = true;
+            for (long j = 0; j < magicLength; j++)
             {
-                int index = i+j;
-                if (_data[index] != _magicString[j])
+                if (_data[i + j] != _magicString[j])
                 {
-                    magicStringValid = false;
+                    match = false;
                     break;
                 }
             }
 
-            if (magicStringValid)
+            if (!match)
+                continue;
+
+            Logger.Log(LogType.Debug, "Found magic string!");
+
+            // First magic string -> start first chunk including the magic string
+            if (order < 0)
             {
-                Logger.Log(LogType.Debug, "Found magic string!");
-                // First magic string will mark the beginning of the first chunk
-                if (order < 0)
-                {
-                    order = 0;
-                    dataBeginningOffset = i + _magicString.Length;
-                    continue;
-                }
+                order = 0;
+                dataBegin = i;
+                i += (magicLength - 1);
+                continue;
+            }
 
-                // Index where the raw data ends
-                int dataEnd = i - dataBeginningOffset;
-
-                var segment = new ArraySegment<byte>(_data, dataBeginningOffset, dataEnd);
-                
+            // Emit previous chunk from dataBegin to (i - 1)
+            long chunkLength = i - dataBegin;
+            if (chunkLength > 0)
+            {
+                var segment = new ArraySegment<byte>(_data, (int)dataBegin, (int)chunkLength);
                 var chunk = new DecompressionChunk(order, segment.ToArray());
                 _output.Put(chunk);
-                dataBeginningOffset = i + _magicString.Length - 1;
-                order++;
+            }
+
+            // Next chunk starts INCLUDING this magic string
+            order++;
+            dataBegin = i;
+
+            // Skip ahead
+            i += (magicLength - 1);
+        }
+
+        // Emit final chunk (if any)
+        if (order >= 0 && dataBegin < dataLength)
+        {
+            long finalLength = dataLength - dataBegin;
+            if (finalLength > 0)
+            {
+                var segment = new ArraySegment<byte>(_data, (int)dataBegin, (int)finalLength);
+                var finalChunk = new DecompressionChunk(order, segment.ToArray());
+                _output.Put(finalChunk);
             }
         }
     }
+
 }

@@ -5,6 +5,7 @@ using System.Formats.Tar;
 using System.Text;
 using Jtar.Decompression.Output;
 using Jtar.Decompression;
+using Jtar.Decompression.Communication;
 
 namespace Jtar.Tests
 {
@@ -88,7 +89,7 @@ namespace Jtar.Tests
         {
             public readonly List<T> Items = new();
 
-            public void Output(T item)
+            public void Put(T item)
             {
                 if (item != null)
                     Items.Add(item);

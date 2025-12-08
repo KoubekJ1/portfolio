@@ -1,3 +1,5 @@
+using Jtar.Logging;
+
 namespace Jtar.Decompression.Output;
 
 public class DataCache
@@ -15,6 +17,7 @@ public class DataCache
         using var ms = new MemoryStream();
         while (dataCache.ContainsKey(upcomingIndex))
         {
+            Logger.Log(LogType.Debug, $"DataCache releasing chunk {upcomingIndex}");
             var data = dataCache[upcomingIndex];
             ms.Write(data);
             dataCache.Remove(upcomingIndex);
