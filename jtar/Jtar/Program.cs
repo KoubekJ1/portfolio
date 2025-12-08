@@ -23,8 +23,6 @@ class Program
 
         rootCommand.Subcommands.Add(decompressCommand);
 
-        rootCommand.Parse(args).Invoke();
-
-        return 0;
+        return rootCommand.Parse(args).Invoke();
     }
 }

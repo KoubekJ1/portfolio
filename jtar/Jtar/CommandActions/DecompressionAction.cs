@@ -77,11 +77,6 @@ public class DecompressionAction : SynchronousCommandLineAction
                 Logger.Log(LogType.Info, $"Archive unpacked!");
 
             }
-            catch (InvalidOutputFileException e)
-            {
-                Logger.Log(LogType.Error, e.Message);
-                return 1;
-            }
             catch (Exception e)
             {
                 Logger.Log(LogType.Error, "An unknown error occured!");
