@@ -28,7 +28,7 @@ public class FileLoaderManager
     /// </summary>
     public async Task Run()
     {
-        var worker = new FileLoaderWorker(Filepaths, _outputCollection);
+        var worker = new FileLoaderWorker(Filepaths, _outputCollection, _tarFormatter);
         await Task.Run(worker.Run);
         _outputCollection.CompleteAdding();
     }
