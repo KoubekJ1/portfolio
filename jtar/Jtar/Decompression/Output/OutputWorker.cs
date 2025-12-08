@@ -28,9 +28,11 @@ public class OutputWorker
             //Console.WriteLine(sequence.Length + "a");
             if (sequence.Length > 0)
             {
-                var entry = creator.GetTarEntry(sequence);
+                foreach (var entry in creator.GetTarEntries(sequence))
+                {
+                    _output.Put(entry);
+                }
                 //Console.WriteLine(entry == null ? "null" : "entry");
-                if (entry != null) _output.Put(entry);
             }
         }
     }

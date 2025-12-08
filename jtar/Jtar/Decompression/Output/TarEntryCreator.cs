@@ -12,63 +12,73 @@ public class TarEntryCreator
 
     private readonly MemoryStream _ms = new();
 
-    public TarEntry? GetTarEntry(byte[] data)
+    public IEnumerable<TarEntry> GetTarEntries(byte[] data)
     {
-        // Append data
+        // Save previous length so we can revert the whole append if needed
+        long oldLength = _ms.Length;
+
+        // Append incoming data
         _ms.Position = _ms.Length;
         _ms.Write(data);
 
-        // Rewind before parsing
-        _ms.Position = 0;
+        // Prepare output list
+        List<TarEntry> entries = new();
 
-        using var tr = new TarReader(_ms, leaveOpen: true);
-
-        TarEntry? entry;
-
-        try
+        // Try to parse multiple entries
+        while (true)
         {
-            entry = tr.GetNextEntry();
+            // Start parsing from the beginning of the current buffer
+            _ms.Position = 0;
+
+            using var tr = new TarReader(_ms, leaveOpen: true);
+
+            TarEntry? entry;
+
+            try
+            {
+                entry = tr.GetNextEntry();
+            }
+            catch (EndOfStreamException)
+            {
+                // Incomplete data → rollback everything from this append
+                _ms.SetLength(oldLength);
+                _ms.Position = 0;
+                break;
+            }
+
+            if (entry == null)
+            {
+                // No more entries → stop
+                // Keep current buffer; no rollback needed
+                break;
+            }
+
+            // SUCCESS: a full entry was parsed
+            entries.Add(entry);
+
+            long consumed = _ms.Position;
+            long remaining = _ms.Length - consumed;
+
+            if (remaining > 0)
+            {
+                // Cut off consumed bytes and leave only the remainder
+                var buf = new byte[remaining];
+                _ms.Read(buf, 0, (int)remaining);
+
+                _ms.SetLength(0);
+                _ms.Write(buf, 0, buf.Length);
+            }
+            else
+            {
+                // Everything consumed — clear buffer
+                _ms.SetLength(0);
+            }
+
+            // After removing consumed bytes, loop again:
+            // - If more full entries are present → we’ll parse them
+            // - If only a partial chunk remains → the next iteration breaks cleanly
         }
-        catch (EndOfStreamException)
-        {
-            return null;
-        }
 
-        // TarReader advances the position. That's how many bytes were consumed.
-        long consumed = _ms.Position;
-
-        Logger.Log(LogType.Debug, $"MS pos after read: {consumed}, length: {_ms.Length}");
-
-        if (entry == null)
-            return null;
-
-        // Remaining bytes in stream
-        long remaining = _ms.Length - consumed;
-
-        if (remaining > 0)
-        {
-            // Copy remainder into new buffer
-            var buf = new byte[remaining];
-
-            // Read remainder directly
-            _ms.Read(buf, 0, (int)remaining);
-
-            // Reset stream
-            _ms.SetLength(0);
-
-            // Write back only unread data
-            _ms.Write(buf, 0, buf.Length);
-        }
-        else
-        {
-            // All data consumed
-            _ms.SetLength(0);
-        }
-
-        // Reset to start for next iteration
-        _ms.Position = 0;
-
-        //GetTarEntry([]);
-        return entry;
+        return entries;
     }
 }
