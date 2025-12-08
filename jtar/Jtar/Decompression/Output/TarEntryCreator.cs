@@ -68,6 +68,7 @@ public class TarEntryCreator
         // Reset to start for next iteration
         _ms.Position = 0;
 
+        //GetTarEntry([]);
         return entry;
     }
 }
