@@ -1,4 +1,5 @@
 using System.Formats.Tar;
+using Jtar.Decompression.Communication;
 
 namespace Jtar.Decompression.Output;
 
@@ -18,9 +19,10 @@ public class OutputWorker
         var creator = new TarEntryCreator();
         var cache = new DataCache();
 
-        DecompressionChunk chunk;
+        DecompressionChunk? chunk;
         while (_input.Get(out chunk))
         {
+            if (chunk == null) continue;
             cache.Add(chunk.Order, chunk.Data);
             var sequence = cache.GetUpcomingSequence();
             //Console.WriteLine(sequence.Length + "a");
@@ -28,7 +30,7 @@ public class OutputWorker
             {
                 var entry = creator.GetTarEntry(sequence);
                 //Console.WriteLine(entry == null ? "null" : "entry");
-                if (entry != null) _output.Output(entry);
+                if (entry != null) _output.Put(entry);
             }
         }
     }

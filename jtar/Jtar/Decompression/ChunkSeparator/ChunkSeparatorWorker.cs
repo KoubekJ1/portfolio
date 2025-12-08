@@ -1,4 +1,6 @@
-namespace Jtar.Decompression;
+using Jtar.Decompression.Communication;
+
+namespace Jtar.Decompression.ChunkSeparator;
 
 public class ChunkSeparatorWorker
 {
@@ -53,7 +55,7 @@ public class ChunkSeparatorWorker
                 var segment = new ArraySegment<byte>(_data, dataBeginningOffset, dataEnd);
                 
                 var chunk = new DecompressionChunk(order, segment.ToArray());
-                _output.Output(chunk);
+                _output.Put(chunk);
                 dataBeginningOffset = i + _magicString.Length - 1;
                 order++;
             }
