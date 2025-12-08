@@ -20,29 +20,22 @@ public class PaxTarFormatter : ITarFormatter
     public byte[] FormatTar(string path, string rootDir)
     {
         using var ms = new MemoryStream();
-        using var writer = new TarWriter(ms, TarEntryFormat.Pax, leaveOpen: true);
-
-        // Compute relative path in a normalized form
-        string relative = Path.GetRelativePath(rootDir, path).Replace("\\", "/");
-
-        var fileInfo = new FileInfo(path);
-
-        // Create PAX entry (this automatically handles long paths, timestamps, etc.)
-        var entry = new PaxTarEntry(TarEntryType.RegularFile, relative)
+        var writer = new TarWriter(ms, TarEntryFormat.Pax, leaveOpen: true);
+        using (var fileStream = File.OpenRead(path))
         {
-            ModificationTime = fileInfo.LastWriteTimeUtc
-        };
+            string relative = Path.GetRelativePath(rootDir, path)
+                                  .Replace("\\", "/");
+            var fileInfo = new FileInfo(path);
 
-        // Set file size
-        entry.DataStream = File.OpenRead(path);
+            var entry = new PaxTarEntry(TarEntryType.RegularFile, relative)
+            {
+                DataStream = fileStream,
+                ModificationTime = fileInfo.LastWriteTimeUtc
+            };
 
-        // Write entry
-        writer.WriteEntry(entry);
+            writer.WriteEntry(entry);
+        }
 
-        writer.Dispose(); // finalize
-
-        var data = ms.ToArray();
-        ms.Close();
-        return data;
+        return ms.ToArray();
     }
 }
