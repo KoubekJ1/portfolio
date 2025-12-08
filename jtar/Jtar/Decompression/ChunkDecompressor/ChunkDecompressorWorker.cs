@@ -1,5 +1,6 @@
 using Jtar.Compressor;
 using Jtar.Decompression.Communication;
+using Jtar.Logging;
 
 namespace Jtar.Decompression.ChunkDecompressor;
 
@@ -22,6 +23,7 @@ public class ChunkDecompressorWorker
         while (_input.Get(out chunk))
         {
             if (chunk == null) continue;
+            Logger.Log(LogType.Debug, $"Processing chunk {chunk.Order}");
             var decompressedData = _compressor.Decompress(chunk.Data);
             var outputChunk = new DecompressionChunk(chunk.Order, decompressedData);
             _output.Put(outputChunk);

@@ -1,4 +1,5 @@
 using Jtar.Decompression.Communication;
+using Jtar.Logging;
 
 namespace Jtar.Decompression.ChunkSeparator;
 
@@ -17,6 +18,8 @@ public class ChunkSeparatorWorker
 
     public void Run()
     {
+        Logger.Log(LogType.Debug, "ChunkSeparatorWorker started!");
+        
         // ! Change int to long !
 
         // The order of the current chunk
@@ -41,8 +44,9 @@ public class ChunkSeparatorWorker
 
             if (magicStringValid)
             {
+                Logger.Log(LogType.Debug, "Found magic string!");
                 // First magic string will mark the beginning of the first chunk
-                if (order < 1)
+                if (order < 0)
                 {
                     order = 0;
                     dataBeginningOffset = i + _magicString.Length - 1;

@@ -1,3 +1,5 @@
+using Jtar.Logging;
+
 namespace Jtar.Decompression;
 
 public class DecompressionContextBuilder
@@ -27,6 +29,7 @@ public class DecompressionContextBuilder
     public DecompressionContext Build()
     {
         var data = File.ReadAllBytes(_inputFile);
+        Logger.Log(LogType.Debug, $"File byte length: {data.Length}");
         return new DecompressionContext(data, _outputDir, _threadCount);
     }
 }

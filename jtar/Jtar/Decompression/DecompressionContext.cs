@@ -24,13 +24,15 @@ public class DecompressionContext
     {
         Logger.Log(LogType.Debug, "Beginning unpacking...");
 
+        //Directory.CreateDirectory(_outputDir);
+
         // Zstd magic string (little-endian): 0xFD2FB528
         byte[] magicString =
         [
-            Convert.ToByte("0x28"),
-            Convert.ToByte("0xB5"),
-            Convert.ToByte("0x2F"),
-            Convert.ToByte("0xFD"),
+            Convert.ToByte("0x28", 16),
+            Convert.ToByte("0xB5", 16),
+            Convert.ToByte("0x2F", 16),
+            Convert.ToByte("0xFD", 16),
         ];
         var chunkSeparatorManager = new ChunkSeparatorManager(_compressedData, magicString);
         var chunkDecompressorManager = new ChunkDecompressorManager(new ZstdCompressor(), chunkSeparatorManager.CompressedChunks, _threadCount);
@@ -43,7 +45,7 @@ public class DecompressionContext
             Task.Run(outputManager.Run),
         ];
 
-        await Task.WhenAll();
+        await Task.WhenAll(tasks);
         Logger.Log(LogType.Debug, "Finished unpacking!");
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using Jtar.Decompression.Communication;
+using Jtar.Logging;
 
 namespace Jtar.Decompression.ChunkSeparator;
 
@@ -22,7 +23,9 @@ public class ChunkSeparatorManager
     public async Task Run()
     {
         var worker = new ChunkSeparatorWorker(CompressedChunks, _magicString, _data);
+        Logger.Log(LogType.Debug, "Starting ChunkSeparatorWorker!");
         await Task.Run(worker.Run);
+        Logger.Log(LogType.Debug, "after await!");
         _sourceCollection.CompleteAdding();
     }
 }

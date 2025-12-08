@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using Jtar.Logging;
 
 namespace Jtar.Decompression.Communication;
 
@@ -18,6 +19,7 @@ public class BlockingCollectionIO<T> : IInput<T>, IOutput<T>
 
     public void Put(T obj)
     {
+        Logger.Log(LogType.Debug, $"Added {obj} to queue");
         _collection.Add(obj);
     }
 }
