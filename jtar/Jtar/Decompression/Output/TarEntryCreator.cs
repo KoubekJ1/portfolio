@@ -36,7 +36,7 @@ public class TarEntryCreator
 
             try
             {
-                entry = tr.GetNextEntry();
+                entry = tr.GetNextEntry(true);
             }
             catch (EndOfStreamException)
             {
@@ -48,7 +48,7 @@ public class TarEntryCreator
 
             if (entry == null)
             {
-                // No more entries → stop
+                // No more entries: stop
                 // Keep current buffer; no rollback needed
                 break;
             }
