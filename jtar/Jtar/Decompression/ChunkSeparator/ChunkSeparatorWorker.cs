@@ -28,7 +28,9 @@ public class ChunkSeparatorWorker
         // Index of where the next chunk of raw data starts (excluding the magic string)
         int dataBeginningOffset = -1;
 
-        for (int i = 0; i < _data.Length - _magicString.Length; i++)
+        // ! include last chunk!
+
+        for (int i = 0; i <= _data.Length - _magicString.Length; i++)
         {
             // Check if the following bytes match the magic string
             bool magicStringValid = true;
@@ -49,7 +51,7 @@ public class ChunkSeparatorWorker
                 if (order < 0)
                 {
                     order = 0;
-                    dataBeginningOffset = i + _magicString.Length - 1;
+                    dataBeginningOffset = i + _magicString.Length;
                     continue;
                 }
 

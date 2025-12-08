@@ -25,7 +25,7 @@ public class ChunkSeparatorManager
         var worker = new ChunkSeparatorWorker(CompressedChunks, _magicString, _data);
         Logger.Log(LogType.Debug, "Starting ChunkSeparatorWorker!");
         await Task.Run(worker.Run);
-        Logger.Log(LogType.Debug, "after await!");
         _sourceCollection.CompleteAdding();
+        Logger.Log(LogType.Debug, "ChunkSeparatorWorker output collection closed!");
     }
 }

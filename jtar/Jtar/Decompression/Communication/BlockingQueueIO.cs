@@ -14,7 +14,25 @@ public class BlockingCollectionIO<T> : IInput<T>, IOutput<T>
 
     public bool Get(out T? obj)
     {
-        return _collection.TryTake(out obj);
+        Logger.Log(LogType.Debug, $"Thread {Environment.CurrentManagedThreadId} requesting object...");
+        if (_collection.IsCompleted)
+        {
+            Logger.Log(LogType.Debug, $"Thread {Environment.CurrentManagedThreadId} request terminated!");
+            obj = default(T);
+            return false;
+        }
+        try
+        {
+            Logger.Log(LogType.Debug, $"Thread {Environment.CurrentManagedThreadId} request fulfilled!");
+            obj = _collection.Take();
+            return true;
+        }
+        catch (InvalidOperationException)
+        {
+            Logger.Log(LogType.Debug, $"Thread {Environment.CurrentManagedThreadId} request terminated!");
+            obj = default(T);
+            return false;
+        }
     }
 
     public void Put(T obj)

@@ -19,14 +19,17 @@ public class ChunkDecompressorWorker
 
     public void Run()
     {
+        Logger.Log(LogType.Debug, $"ChunkDecompressorWorker {Environment.CurrentManagedThreadId} started!");
         DecompressionChunk? chunk;
         while (_input.Get(out chunk))
         {
             if (chunk == null) continue;
             Logger.Log(LogType.Debug, $"Processing chunk {chunk.Order}");
             var decompressedData = _compressor.Decompress(chunk.Data);
+            Logger.Log(LogType.Debug, $"Chunk {chunk.Order} processed!");
             var outputChunk = new DecompressionChunk(chunk.Order, decompressedData);
             _output.Put(outputChunk);
         }
+        Logger.Log(LogType.Debug, $"ChunkDecompressorWorker {Environment.CurrentManagedThreadId} finished!");
     }
 }
