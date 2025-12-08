@@ -10,6 +10,7 @@ public class DecompressionContextBuilder
 
     public DecompressionContextBuilder SetThreadCount(int threadCount)
     {
+        if (threadCount < 1) throw new ArgumentException("Thread count must be at least 1!");
         _threadCount = threadCount;
         return this;
     }
@@ -29,6 +30,7 @@ public class DecompressionContextBuilder
     public DecompressionContext Build()
     {
         var data = File.ReadAllBytes(_inputFile);
+        Logger.Log(LogType.Debug, $"Building decompression context builder with {_threadCount} threads");
         Logger.Log(LogType.Debug, $"File byte length: {data.Length}");
         return new DecompressionContext(data, _outputDir, _threadCount);
     }

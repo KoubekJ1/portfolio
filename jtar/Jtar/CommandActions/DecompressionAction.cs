@@ -65,7 +65,7 @@ public class DecompressionAction : SynchronousCommandLineAction
             if (argOutputName != null && argOutputName != string.Empty) outputDir = argOutputName;
 
             var threadCount = parseResult.GetValue(threadCountOption);
-            if (threadCount > 0) builder.SetThreadCount(threadCount);
+            if (threadCount > 0) builder.SetThreadCount(Math.Max(threadCount, 1));
 
             builder.SetOutputDir(outputDir);
 

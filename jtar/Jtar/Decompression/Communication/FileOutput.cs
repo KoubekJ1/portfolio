@@ -18,8 +18,8 @@ public class FileOutput : IOutput<TarEntry>
     {
         var finalPath = $"{_rootPath}/{obj.Name}";
         Logger.Log(LogType.Debug, $"File outputed to {finalPath}");
-        // ! Uncomment !
-        Directory.CreateDirectory(Path.GetDirectoryName(finalPath));
+        // ! May be null !
+        Directory.CreateDirectory(Path.GetDirectoryName(finalPath)!);
         obj.ExtractToFile(finalPath, _overwrite);
     }
 }
