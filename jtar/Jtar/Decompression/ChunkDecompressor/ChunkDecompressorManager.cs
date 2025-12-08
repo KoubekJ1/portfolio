@@ -29,7 +29,7 @@ public class ChunkDecompressorManager
 
         for (int i = 0; i < _threadCount; i++)
         {
-            var worker = new ChunkDecompressorWorker(_input, DecompressedChunks, _compressor);
+            var worker = new ChunkDecompressorWorker(_input, DecompressedChunks, (ICompressor)_compressor.Clone());
             tasks.AddLast(Task.Run(worker.Run));
         }
 
