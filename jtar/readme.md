@@ -1,12 +1,12 @@
 # JTAR
-<p>Software napsaný v C# sloužící pro kompresi souborů do .tar.zstd formátu tvořený v rámci školního projektu.</p>
+<p>Software napsaný v C# sloužící pro kompresi a dekompresi souborů ve formátu .tar.zstd. Projekt byl zhotoven v rámci školního projektu.</p>
 <p>Název školy: SPŠE Ječná</p>
-<p>Datum poslední úpravy: 1.12.2025</p>
+<p>Datum poslední úpravy: 9.12.2025</p>
 
 ## Autor
 Jan Koubek C4b<br>
 koubek@spsejecna.cz<br>
-Tvořeno v listopadu 2025<br>
+Tvořeno v listopadu a prosinci 2025<br>
 
 ## O programu
 <p>Program slouží pro archivaci souborů do archivu formátu TAR specifikace USTAR (POSIX specifikace uvedena v normách POSIX.1-1988 a POSIX.1-2001). Na tento archiv se následně aplikuje komprese formátu Zstandard, vytvořený společností Facebook, není-li jinak specifikováno ve spouštěcích argumentech.
@@ -20,33 +20,37 @@ Archiv je možné vytvořit i bez použití komprese.
 
 ## Stažení
 <p>Stáhnout zdrojový kód z následujícího repozitáře: https://github.com/KoubekJ1/portfolio</p>
-<p>Momentální verze: 1.0.1</p>
+<p>Momentální verze: 1.1.0</p>
 
 ## Použití
 ### Předem zkompilovaný binární soubor
 <p>Spusťte s vhodnými spouštěcími argumenty</p>
-<p>Syntax: **jtar** [ -o *OUTPUT-PATH* ] [ -t *THREAD-COUNT* ] [ -n ] [ -d ] *FILEPATH1 FILEPATH2 ...*</p>
+<p>Syntax: **jtar** { compress | decompress } [ -o *OUTPUT-PATH* ] [ -t *THREAD-COUNT* ] [ -n ] [ -d ] *FILEPATH1 FILEPATH2 ...*</p>
 
 ### Debug
 <p>Pro spuštění ve vývojovém prostředí je třeba mít nainstalován .NET SDK verze 8.0 nebo výše. Následně je potřeba stáhnout zdrojový kód z repozitáře, přesunout se v konzoli do adresáře portfolio/jtar/Jtar a použít příkaz "dotnet run" (+ vstupní parametry). Veškeré závislosti se nainstalují sami.</p>
-<p>Syntax: **dotnet run** [ -o *OUTPUT-PATH* ] [ -t *THREAD-COUNT* ] [ -n ] [ -d ] *FILEPATH1 FILEPATH2 ...*</p>
+<p>Syntax: **dotnet run** { compress | decompress } [ -o *OUTPUT-PATH* ] [ -t *THREAD-COUNT* ] [ -n ] [ -d ] *FILEPATH1 FILEPATH2 ...*</p>
 
 ### Parametry
 <p>Konfigurace, resp. parametry pro spuštění se uvádí formou argumentů uvedených v konzoli za názvem programu.</p>
 
-<p>Jedinným povinným argumentem je cesta k jednomu nebo více vstupním souborům či adresářům, které budou archivovány ve výsledném souboru.</p>
+<p>Parametrem je výběr komprese či dekomprese pomocí argumentu compress či decompress, poté specifikovat cestu k souboru,.</p>
+<p>Dále je možno specifikovat volitelné parametry (viz. níže)</p>
 
-<p>Cesty musí být relativní, nikoliv absolutní</p>
+<p>Vstupní cesty souborů musí být relativní, nikoliv absolutní</p>
 
 #### Volitelné parametry
 **-o, --output**
-- Cesta výsledného souboru
+- Cesta výsledného souboru či adresáře
 
 **-t, --thread-count**
 - Specifikace počtu vláken použitých pro kompresi (výchozí: počet logických vláken CPU - 1)
 
 **-n, --no-compress**
-- Nepoužít kompresi, pouze vytvořit archiv .tar
+- Pouze pro packaging, program nepoužije při archivaci kompresi, pouze vytvoří archiv .tar
+
+**-u, --ustar**
+- Pouze pro packaging, program použije formát archivu TAR USTAR, který má větší kompatibilitu zejména se staršími stroji.
 
 **-d, --debug**
 - Zapnout tisk skrytých výstupů do konzole
@@ -59,6 +63,8 @@ Archiv je možné vytvořit i bez použití komprese.
 - Pokud je jako název výstupního souboru uvedena cesta spadající pod neexistující adresář, program skončí s chybovým kódem 1
 
 ## Implementace
+
+### Komprese
 Program byl realizován v jazyce C# pomocí .NET 8.0 SDK s velikým důrazem na použití vláken. Současně běží 4 procesy, které na sebe pevně navazují:
 - FileSeeker: Hledání podsouborů ve složkách specifikovaných ve vstupních argumentech
 - FileLoader: Načítání nalezených souborů, vytvoření TAR hlaviček a rozdělení souborů na bloky (chunky)
