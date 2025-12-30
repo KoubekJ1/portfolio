@@ -1,4 +1,5 @@
-﻿using System;
+﻿using musicplayer.tools;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,6 +26,8 @@ namespace musicplayer
 				return;
 			}
 
+			PlaybackLengthHandler handler = new PlaybackLengthHandler();
+			handler.Register();
 
             Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);

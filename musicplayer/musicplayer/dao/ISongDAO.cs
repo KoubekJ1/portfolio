@@ -1,14 +1,11 @@
 ﻿using musicplayer.dataobjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace musicplayer.dao
 {
-	public interface ISongDAO : IDAO<Album>
+	public interface ISongDAO : IDAO<Song>
 	{
 		int? UploadSongData(byte[] data);
+
+		void AddListeningTime(long time, int songID);
 	}
 }

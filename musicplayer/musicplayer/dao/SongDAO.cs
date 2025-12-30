@@ -13,7 +13,7 @@ namespace musicplayer.dao
     /// <summary>
     /// DAO implementation used for working with Songs
     /// </summary>
-    public class SongDAO : IDAO<Song>
+    public class SongDAO : ISongDAO
     {
 
         /// <summary>
@@ -245,5 +245,18 @@ namespace musicplayer.dao
             connection.Close();
             return id;
         }
-    }
+
+		public void AddListeningTime(long time, int songID)
+		{
+			SqlConnection connection = DatabaseConnection.GetConnection();
+			connection.Open();
+
+			SqlCommand command = new SqlCommand("UPDATE songs SET so_listening_time = so_listening_time + @time WHERE so_id = @id", connection);
+			command.Parameters.AddWithValue("time", time);
+			command.Parameters.AddWithValue("id", songID);
+			command.ExecuteNonQuery();
+
+			connection.Close();
+		}
+	}
 }

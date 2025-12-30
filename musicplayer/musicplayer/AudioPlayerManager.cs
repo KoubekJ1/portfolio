@@ -54,6 +54,11 @@ namespace musicplayer
 		private LinkedList<Song> _songQueue;
 		private LinkedList<Song> _songHistory;
 
+		private Song? _currentSong;
+
+		public Action<int?> OnStartedPlaying { get; set; } = new Action<int?>(delegate { });
+		public Action<int?> OnFinishedPlaying { get; set; } = new Action<int?>(delegate { });
+
 		/// <summary>
 		/// Constructs a new AudioPlayerManager instance
 		/// </summary>
@@ -82,6 +87,8 @@ namespace musicplayer
 			PlayerControl.GetPlayerControl().SongName = song.Name;
 			if (song.Album?.Artist != null) PlayerControl.GetPlayerControl().ArtistName = song.Album.Artist.Name;
 			else PlayerControl.GetPlayerControl().ArtistName = "Unknown artist";
+			OnStartedPlaying.Invoke(song.Id);
+			_currentSong = song;
 			PlayAudio(song.Data, replace);
 			song.Data = null;
 			return true;
@@ -169,6 +176,8 @@ namespace musicplayer
 		{
 			if (_outputDevice == null || _fileReader == null || _stream == null) return;
 
+			int? id = _currentSong?.Id;
+			OnStartedPlaying.Invoke(id);
 			_outputDevice.Play();
 		}
 
@@ -177,6 +186,8 @@ namespace musicplayer
 		/// </summary>
 		private void Stop()
 		{
+			int? id = _currentSong?.Id;
+			OnFinishedPlaying.Invoke(id);
 			_outputDevice?.Stop();
 		}
 
@@ -321,6 +332,8 @@ namespace musicplayer
 		{
 			if (Progress >= 1)
 			{
+				int? id = _currentSong?.Id;
+				OnFinishedPlaying.Invoke(id);
 				PlayNextSong();
 			}
 		}
