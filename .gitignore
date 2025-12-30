@@ -16,3 +16,9 @@ jtar/*.tar
 *.vs
 *.drawio.bkp
 *.tar.zstd
+
+# musicplayer
+musicplayer/musicplayer/bin
+musicplayer/musicplayer/obj
+musicplayer/global.json
+musicplayer/.vs/
