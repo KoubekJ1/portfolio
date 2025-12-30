@@ -46,6 +46,9 @@ namespace musicplayer.controls.forms
 
 			tbName.Text = song.Name;
 			lFile.Text = "Original song data";
+
+			trbRating.Value = (int)(_song.Rating * 10);
+			lRatingValue.Text = song.Rating.ToString();
 		}
 
 		public void Clear()
@@ -132,6 +135,18 @@ namespace musicplayer.controls.forms
 		}
 
 		private void NewSongForm_Load(object sender, EventArgs e)
+		{
+
+		}
+
+		private void trackBar1_Scroll(object sender, EventArgs e)
+		{
+			var newVal = Math.Round((double)trbRating.Value / 10, 1);
+			lRatingValue.Text = newVal.ToString();
+			_song.Rating = newVal;
+		}
+
+		private void lRatingValue_Click(object sender, EventArgs e)
 		{
 
 		}

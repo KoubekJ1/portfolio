@@ -33,6 +33,10 @@
 			lFile = new Label();
 			tbName = new TextBox();
 			label1 = new Label();
+			trbRating = new TrackBar();
+			lRatingValue = new Label();
+			lRatingLabel = new Label();
+			((System.ComponentModel.ISupportInitialize)trbRating).BeginInit();
 			SuspendLayout();
 			// 
 			// bAdd
@@ -44,7 +48,7 @@
 			bAdd.TabIndex = 9;
 			bAdd.Text = "Add";
 			bAdd.UseVisualStyleBackColor = true;
-			bAdd.Click += this.bAdd_Click_1;
+			bAdd.Click += bAdd_Click_1;
 			// 
 			// bFile
 			// 
@@ -55,7 +59,7 @@
 			bFile.TabIndex = 8;
 			bFile.Text = "Select file";
 			bFile.UseVisualStyleBackColor = true;
-			bFile.Click += this.bFile_Click_1;
+			bFile.Click += bFile_Click_1;
 			// 
 			// lFile
 			// 
@@ -74,7 +78,7 @@
 			tbName.Name = "tbName";
 			tbName.Size = new Size(285, 27);
 			tbName.TabIndex = 6;
-			tbName.TextChanged += this.tbName_TextChanged_1;
+			tbName.TextChanged += tbName_TextChanged_1;
 			// 
 			// label1
 			// 
@@ -86,10 +90,43 @@
 			label1.TabIndex = 5;
 			label1.Text = "Name";
 			// 
+			// trbRating
+			// 
+			trbRating.Location = new Point(157, 104);
+			trbRating.Maximum = 50;
+			trbRating.Name = "trbRating";
+			trbRating.Size = new Size(130, 56);
+			trbRating.TabIndex = 10;
+			trbRating.Scroll += trackBar1_Scroll;
+			// 
+			// lRatingValue
+			// 
+			lRatingValue.AutoSize = true;
+			lRatingValue.Location = new Point(157, 79);
+			lRatingValue.Margin = new Padding(2, 0, 2, 0);
+			lRatingValue.Name = "lRatingValue";
+			lRatingValue.Size = new Size(28, 20);
+			lRatingValue.TabIndex = 11;
+			lRatingValue.Text = "0.0";
+			lRatingValue.Click += lRatingValue_Click;
+			// 
+			// lRatingLabel
+			// 
+			lRatingLabel.AutoSize = true;
+			lRatingLabel.Location = new Point(157, 59);
+			lRatingLabel.Margin = new Padding(2, 0, 2, 0);
+			lRatingLabel.Name = "lRatingLabel";
+			lRatingLabel.Size = new Size(52, 20);
+			lRatingLabel.TabIndex = 12;
+			lRatingLabel.Text = "Rating";
+			// 
 			// NewSongFormControl
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
+			Controls.Add(lRatingLabel);
+			Controls.Add(lRatingValue);
+			Controls.Add(trbRating);
 			Controls.Add(bAdd);
 			Controls.Add(bFile);
 			Controls.Add(lFile);
@@ -98,6 +135,7 @@
 			Name = "NewSongFormControl";
 			Size = new Size(293, 149);
 			Load += NewSongForm_Load;
+			((System.ComponentModel.ISupportInitialize)trbRating).EndInit();
 			ResumeLayout(false);
 			PerformLayout();
 		}
@@ -109,5 +147,8 @@
 		private Label lFile;
 		private TextBox tbName;
 		private Label label1;
+		private TrackBar trbRating;
+		private Label lRatingValue;
+		private Label lRatingLabel;
 	}
 }

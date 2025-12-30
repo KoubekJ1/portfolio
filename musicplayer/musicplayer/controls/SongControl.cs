@@ -33,7 +33,7 @@ namespace musicplayer.controls
 			this._artistContentControl = artistContentControl;
 			int minutes = song.Length / 60;
 			int seconds = song.Length - minutes * 60;
-			lSongName.Text = song.Name;
+			lSongName.Text = $"{song.Name}     Rating: {song.Rating}";
 			lLength.Text = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
 		}
 

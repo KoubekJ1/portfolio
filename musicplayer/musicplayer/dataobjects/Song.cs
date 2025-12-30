@@ -16,6 +16,7 @@ namespace musicplayer.dataobjects
         private string _name;
         private byte[]? _data;
         private int _length;
+        private double _rating;
 
         private Album? _album;
         private int? _dataID;
@@ -59,5 +60,6 @@ namespace musicplayer.dataobjects
         public int Length { get => _length; set => _length = value; }
 		public int? DataID { get => _dataID; set => _dataID = value; }
 		public Album? Album { get => _album; set => _album = value; }
+        public double Rating { get => _rating; set => _rating = value; }
 	}
 }

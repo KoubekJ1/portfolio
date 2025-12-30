@@ -27,7 +27,7 @@ namespace musicplayer.dao
             SqlConnection connection = DatabaseConnection.GetConnection();
             connection.Open();
 
-            SqlCommand command = new SqlCommand("SELECT so_id, so_sd_id, so_name, so_length FROM songs", connection);
+            SqlCommand command = new SqlCommand("SELECT so_id, so_sd_id, so_name, so_length, so_rating FROM songs", connection);
             
             SqlDataReader reader = command.ExecuteReader();
 
@@ -38,7 +38,8 @@ namespace musicplayer.dao
                 song.Id = reader.GetInt32(0);
                 song.Length = reader.GetInt32(3);
 				song.DataID = reader[1] != DBNull.Value ? reader.GetInt32(1) : null;
-                songs.AddLast(song);
+				song.Rating = Math.Round(reader.GetDouble(4), 1);
+				songs.AddLast(song);
 			}
 
             connection.Close();
@@ -56,7 +57,7 @@ namespace musicplayer.dao
             SqlConnection connection = DatabaseConnection.GetConnection();
             connection.Open();
 
-            SqlCommand command = new SqlCommand("SELECT so_id, so_sd_id, so_name, so_length FROM songs WHERE so_id = @id", connection);
+            SqlCommand command = new SqlCommand("SELECT so_id, so_sd_id, so_name, so_length, so_rating FROM songs WHERE so_id = @id", connection);
             command.Parameters.AddWithValue("id", id);
 
             SqlDataReader reader = command.ExecuteReader();
@@ -65,7 +66,7 @@ namespace musicplayer.dao
             song.Id = reader.GetInt32(0);
 			song.Length = reader.GetInt32(3);
 			song.DataID = reader[1] != DBNull.Value ? reader.GetInt32(1) : null;
-
+            song.Rating = Math.Round(reader.GetDouble(4), 1);
 
 			connection.Close();
 
@@ -154,13 +155,14 @@ namespace musicplayer.dao
             SqlConnection connection = DatabaseConnection.GetConnection();
             connection.Open();
 
-            SqlCommand command = new SqlCommand("INSERT INTO songs (so_sd_id, so_name, so_length) OUTPUT INSERTED.so_id VALUES (@data_id, @name, @length)", connection);
+            SqlCommand command = new SqlCommand("INSERT INTO songs (so_sd_id, so_name, so_length, so_rating) OUTPUT INSERTED.so_id VALUES (@data_id, @name, @length, @rating)", connection);
             command.Parameters.AddWithValue("data_id", dataID);
             //command.Parameters.AddWithValue("alb_id", song.AlbumID != null ? song.AlbumID : DBNull.Value);
             command.Parameters.AddWithValue("name", song.Name);
             command.Parameters.AddWithValue("length", song.Length);
+            command.Parameters.AddWithValue("rating", song.Rating);
 
-            int? id = (int?)command.ExecuteScalar();
+			int? id = (int?)command.ExecuteScalar();
             song.Id = id;
 
             connection.Close();
@@ -189,13 +191,14 @@ namespace musicplayer.dao
 			SqlConnection connection = DatabaseConnection.GetConnection();
             connection.Open();            
 
-            SqlCommand command = new SqlCommand("UPDATE songs SET so_sd_id = @sd_id, so_name = @name, so_length = @length WHERE so_id = @id", connection);
+            SqlCommand command = new SqlCommand("UPDATE songs SET so_sd_id = @sd_id, so_name = @name, so_length = @length, so_rating = @rating WHERE so_id = @id", connection);
             command.Parameters.AddWithValue("id", song.Id);
             command.Parameters.AddWithValue("sd_id", song.DataID);
 			command.Parameters.AddWithValue("name", song.Name);
             command.Parameters.AddWithValue("length", song.Length);
+			command.Parameters.AddWithValue("rating", song.Rating);
 
-            command.ExecuteNonQuery();
+			command.ExecuteNonQuery();
 
 			connection.Close();
         }
