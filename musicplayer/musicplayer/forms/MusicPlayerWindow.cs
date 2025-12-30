@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.VisualBasic;
 using musicplayer.controls;
 using musicplayer.dao;
 using musicplayer.forms;
@@ -71,10 +72,21 @@ namespace musicplayer
 		/// <param name="e"></param>
 		private void buttonArtists_Click(object sender, EventArgs e)
 		{
-			panelContent.Controls.Clear();
-			ArtistsControl artistsControl = new ArtistsControl(panelContent);
-			artistsControl.Dock = DockStyle.Fill;
-			panelContent.Controls.Add(artistsControl);
+			try
+			{
+				panelContent.Controls.Clear();
+				ArtistsControl artistsControl = new ArtistsControl(panelContent);
+				artistsControl.Dock = DockStyle.Fill;
+				panelContent.Controls.Add(artistsControl);
+			}
+			catch (SqlException ex) when (ex.Number == 208)
+			{
+				MessageBox.Show("Unable to show page due to database schema being incorrect.", "Invalid database schema");
+			}
+			catch (Exception ex)
+			{
+				ErrorHandler.HandleException(ex);
+			}
 		}
 
 		/// <summary>
@@ -116,6 +128,10 @@ namespace musicplayer
 				displayControl.Dock = DockStyle.Fill;
 				panelContent.Controls.Add(displayControl);
 			}
+			catch (SqlException ex) when (ex.Number == 208)
+			{
+				MessageBox.Show("Unable to show page due to database schema being incorrect.", "Invalid database schema");
+			}
 			catch (Exception ex)
 			{
 				ErrorHandler.HandleException(ex, "Unable to load albums.", "Error");
@@ -136,6 +152,10 @@ namespace musicplayer
 				var songControl = new SongOverviewControl(songs, panelContent);
 				songControl.Dock = DockStyle.Fill;
 				panelContent.Controls.Add(songControl);
+			}
+			catch (SqlException ex) when (ex.Number == 208)
+			{
+				MessageBox.Show("Unable to show page due to database schema being incorrect.", "Invalid database schema");
 			}
 			catch (Exception ex)
 			{
