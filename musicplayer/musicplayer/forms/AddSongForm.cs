@@ -1,4 +1,5 @@
-﻿using musicplayer.dao;
+﻿using musicplayer.controls.forms;
+using musicplayer.dao;
 using musicplayer.dataobjects;
 using System;
 using System.Collections.Generic;
@@ -18,120 +19,51 @@ namespace musicplayer.forms
 	/// </summary>
 	public partial class AddSongForm : Form
 	{
-		private Album? _album;
+		public Song? Song { get; private set; }
 
-		private Song _song;
+		private Action<Song>? _onCreate;
 
-		public Song Song { get => _song; }
+		private NewSongFormControl _control = new NewSongFormControl();
 
 		/// <summary>
 		/// Constructs a new add song form
 		/// </summary>
-		public AddSongForm()
+		public AddSongForm(Action<Song>? onCreate = null)
 		{
 			InitializeComponent();
 			this.FormBorderStyle = FormBorderStyle.FixedSingle;
-			_song = new Song("");
+			_control = new NewSongFormControl((song) => {
+				Song = song;
+				if (_onCreate != null) { _onCreate(song); }
+			});
+			_control.Dock = DockStyle.Fill;
+			this.Controls.Add(_control);
+			_onCreate = onCreate;
 		}
 
 		/// <summary>
 		/// Constructs a new add song form with the given song to edit
 		/// </summary>
 		/// <param name="song">Song</param>
-		public AddSongForm(Song song)
+		public AddSongForm(Song song, Action<Song>? onCreate = null)
 		{
 			InitializeComponent();
 			this.FormBorderStyle = FormBorderStyle.FixedSingle;
-			_song = song;
+			_control = new NewSongFormControl(song, (song) => {
+				Song = song;
+				if (_onCreate != null) { _onCreate(song); }
+			});
+			_control.Dock = DockStyle.Fill;
+			this.Controls.Add(_control);
 
 			this.Text = "Edit Song";
-			this.bAdd.Text = "Save";
 
-			tbName.Text = song.Name;
-			lFile.Text = "Original song data";
+			_onCreate = onCreate;
 		}
 
 		private void AddSongForm_Load(object sender, EventArgs e)
 		{
 
-		}
-
-		/// <summary>
-		/// Opens the file chooser dialog for the user to choose a file containing the song data
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void bFile_Click(object sender, EventArgs e)
-		{
-			OpenFileDialog dialog = new OpenFileDialog();
-			dialog.Filter = "MP3 Files (*.mp3)|*.mp3";
-			if (dialog.ShowDialog() != DialogResult.OK) return;
-			try
-			{
-				_song.Data = File.ReadAllBytes(dialog.FileName);
-				_song.DataID = null;
-				lFile.Text = dialog.FileName;
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show("Unable to load song: " + dialog.FileName, "Error");
-				return;
-			}
-		}
-
-		/// <summary>
-		/// Adds the song to the database
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void bAdd_Click(object sender, EventArgs e)
-		{
-			SongDAO dao = new SongDAO();
-			if (_song.Data == null)
-			{
-				if (_song.DataID != null)
-				{
-					try
-					{
-						_song.Data = dao.GetSongData((int)_song.DataID);
-					}
-					catch (Exception ex)
-					{
-						ErrorHandler.HandleException(ex, "Error", "Unable to load song data from the database!");
-						return;
-					}
-				}
-				else
-				{
-					MessageBox.Show("Please load an MP3 file containing the song data.", "No song data");
-					return;
-				}
-			}
-
-			_song.Length = (int)AudioPlayerManager.GetDuration(_song.Data);
-
-			_song.Id = dao.Upload(_song);
-
-			if (_song.Id == null)
-			{
-				MessageBox.Show("Upload failed due to an error.", "Error");
-				this.Close();
-			}
-			else
-			{
-				MessageBox.Show("Successfully uploaded \"" + _song.Name + "\" to the database.", "Add Song");
-				this.Close();
-			}
-		}
-
-		/// <summary>
-		/// Sets the song's name to the textbox value
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void tbName_TextChanged(object sender, EventArgs e)
-		{
-			_song.Name = tbName.Text;
 		}
 	}
 }

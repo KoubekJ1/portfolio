@@ -74,7 +74,7 @@ namespace musicplayer.forms
 		{
 			AddSongForm addSongForm = new AddSongForm();
 			addSongForm.ShowDialog();
-			if (addSongForm.Song.Id == null) return;
+			if (addSongForm.Song == null) return;
 			
 			_song = addSongForm.Song;
 			this.Close();
