@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.ComponentModel.Design.ObjectSelectorEditor;
 
 namespace musicplayer.controls.forms
 {
@@ -55,6 +56,11 @@ namespace musicplayer.controls.forms
 		{
 			this._album = null;
 			this._song = new Song("");
+
+			tbName.Text = "";
+			lFile.Text = "(No file selected)";
+			lRatingValue.Text = "0";
+			trbRating.Value = 0;
 		}
 
 		/// <summary>

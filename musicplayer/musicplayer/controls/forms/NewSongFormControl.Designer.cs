@@ -105,9 +105,9 @@
 			lRatingValue.Location = new Point(157, 79);
 			lRatingValue.Margin = new Padding(2, 0, 2, 0);
 			lRatingValue.Name = "lRatingValue";
-			lRatingValue.Size = new Size(28, 20);
+			lRatingValue.Size = new Size(17, 20);
 			lRatingValue.TabIndex = 11;
-			lRatingValue.Text = "0.0";
+			lRatingValue.Text = "0";
 			lRatingValue.Click += lRatingValue_Click;
 			// 
 			// lRatingLabel
