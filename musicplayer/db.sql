@@ -21,7 +21,7 @@ CREATE TABLE song_data (
 
 CREATE TABLE artists (
 	ar_id INT IDENTITY(1,1) PRIMARY KEY,
-	ar_name NVARCHAR(500) NOT NULL,
+	ar_name NVARCHAR(100) NOT NULL,
 	ar_img_id INT NULL FOREIGN KEY REFERENCES image_data(img_id) ON DELETE SET NULL
 );
 
@@ -29,12 +29,14 @@ CREATE TABLE albums (
 	alb_id INT IDENTITY(1,1) PRIMARY KEY,
 	alb_img_id INT NULL FOREIGN KEY REFERENCES image_data(img_id) ON DELETE SET NULL,
 	alb_ar_id INT NULL FOREIGN KEY REFERENCES artists(ar_id) ON DELETE SET NULL,
-	alb_name NVARCHAR(500) NOT NULL,
+	alb_name NVARCHAR(100) NOT NULL,
+	alb_type NVARCHAR NOT NULL CHECK(alb_type IN ('lp', 'ep', 'sp')),
+	alb_release_date DATE NOT NULL
 );
 
 CREATE TABLE genres (
 	ge_id INT IDENTITY(1,1) PRIMARY KEY,
-	ge_name NVARCHAR(500) NOT NULL,
+	ge_name NVARCHAR(100) NOT NULL,
 );
 
 CREATE TABLE albums_genres (
@@ -46,8 +48,11 @@ CREATE TABLE albums_genres (
 CREATE TABLE songs (
 	so_id INT IDENTITY(1,1) PRIMARY KEY,
 	so_sd_id INT NOT NULL FOREIGN KEY REFERENCES song_data(sd_id) ON DELETE CASCADE,
-	so_name NVARCHAR(500) NOT NULL,
+	so_ar_id INT NULL FOREIGN KEY REFERENCES artists(ar_id) ON DELETE SET NULL,
+	so_name NVARCHAR(100) NOT NULL,
 	so_length INT NOT NULL,
+	so_listening_time INT NOT NULL DEFAULT(0),
+	so_rating FLOAT NOT NULL DEFAULT(0)
 );
 
 CREATE TABLE album_songs (
