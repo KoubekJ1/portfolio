@@ -43,6 +43,8 @@
 			lArtist = new Label();
 			lArtistName = new Label();
 			bPickArtist = new Button();
+			pNewSongFormContainer = new Panel();
+			lNewSongLabel = new Label();
 			((System.ComponentModel.ISupportInitialize)pbImage).BeginInit();
 			SuspendLayout();
 			// 
@@ -178,11 +180,29 @@
 			bPickArtist.UseVisualStyleBackColor = true;
 			bPickArtist.Click += bClickArtist_Click;
 			// 
+			// pNewSongFormContainer
+			// 
+			pNewSongFormContainer.Location = new Point(481, 111);
+			pNewSongFormContainer.Name = "pNewSongFormContainer";
+			pNewSongFormContainer.Size = new Size(513, 282);
+			pNewSongFormContainer.TabIndex = 20;
+			// 
+			// lNewSongLabel
+			// 
+			lNewSongLabel.AutoSize = true;
+			lNewSongLabel.Location = new Point(481, 88);
+			lNewSongLabel.Name = "lNewSongLabel";
+			lNewSongLabel.Size = new Size(77, 20);
+			lNewSongLabel.TabIndex = 21;
+			lNewSongLabel.Text = "New Song";
+			// 
 			// AddAlbumForm
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
-			ClientSize = new Size(532, 345);
+			ClientSize = new Size(1312, 560);
+			Controls.Add(lNewSongLabel);
+			Controls.Add(pNewSongFormContainer);
 			Controls.Add(bPickArtist);
 			Controls.Add(lArtistName);
 			Controls.Add(lArtist);
@@ -221,5 +241,7 @@
 		private Label lArtist;
 		private Label lArtistName;
 		private Button bPickArtist;
+		private Panel pNewSongFormContainer;
+		private Label lNewSongLabel;
 	}
 }

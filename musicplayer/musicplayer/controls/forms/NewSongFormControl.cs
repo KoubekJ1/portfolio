@@ -18,7 +18,7 @@ namespace musicplayer.controls.forms
 
 		private Song _song;
 
-		public Action<Song>? _onCreate;
+		public Action<Song> _onCreate = delegate { };
 
 		public Song Song { get => _song; }
 
@@ -29,7 +29,7 @@ namespace musicplayer.controls.forms
 		{
 			InitializeComponent();
 			_song = new Song("");
-			_onCreate = onCreate;
+			_onCreate += onCreate;
 		}
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace musicplayer.controls.forms
 		{
 			InitializeComponent();
 			_song = song;
-			_onCreate = onCreate;
+			_onCreate += onCreate;
 
 			this.bAdd.Text = "Save";
 
@@ -119,8 +119,7 @@ namespace musicplayer.controls.forms
 			}
 			else
 			{
-				MessageBox.Show("Successfully uploaded \"" + _song.Name + "\" to the database.", "Add Song");
-				if (_onCreate != null) _onCreate(_song);
+				_onCreate.Invoke(_song);
 			}
 		}
 

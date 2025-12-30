@@ -1,4 +1,5 @@
-﻿using musicplayer.dao;
+﻿using musicplayer.controls.forms;
+using musicplayer.dao;
 using musicplayer.dataobjects;
 using musicplayer.forms;
 using System;
@@ -30,6 +31,8 @@ namespace musicplayer
 			InitializeComponent();
 			this.FormBorderStyle = FormBorderStyle.FixedSingle;
 			_album = new Album("");
+
+			AddNewSongForm();
 		}
 
 		/// <summary>
@@ -51,6 +54,19 @@ namespace musicplayer
 			{
 				lbSongs.Items.Add(song);
 			}
+
+			AddNewSongForm();
+		}
+
+		private void AddNewSongForm()
+		{
+			NewSongFormControl newSongFormControl = null!;
+			newSongFormControl = new NewSongFormControl((song) =>
+			{
+				lbSongs.Items.Add(song);
+				newSongFormControl.Clear();
+			});
+			this.pNewSongFormContainer.Controls.Add(newSongFormControl);
 		}
 
 		/// <summary>

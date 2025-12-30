@@ -34,6 +34,8 @@ namespace musicplayer.forms
 			this.FormBorderStyle = FormBorderStyle.FixedSingle;
 			_control = new NewSongFormControl((song) => {
 				Song = song;
+
+				MessageBox.Show("Successfully uploaded \"" + song.Name + "\" to the database.", "Add Song");
 				if (_onCreate != null) { _onCreate(song); }
 			});
 			_control.Dock = DockStyle.Fill;
@@ -51,6 +53,7 @@ namespace musicplayer.forms
 			this.FormBorderStyle = FormBorderStyle.FixedSingle;
 			_control = new NewSongFormControl(song, (song) => {
 				Song = song;
+				MessageBox.Show("Successfully update \"" + song.Name + "\" in the database.", "Update Song");
 				if (_onCreate != null) { _onCreate(song); }
 			});
 			_control.Dock = DockStyle.Fill;
