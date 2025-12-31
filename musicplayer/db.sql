@@ -22,7 +22,8 @@ CREATE TABLE song_data (
 CREATE TABLE artists (
 	ar_id INT IDENTITY(1,1) PRIMARY KEY,
 	ar_name NVARCHAR(100) NOT NULL,
-	ar_img_id INT NULL FOREIGN KEY REFERENCES image_data(img_id) ON DELETE SET NULL
+	ar_img_id INT NULL FOREIGN KEY REFERENCES image_data(img_id) ON DELETE SET NULL,
+	ar_listening_time INT NOT NULL DEFAULT(0) -- Denormalized attributed calculated based on a trigger
 );
 
 CREATE TABLE albums (
@@ -61,3 +62,5 @@ CREATE TABLE album_songs (
 	as_so_id INT NOT NULL FOREIGN KEY REFERENCES songs(so_id) ON DELETE CASCADE,
 	as_order INT NOT NULL
 );
+
+CREATE INDEX idx_autofill ON artists (ar_name, ar_listening_time DESC)
