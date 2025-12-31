@@ -15,6 +15,8 @@ namespace musicplayer.controls.forms
 	public partial class NewArtistFormControl : UserControl
 	{
 		private Artist _artist;
+		private bool _matched = false;
+		private IEnumerable<string> ;
 
 		public Artist Artist { get => _artist; }
 
@@ -23,12 +25,20 @@ namespace musicplayer.controls.forms
 		/// <summary>
 		/// Constructs a new AddArtistForm
 		/// </summary>
-		public NewArtistFormControl()
+		public NewArtistFormControl(bool isAutofill = false)
 		{
 			InitializeComponent();
 
 			_artist = new Artist("");
 			OnCreate = delegate { };
+
+			if (isAutofill)
+			{
+				bAdd.Dispose();
+				tbName.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+				tbName.AutoCompleteSource = AutoCompleteSource.CustomSource;
+				tbName.AutoCompleteCustomSource = 
+			}
 		}
 
 		/// <summary>

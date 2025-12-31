@@ -100,7 +100,7 @@
 			Controls.Add(tbName);
 			Controls.Add(labelName);
 			Name = "NewArtistFormControl";
-			Size = new Size(710, 538);
+			Size = new Size(252, 299);
 			((System.ComponentModel.ISupportInitialize)pbImage).EndInit();
 			ResumeLayout(false);
 			PerformLayout();

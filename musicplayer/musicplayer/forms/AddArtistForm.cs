@@ -18,6 +18,8 @@ namespace musicplayer
 	/// </summary>
 	public partial class AddArtistForm : Form
 	{
+		public Artist? Artist { get; private set; }
+
 		/// <summary>
 		/// Constructs a new AddArtistForm
 		/// </summary>
@@ -29,6 +31,7 @@ namespace musicplayer
 			NewArtistFormControl control = new NewArtistFormControl();
 			control.OnCreate += (artist) =>
 			{
+				Artist = artist;
 				MessageBox.Show("Artist " + artist.Name + " added successfully", artist.Name);
 				this.Close();
 			};
@@ -44,11 +47,13 @@ namespace musicplayer
 		{
 			InitializeComponent();
 			this.FormBorderStyle = FormBorderStyle.FixedSingle;
+			Artist = artist;
 
 			NewArtistFormControl control = new NewArtistFormControl();
-			control.OnCreate += (artist) =>
+			control.OnCreate += (updatedArtist) =>
 			{
-				MessageBox.Show("Artist " + artist.Name + " updated successfully", artist.Name);
+				Artist = updatedArtist;
+				MessageBox.Show("Artist " + updatedArtist.Name + " updated successfully", updatedArtist.Name);
 				this.Close();
 			};
 			control.Dock = DockStyle.Fill;

@@ -33,6 +33,10 @@ namespace musicplayer
 			_album = new Album("");
 
 			AddNewSongForm();
+
+			var artistControl = new NewArtistFormControl(true);
+			artistControl.Dock = DockStyle.Fill;
+			pArtistContainer.Controls.Add(artistControl);
 		}
 
 		/// <summary>

@@ -45,6 +45,8 @@
 			bPickArtist = new Button();
 			pNewSongFormContainer = new Panel();
 			lNewSongLabel = new Label();
+			pArtistContainer = new Panel();
+			lArtistLabel = new Label();
 			((System.ComponentModel.ISupportInitialize)pbImage).BeginInit();
 			SuspendLayout();
 			// 
@@ -196,11 +198,29 @@
 			lNewSongLabel.TabIndex = 21;
 			lNewSongLabel.Text = "New Song";
 			// 
+			// pArtistContainer
+			// 
+			pArtistContainer.Location = new Point(1113, 111);
+			pArtistContainer.Name = "pArtistContainer";
+			pArtistContainer.Size = new Size(511, 282);
+			pArtistContainer.TabIndex = 22;
+			// 
+			// lArtistLabel
+			// 
+			lArtistLabel.AutoSize = true;
+			lArtistLabel.Location = new Point(1113, 88);
+			lArtistLabel.Name = "lArtistLabel";
+			lArtistLabel.Size = new Size(44, 20);
+			lArtistLabel.TabIndex = 23;
+			lArtistLabel.Text = "Artist";
+			// 
 			// AddAlbumForm
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
-			ClientSize = new Size(1312, 560);
+			ClientSize = new Size(1720, 560);
+			Controls.Add(lArtistLabel);
+			Controls.Add(pArtistContainer);
 			Controls.Add(lNewSongLabel);
 			Controls.Add(pNewSongFormContainer);
 			Controls.Add(bPickArtist);
@@ -243,5 +263,7 @@
 		private Button bPickArtist;
 		private Panel pNewSongFormContainer;
 		private Label lNewSongLabel;
+		private Panel pArtistContainer;
+		private Label lArtistLabel;
 	}
 }
