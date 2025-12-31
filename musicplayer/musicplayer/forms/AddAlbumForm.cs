@@ -21,6 +21,8 @@ namespace musicplayer
 	{
 		private Album _album;
 
+		private NewArtistFormControl _artistControl;
+
 		public Album? Album { get => _album; }
 
 		/// <summary>
@@ -34,9 +36,11 @@ namespace musicplayer
 
 			AddNewSongForm();
 
-			var artistControl = new NewArtistFormControl(true);
-			artistControl.Dock = DockStyle.Fill;
-			pArtistContainer.Controls.Add(artistControl);
+			this.KeyPreview = true;
+
+			_artistControl = new NewArtistFormControl(true);
+			_artistControl.Dock = DockStyle.Fill;
+			pArtistContainer.Controls.Add(_artistControl);
 		}
 
 		/// <summary>
@@ -203,6 +207,11 @@ namespace musicplayer
 		private void tbName_TextChanged(object sender, EventArgs e)
 		{
 			_album.Name = tbName.Text;
+		}
+
+		private void FormKeyDown(object sender, KeyEventArgs e)
+		{
+
 		}
 	}
 }

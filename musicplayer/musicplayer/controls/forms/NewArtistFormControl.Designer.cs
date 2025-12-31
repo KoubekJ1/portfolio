@@ -34,6 +34,7 @@
 			pbImage = new PictureBox();
 			tbName = new TextBox();
 			labelName = new Label();
+			lbArtists = new ListBox();
 			((System.ComponentModel.ISupportInitialize)pbImage).BeginInit();
 			SuspendLayout();
 			// 
@@ -76,7 +77,7 @@
 			tbName.Location = new Point(0, 22);
 			tbName.Margin = new Padding(2);
 			tbName.Name = "tbName";
-			tbName.Size = new Size(248, 27);
+			tbName.Size = new Size(315, 27);
 			tbName.TabIndex = 6;
 			tbName.TextChanged += tbName_TextChanged;
 			// 
@@ -90,17 +91,27 @@
 			labelName.TabIndex = 5;
 			labelName.Text = "Name";
 			// 
+			// lbArtists
+			// 
+			lbArtists.FormattingEnabled = true;
+			lbArtists.Location = new Point(165, 56);
+			lbArtists.Name = "lbArtists";
+			lbArtists.Size = new Size(150, 164);
+			lbArtists.TabIndex = 10;
+			lbArtists.SelectedIndexChanged += lbArtists_SelectedIndexChanged;
+			// 
 			// NewArtistFormControl
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
+			Controls.Add(lbArtists);
 			Controls.Add(bAdd);
 			Controls.Add(bChangeImage);
 			Controls.Add(pbImage);
 			Controls.Add(tbName);
 			Controls.Add(labelName);
 			Name = "NewArtistFormControl";
-			Size = new Size(252, 299);
+			Size = new Size(398, 299);
 			((System.ComponentModel.ISupportInitialize)pbImage).EndInit();
 			ResumeLayout(false);
 			PerformLayout();
@@ -113,5 +124,6 @@
 		private PictureBox pbImage;
 		private TextBox tbName;
 		private Label labelName;
+		private ListBox lbArtists;
 	}
 }

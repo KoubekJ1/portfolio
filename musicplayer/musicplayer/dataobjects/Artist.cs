@@ -15,6 +15,7 @@ namespace musicplayer.dataobjects
     {
         private int? _id;
         private string _name;
+        private int? _imageID;
         private IconImage? _image;
         
         private List<Album> _albums;
@@ -44,6 +45,7 @@ namespace musicplayer.dataobjects
         public int? Id { get => _id; set => _id = value; }
         public string Name { get => _name; set => _name = value; }
         public IconImage? Image { get => _image; set => _image = value; }
+		public int? ImageID { get => _imageID; set => _imageID = value; }
 		public List<Album> Albums { get => _albums; }
 
 		public int? GetID()

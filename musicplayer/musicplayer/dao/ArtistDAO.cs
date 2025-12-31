@@ -11,7 +11,7 @@ namespace musicplayer.dao
     /// <summary>
     /// DAO implementation that retrieves Artist objects from an SQL Server database handled by the DatabaseConnection singleton instance
     /// </summary>
-    public class ArtistDAO : IDAO<Artist>
+    public class ArtistDAO : IArtistDAO
     {
         /// <summary>
         /// Retrieves all artists from the database
@@ -157,5 +157,31 @@ namespace musicplayer.dao
 
 			connection.Close();
         }
-    }
+
+		public IEnumerable<Artist> GetByName(string name, int count = 10)
+		{
+			LinkedList<Artist> artists = new LinkedList<Artist>();
+
+			SqlConnection connection = DatabaseConnection.GetConnection();
+			connection.Open();
+
+			SqlCommand command = new SqlCommand("SELECT TOP (@count) ar_id, ar_name, ar_img_id FROM artists WHERE ar_name LIKE @name + '%' ORDER BY ar_listening_time DESC", connection);
+            command.Parameters.AddWithValue("name", name);
+            command.Parameters.AddWithValue("count", count);
+			SqlDataReader reader = command.ExecuteReader();
+
+			Artist artist;
+			while (reader.Read())
+			{
+				artist = new Artist(reader.GetString(1));
+				artist.Id = reader.GetInt32(0);
+				if (!reader.IsDBNull(2)) artist.ImageID = reader.GetInt32(2);
+				artists.AddLast(artist);
+			}
+
+			connection.Close();
+
+			return artists;
+		}
+	}
 }

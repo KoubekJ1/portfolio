@@ -9,14 +9,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace musicplayer.controls.forms
 {
 	public partial class NewArtistFormControl : UserControl
 	{
 		private Artist _artist;
-		private bool _matched = false;
-		private IEnumerable<string> ;
+		private bool _isAutofill = false;
+		private bool _matched = true;
+		private Artist? _matchedArtist = null;
+		private IEnumerable<Artist> _potentionalMatches = [];
 
 		public Artist Artist { get => _artist; }
 
@@ -32,12 +35,16 @@ namespace musicplayer.controls.forms
 			_artist = new Artist("");
 			OnCreate = delegate { };
 
+			_isAutofill = isAutofill;
+
 			if (isAutofill)
 			{
 				bAdd.Dispose();
-				tbName.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-				tbName.AutoCompleteSource = AutoCompleteSource.CustomSource;
-				tbName.AutoCompleteCustomSource = 
+
+			}
+			else
+			{
+				lbArtists.Dispose();
 			}
 		}
 
@@ -103,7 +110,53 @@ namespace musicplayer.controls.forms
 		/// <param name="e"></param>
 		private void tbName_TextChanged(object sender, EventArgs e)
 		{
+			if (_matched)
+			{
+				_matched = false;
+				_artist = new Artist(tbName.Text);
+				pbImage.Image = null;
+			}
 			_artist.Name = tbName.Text;
+			bChangeImage.Enabled = true;
+			if (_isAutofill)
+			{
+				try
+				{
+					var dao = new ArtistDAO();
+					_potentionalMatches = dao.GetByName(tbName.Text, 10);
+					lbArtists.Items.Clear();
+					foreach (var match in _potentionalMatches)
+					{
+						lbArtists.Items.Add(match);
+					}
+				}
+				catch (Exception) { }
+			}
+		}
+
+		private void lbArtists_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			bChangeImage.Enabled = true;
+			_matched = false;
+			_artist = new Artist("");
+			pbImage.Image = null;
+			if (lbArtists.SelectedItem != null) {
+				_artist = (Artist)lbArtists.SelectedItem;
+				bChangeImage.Enabled = false;
+				tbName.TextChanged -= tbName_TextChanged;
+				tbName.Text = _artist.Name;
+				tbName.TextChanged += tbName_TextChanged;
+				_matched = true;
+				if (_artist.ImageID == null) return;
+				try
+				{
+					var dao = new IconImageDAO();
+					var iconImage = dao.GetByID((int)_artist.ImageID);
+					if (iconImage == null) return;
+					pbImage.Image = IconImage.ResizeImage(iconImage.Image, pbImage.Width, pbImage.Height);
+					pbImage.SizeMode = PictureBoxSizeMode.StretchImage;
+				} catch (Exception) { }
+			}
 		}
 	}
 }
