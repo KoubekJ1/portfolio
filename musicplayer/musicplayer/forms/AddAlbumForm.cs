@@ -127,6 +127,7 @@ namespace musicplayer
 			{
 				Song? song = lbItem as Song;
 				if (song == null) continue;
+				song.Artist = _artistControl.Artist;
 				_album.Songs.Add(song);
 			}
 

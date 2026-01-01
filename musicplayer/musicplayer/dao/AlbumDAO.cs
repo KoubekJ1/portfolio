@@ -208,10 +208,7 @@ namespace musicplayer.dao
 
             for (int i = 0; i < data.Songs.Count; i++)
             {
-                if (data.Songs[i].Id == null)
-                {
-                    new SongDAO().Upload(data.Songs[i]);
-                }
+                new SongDAO().Upload(data.Songs[i]);
                 CreateSongConnectionRow((int)data.Id, (int)data.Songs[i].Id, i);
             }
 
@@ -248,10 +245,7 @@ namespace musicplayer.dao
 
 			for (int i = 0; i < data.Songs.Count; i++)
 			{
-				if (data.Songs[i].Id == null)
-				{
-					new SongDAO().Upload(data.Songs[i]);
-				}
+				new SongDAO().Upload(data.Songs[i]);
 				CreateSongConnectionRow((int)data.Id, (int)data.Songs[i].Id, i);
 			}
 		}

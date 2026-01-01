@@ -49,7 +49,7 @@ namespace musicplayer
 			this.FormBorderStyle = FormBorderStyle.FixedSingle;
 			Artist = artist;
 
-			NewArtistFormControl control = new NewArtistFormControl();
+			NewArtistFormControl control = new NewArtistFormControl(artist);
 			control.OnCreate += (updatedArtist) =>
 			{
 				Artist = updatedArtist;

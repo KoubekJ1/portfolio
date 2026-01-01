@@ -20,6 +20,7 @@ namespace musicplayer.dataobjects
 
         private Album? _album;
         private int? _dataID;
+        private Artist? _artist;
 
         /// <summary>
         /// Constructs a new song with the given name
@@ -61,5 +62,6 @@ namespace musicplayer.dataobjects
 		public int? DataID { get => _dataID; set => _dataID = value; }
 		public Album? Album { get => _album; set => _album = value; }
         public double Rating { get => _rating; set => _rating = value; }
+		public Artist? Artist { get => _artist; set => _artist = value; }
 	}
 }

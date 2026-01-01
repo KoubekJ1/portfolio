@@ -155,12 +155,13 @@ namespace musicplayer.dao
             SqlConnection connection = DatabaseConnection.GetConnection();
             connection.Open();
 
-            SqlCommand command = new SqlCommand("INSERT INTO songs (so_sd_id, so_name, so_length, so_rating) OUTPUT INSERTED.so_id VALUES (@data_id, @name, @length, @rating)", connection);
+            SqlCommand command = new SqlCommand("INSERT INTO songs (so_sd_id, so_name, so_length, so_rating, so_ar_id) OUTPUT INSERTED.so_id VALUES (@data_id, @name, @length, @rating, @artistID)", connection);
             command.Parameters.AddWithValue("data_id", dataID);
             //command.Parameters.AddWithValue("alb_id", song.AlbumID != null ? song.AlbumID : DBNull.Value);
             command.Parameters.AddWithValue("name", song.Name);
             command.Parameters.AddWithValue("length", song.Length);
             command.Parameters.AddWithValue("rating", song.Rating);
+			command.Parameters.AddWithValue("artistID", song.Artist?.Id != null ? song.Artist.Id : DBNull.Value);
 
 			int? id = (int?)command.ExecuteScalar();
             song.Id = id;
@@ -191,12 +192,13 @@ namespace musicplayer.dao
 			SqlConnection connection = DatabaseConnection.GetConnection();
             connection.Open();            
 
-            SqlCommand command = new SqlCommand("UPDATE songs SET so_sd_id = @sd_id, so_name = @name, so_length = @length, so_rating = @rating WHERE so_id = @id", connection);
+            SqlCommand command = new SqlCommand("UPDATE songs SET so_sd_id = @sd_id, so_name = @name, so_length = @length, so_rating = @rating, so_ar_id = @artistID WHERE so_id = @id", connection);
             command.Parameters.AddWithValue("id", song.Id);
             command.Parameters.AddWithValue("sd_id", song.DataID);
 			command.Parameters.AddWithValue("name", song.Name);
             command.Parameters.AddWithValue("length", song.Length);
 			command.Parameters.AddWithValue("rating", song.Rating);
+			command.Parameters.AddWithValue("artistID", song.Artist?.Id != null ? song.Artist.Id : DBNull.Value);
 
 			command.ExecuteNonQuery();
 

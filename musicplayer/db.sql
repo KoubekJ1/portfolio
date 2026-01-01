@@ -63,4 +63,4 @@ CREATE TABLE album_songs (
 	as_order INT NOT NULL
 );
 
-CREATE INDEX idx_autofill ON artists (ar_name, ar_listening_time DESC)
+CREATE INDEX idx_autofill ON artists (ar_name, ar_listening_time DESC);
