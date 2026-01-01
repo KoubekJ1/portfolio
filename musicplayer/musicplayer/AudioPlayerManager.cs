@@ -85,7 +85,7 @@ namespace musicplayer
 			_songHistory.AddFirst(song);
 
 			PlayerControl.GetPlayerControl().SongName = song.Name;
-			if (song.Album?.Artist != null) PlayerControl.GetPlayerControl().ArtistName = song.Album.Artist.Name;
+			if (song.Artist != null) PlayerControl.GetPlayerControl().ArtistName = song.Artist.Name;
 			else PlayerControl.GetPlayerControl().ArtistName = "Unknown artist";
 			OnStartedPlaying.Invoke(song.Id);
 			_currentSong = song;

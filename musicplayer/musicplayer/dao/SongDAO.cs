@@ -27,9 +27,11 @@ namespace musicplayer.dao
             SqlConnection connection = DatabaseConnection.GetConnection();
             connection.Open();
 
-            SqlCommand command = new SqlCommand("SELECT so_id, so_sd_id, so_name, so_length, so_rating FROM songs", connection);
+            SqlCommand command = new SqlCommand("SELECT so_id, so_sd_id, so_name, so_length, so_rating, so_ar_id FROM songs", connection);
             
             SqlDataReader reader = command.ExecuteReader();
+
+            LinkedList<int?> artistIDs = new LinkedList<int?>();
 
             Song song;
             while (reader.Read())
@@ -39,12 +41,32 @@ namespace musicplayer.dao
                 song.Length = reader.GetInt32(3);
 				song.DataID = reader[1] != DBNull.Value ? reader.GetInt32(1) : null;
 				song.Rating = Math.Round(reader.GetDouble(4), 1);
+				artistIDs.AddLast(reader[5] != DBNull.Value ? reader.GetInt32(5) : null);
 				songs.AddLast(song);
 			}
 
             connection.Close();
 
-            return songs;
+			LinkedListNode<int?> currentArtistIdNode = artistIDs.First;
+
+            var artistDao = new ArtistDAO();
+			foreach (Song s in songs)
+			{
+				// Check if there is a valid Artist ID for this song
+				if (currentArtistIdNode != null && currentArtistIdNode.Value.HasValue)
+				{
+					// CALL THE DAO: Assuming a method like GetArtist or GetById exists
+					s.Artist = artistDao.GetByID(currentArtistIdNode.Value.Value);
+				}
+
+				// Move to the next artist ID in the parallel list
+				if (currentArtistIdNode != null)
+				{
+					currentArtistIdNode = currentArtistIdNode.Next;
+				}
+			}
+
+			return songs;
         }
 
         /// <summary>
@@ -57,7 +79,7 @@ namespace musicplayer.dao
             SqlConnection connection = DatabaseConnection.GetConnection();
             connection.Open();
 
-            SqlCommand command = new SqlCommand("SELECT so_id, so_sd_id, so_name, so_length, so_rating FROM songs WHERE so_id = @id", connection);
+            SqlCommand command = new SqlCommand("SELECT so_id, so_sd_id, so_name, so_length, so_rating, so_ar_id FROM songs WHERE so_id = @id", connection);
             command.Parameters.AddWithValue("id", id);
 
             SqlDataReader reader = command.ExecuteReader();
@@ -67,8 +89,11 @@ namespace musicplayer.dao
 			song.Length = reader.GetInt32(3);
 			song.DataID = reader[1] != DBNull.Value ? reader.GetInt32(1) : null;
             song.Rating = Math.Round(reader.GetDouble(4), 1);
+			int? artistID = reader[5] != DBNull.Value ? reader.GetInt32(5) : null;
 
 			connection.Close();
+
+            if (artistID != null) song.Artist = new ArtistDAO().GetByID((int)artistID);
 
             //song.Data = GetSongData(dataID);
 
