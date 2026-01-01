@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Configuration;
 
 namespace musicplayer
@@ -10,6 +10,7 @@ namespace musicplayer
 	public static class DatabaseConnection
 	{
 		private static SqlConnection connection;
+		private static SqlTransaction? transaction;
 
 		/// <summary>
 		/// Returns the SqlConnection instance used by the program
@@ -20,6 +21,30 @@ namespace musicplayer
 			if (connection == null) initializeConnection();
 			//if (connection.State == System.Data.ConnectionState.Open) connection.Close();
 			return connection;
+		}
+
+		public static SqlTransaction? GetTransaction()
+		{
+			return transaction;
+		}
+
+		public static void CreateTransaction()
+		{
+			if (connection == null) initializeConnection();
+			if (connection.State != System.Data.ConnectionState.Open) throw new InvalidOperationException("Unable to create transaction when connection is closed!");
+			transaction = connection.BeginTransaction();
+		}
+
+		public static void CommitTransaction()
+		{
+			transaction?.Commit();
+			transaction = null;
+		}
+
+		public static void RollbackTransaction()
+		{
+			transaction?.Rollback();
+			transaction = null;
 		}
 
 		/// <summary>

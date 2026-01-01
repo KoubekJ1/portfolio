@@ -35,6 +35,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("SELECT img_data FROM image_data WHERE img_id = @id", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
             command.Parameters.AddWithValue("id", id);
 
             SqlDataReader reader = command.ExecuteReader();
@@ -81,6 +82,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("INSERT INTO image_data (img_data) OUTPUT INSERTED.img_id VALUES (@data)", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
             MemoryStream stream = new MemoryStream();
             data.Image.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
             command.Parameters.AddWithValue("data", stream.ToArray());

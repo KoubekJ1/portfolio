@@ -29,6 +29,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("SELECT alb_id, alb_name, alb_img_id, alb_ar_id, alb_release_date, alb_type FROM albums", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
 
             SqlDataReader reader = command.ExecuteReader();
 
@@ -84,6 +85,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("SELECT alb_id, alb_name, alb_img_id, alb_release_date, alb_type FROM albums WHERE alb_id = @id", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
             command.Parameters.AddWithValue("id", id);
 
             SqlDataReader reader = command.ExecuteReader();
@@ -129,6 +131,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("SELECT alb_id, alb_img_id, alb_name, alb_release_date, alb_type FROM albums WHERE alb_ar_id = @artist_id", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
             command.Parameters.AddWithValue("artist_id", artistID);
 
             SqlDataReader reader = command.ExecuteReader();
@@ -175,6 +178,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("DELETE FROM albums WHERE alb_id = @id", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
 			command.Parameters.AddWithValue("@id", id);
 			command.ExecuteNonQuery();
 
@@ -207,6 +211,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
 			SqlCommand command = new SqlCommand("INSERT INTO albums (alb_img_id, alb_ar_id, alb_name, alb_release_date, alb_type) OUTPUT INSERTED.alb_id VALUES (@img_id, @ar_id, @name, @release_date, @type)", connection);
+			command.Transaction = DatabaseConnection.GetTransaction();
 			command.Parameters.AddWithValue("img_id", data.Image != null && data.Image.Id != null ? data.Image.Id : DBNull.Value);
 			command.Parameters.AddWithValue("ar_id", data.Artist != null && data.Artist.Id != null ? data.Artist.Id : DBNull.Value);
 			command.Parameters.AddWithValue("name", data.Name);
@@ -244,6 +249,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
 			SqlCommand command = new SqlCommand("UPDATE albums SET alb_img_id = @img_id, alb_ar_id = @ar_id, alb_name = @name, alb_release_date = @release_date, alb_type = @type WHERE alb_id = @id", connection);
+			command.Transaction = DatabaseConnection.GetTransaction();
 			command.Parameters.AddWithValue("id", data.Id);
 			command.Parameters.AddWithValue("img_id", data.Image != null && data.Image.Id != null ? data.Image.Id : DBNull.Value);
 			command.Parameters.AddWithValue("ar_id", data.Artist != null && data.Artist.Id != null ? data.Artist.Id : DBNull.Value);
@@ -275,6 +281,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("INSERT INTO album_songs (as_alb_id, as_so_id, as_order) VALUES (@albumID, @songID, @order)", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
             command.Parameters.AddWithValue("albumID", albumID);
             command.Parameters.AddWithValue("songID", songID);
             command.Parameters.AddWithValue("order", order);
@@ -294,6 +301,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("DELETE FROM album_songs WHERE as_alb_id = @id", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
             command.Parameters.AddWithValue("id", albumID);
 
             command.ExecuteNonQuery();

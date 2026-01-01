@@ -29,6 +29,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("SELECT so_id, so_sd_id, so_name, so_length, so_rating, so_ar_id FROM songs", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
             
             SqlDataReader reader = command.ExecuteReader();
 
@@ -83,6 +84,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("SELECT so_id, so_sd_id, so_name, so_length, so_rating, so_ar_id FROM songs WHERE so_id = @id", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
             command.Parameters.AddWithValue("id", id);
 
             SqlDataReader reader = command.ExecuteReader();
@@ -124,6 +126,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("SELECT so_id FROM songs INNER JOIN album_songs ON as_so_id = so_id WHERE as_alb_id = @id ORDER BY as_order ASC", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
             command.Parameters.AddWithValue("id", albumID);
 
             SqlDataReader reader = command.ExecuteReader();
@@ -160,6 +163,7 @@ namespace musicplayer.dao
 
 
 			SqlCommand command1 = new SqlCommand("DELETE FROM song_data WHERE sd_id IN (SELECT so_sd_id FROM songs WHERE so_id = @id)", connection);
+			command1.Transaction = DatabaseConnection.GetTransaction();
 			command1.Parameters.AddWithValue("id", id);
 			command1.ExecuteNonQuery();
 
@@ -195,6 +199,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("INSERT INTO songs (so_sd_id, so_name, so_length, so_rating, so_ar_id) OUTPUT INSERTED.so_id VALUES (@data_id, @name, @length, @rating, @artistID)", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
             command.Parameters.AddWithValue("data_id", dataID);
             //command.Parameters.AddWithValue("alb_id", song.AlbumID != null ? song.AlbumID : DBNull.Value);
             command.Parameters.AddWithValue("name", song.Name);
@@ -233,6 +238,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("UPDATE songs SET so_sd_id = @sd_id, so_name = @name, so_length = @length, so_rating = @rating, so_ar_id = @artistID WHERE so_id = @id", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
             command.Parameters.AddWithValue("id", song.Id);
             command.Parameters.AddWithValue("sd_id", song.DataID);
 			command.Parameters.AddWithValue("name", song.Name);
@@ -256,6 +262,7 @@ namespace musicplayer.dao
             bool wasOpen = connection.State == System.Data.ConnectionState.Open;
             if (!wasOpen) connection.Open();
             SqlCommand cmd = new SqlCommand("SELECT sd_data FROM song_data WHERE sd_id = @id", connection);
+            cmd.Transaction = DatabaseConnection.GetTransaction();
             cmd.Parameters.AddWithValue("id", id);
 
             SqlDataReader reader = cmd.ExecuteReader();
@@ -289,6 +296,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("INSERT INTO song_data (sd_data) OUTPUT INSERTED.sd_id VALUES (@data)", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
             command.Parameters.AddWithValue("data", data);
             int? id = (int?)command.ExecuteScalar();
 
@@ -303,6 +311,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
 			SqlCommand command = new SqlCommand("UPDATE songs SET so_listening_time = so_listening_time + @time WHERE so_id = @id", connection);
+			command.Transaction = DatabaseConnection.GetTransaction();
 			command.Parameters.AddWithValue("time", time);
 			command.Parameters.AddWithValue("id", songID);
 			command.ExecuteNonQuery();

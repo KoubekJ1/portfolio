@@ -27,6 +27,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("SELECT ar_id, ar_name, ar_img_id FROM artists", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
             SqlDataReader reader = command.ExecuteReader();
 
             Artist artist;
@@ -64,6 +65,7 @@ namespace musicplayer.dao
 
             //SqlCommand command = new SqlCommand("SELECT ar_id, ar_name, ar_img_id FROM artists", connection);
             SqlCommand command = new SqlCommand("SELECT ar_id, ar_name, ar_img_id FROM artists WHERE ar_id = @id", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
             command.Parameters.AddWithValue("id", id);
 
             SqlDataReader reader = command.ExecuteReader();
@@ -102,6 +104,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("DELETE FROM artists WHERE ar_id = @id", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
             command.Parameters.AddWithValue("id", id);
             command.ExecuteNonQuery();
 
@@ -131,6 +134,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("INSERT INTO artists (ar_name, ar_img_id) OUTPUT INSERTED.ar_id VALUES (@name, @img_id)", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
             command.Parameters.AddWithValue("name", artist.Name);
             command.Parameters.AddWithValue("img_id", artist.Image != null ? artist.Image.Id : DBNull.Value);
 
@@ -161,6 +165,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("UPDATE artists SET ar_name = @name, ar_img_id = @img_id WHERE ar_id = @id", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
             command.Parameters.AddWithValue("id", artist.Id);
             command.Parameters.AddWithValue("name", artist.Name);
             command.Parameters.AddWithValue("img_id", artist.Image?.Id != null ? artist.Image.Id : DBNull.Value);
@@ -179,6 +184,7 @@ namespace musicplayer.dao
             if (!wasOpen) connection.Open();
 
 			SqlCommand command = new SqlCommand("SELECT TOP (@count) ar_id, ar_name, ar_img_id FROM artists WHERE ar_name LIKE @name + '%' ORDER BY ar_listening_time DESC", connection);
+			command.Transaction = DatabaseConnection.GetTransaction();
             command.Parameters.AddWithValue("name", name);
             command.Parameters.AddWithValue("count", count);
 			SqlDataReader reader = command.ExecuteReader();
