@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,21 +15,21 @@ namespace musicplayer.report
 		public long TotalListeningTime { get; set; }
 
 		public string MostPopularArtist = "<unknown>";
-		public int MostPopularArtistListeningTime { get; set; }
+		public long MostPopularArtistListeningTime { get; set; }
 
 		public string LeastPopularArtist = "<unknown>";
-		public int LeastPopularArtistListeningTime { get; set; }
+		public long LeastPopularArtistListeningTime { get; set; }
 
 		public string MostPopularAlbum = "<unknown>";
-		public int MostPopularAlbumListeningTime { get; set; }
+		public long MostPopularAlbumListeningTime { get; set; }
 
 		public string LeastPopularAlbum = "<unknown>";
-		public int LeastPopularAlbumListeningTime { get; set; }
+		public long LeastPopularAlbumListeningTime { get; set; }
 
 		public string MostPopularSong = "<unknown>";
-		public int MostPopularSongListeningTime { get; set; }
+		public long MostPopularSongListeningTime { get; set; }
 
 		public string LeastPopularSong = "<unknown>";
-		public int LeastPopularSongListeningTime { get; set; }
+		public long LeastPopularSongListeningTime { get; set; }
 	}
 }

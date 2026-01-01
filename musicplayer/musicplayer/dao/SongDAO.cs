@@ -333,5 +333,69 @@ namespace musicplayer.dao
 
             return count;
         }
+
+        public long GetTotalListeningTime()
+        {
+            SqlConnection connection = DatabaseConnection.GetConnection();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
+
+            SqlCommand command = new SqlCommand("SELECT SUM(so_listening_time) FROM songs", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
+            object result = command.ExecuteScalar();
+            long time = 0;
+            if (result != DBNull.Value)
+            {
+                time = (long)result;
+            }
+
+            if (!wasOpen) connection.Close();
+
+            return time;
+        }
+
+        public (string, long)? GetMostPopularSong()
+        {
+            SqlConnection connection = DatabaseConnection.GetConnection();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
+
+            SqlCommand command = new SqlCommand("SELECT so_name, so_listening_time FROM most_popular_song", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
+            SqlDataReader reader = command.ExecuteReader();
+
+            (string, long)? result = null;
+            if (reader.Read())
+            {
+                result = (reader.GetString(0), reader.GetInt64(1));
+            }
+            reader.Close();
+
+            if (!wasOpen) connection.Close();
+
+            return result;
+        }
+
+        public (string, long)? GetLeastPopularSong()
+        {
+            SqlConnection connection = DatabaseConnection.GetConnection();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
+
+            SqlCommand command = new SqlCommand("SELECT so_name, so_listening_time FROM least_popular_song", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
+            SqlDataReader reader = command.ExecuteReader();
+
+            (string, long)? result = null;
+            if (reader.Read())
+            {
+                result = (reader.GetString(0), reader.GetInt64(1));
+            }
+            reader.Close();
+
+            if (!wasOpen) connection.Close();
+
+            return result;
+        }
 	}
 }

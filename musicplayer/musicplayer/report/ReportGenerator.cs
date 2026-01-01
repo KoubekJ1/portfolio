@@ -84,7 +84,7 @@ namespace musicplayer.report
 			return li;
 		}
 
-		private HtmlNode CreateRow(HtmlDocument doc, string category, string name, int value)
+		private HtmlNode CreateRow(HtmlDocument doc, string category, string name, long value)
 		{
 			var tr = doc.CreateElement("tr");
 

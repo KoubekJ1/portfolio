@@ -322,5 +322,49 @@ namespace musicplayer.dao
 
             return count;
         }
+
+        public (string, string, long)? GetMostPopularAlbum()
+        {
+            SqlConnection connection = DatabaseConnection.GetConnection();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
+
+            SqlCommand command = new SqlCommand("SELECT alb_name, ar_name, album_listening_time FROM most_popular_album", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
+            SqlDataReader reader = command.ExecuteReader();
+
+            (string, string, long)? result = null;
+            if (reader.Read())
+            {
+                result = (reader.GetString(0), reader.GetString(1), reader.GetInt64(2));
+            }
+            reader.Close();
+
+            if (!wasOpen) connection.Close();
+
+            return result;
+        }
+
+        public (string, long)? GetLeastPopularAlbum()
+        {
+            SqlConnection connection = DatabaseConnection.GetConnection();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
+
+            SqlCommand command = new SqlCommand("SELECT alb_name, album_listening_time FROM least_popular_album", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
+            SqlDataReader reader = command.ExecuteReader();
+
+            (string, long)? result = null;
+            if (reader.Read())
+            {
+                result = (reader.GetString(0), reader.GetInt64(1));
+            }
+            reader.Close();
+
+            if (!wasOpen) connection.Close();
+
+            return result;
+        }
     }
 }

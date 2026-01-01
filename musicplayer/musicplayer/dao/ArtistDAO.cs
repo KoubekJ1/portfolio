@@ -218,5 +218,49 @@ namespace musicplayer.dao
 
             return count;
         }
+
+        public (string, long)? GetMostPopularArtist()
+        {
+            SqlConnection connection = DatabaseConnection.GetConnection();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
+
+            SqlCommand command = new SqlCommand("SELECT ar_name, ar_listening_time FROM most_popular_artist", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
+            SqlDataReader reader = command.ExecuteReader();
+
+            (string, long)? result = null;
+            if (reader.Read())
+            {
+                result = (reader.GetString(0), reader.GetInt64(1));
+            }
+            reader.Close();
+
+            if (!wasOpen) connection.Close();
+
+            return result;
+        }
+
+        public (string, long)? GetLeastPopularArtist()
+        {
+            SqlConnection connection = DatabaseConnection.GetConnection();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
+
+            SqlCommand command = new SqlCommand("SELECT ar_name, ar_listening_time FROM least_popular_artist", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
+            SqlDataReader reader = command.ExecuteReader();
+
+            (string, long)? result = null;
+            if (reader.Read())
+            {
+                result = (reader.GetString(0), reader.GetInt64(1));
+            }
+            reader.Close();
+
+            if (!wasOpen) connection.Close();
+
+            return result;
+        }
 	}
 }
