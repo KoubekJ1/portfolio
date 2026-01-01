@@ -87,7 +87,7 @@ namespace musicplayer
 			{
 				lbSongs.Items.Add(song);
 				newSongFormControl.Clear();
-			});
+			}, true);
 			this.pNewSongFormContainer.Controls.Add(newSongFormControl);
 		}
 

@@ -133,7 +133,7 @@
 			Controls.Add(tbName);
 			Controls.Add(label1);
 			Name = "NewSongFormControl";
-			Size = new Size(293, 149);
+			Size = new Size(296, 149);
 			Load += NewSongForm_Load;
 			((System.ComponentModel.ISupportInitialize)trbRating).EndInit();
 			ResumeLayout(false);

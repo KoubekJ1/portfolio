@@ -23,21 +23,25 @@ namespace musicplayer.controls.forms
 
 		public Song Song { get => _song; }
 
+		private bool _preventUpload;
+
 		/// <summary>
 		/// Constructs a new add song form
 		/// </summary>
-		public NewSongFormControl(Action<Song>? onCreate = null)
+		public NewSongFormControl(Action<Song>? onCreate = null, bool preventUpload = false)
 		{
 			InitializeComponent();
 			_song = new Song("");
 			_onCreate += onCreate;
+
+			_preventUpload = preventUpload;
 		}
 
 		/// <summary>
 		/// Constructs a new add song form with the given song to edit
 		/// </summary>
 		/// <param name="song">Song</param>
-		public NewSongFormControl(Song song, Action<Song>? onCreate = null)
+		public NewSongFormControl(Song song, Action<Song>? onCreate = null, bool preventUpload = false)
 		{
 			InitializeComponent();
 			_song = song;
@@ -50,6 +54,8 @@ namespace musicplayer.controls.forms
 
 			trbRating.Value = (int)(_song.Rating * 10);
 			lRatingValue.Text = song.Rating.ToString();
+
+			_preventUpload = preventUpload;
 		}
 
 		public void Clear()
@@ -93,6 +99,12 @@ namespace musicplayer.controls.forms
 		/// <param name="e"></param>
 		private void bAdd_Click_1(object sender, EventArgs e)
 		{
+			if (_preventUpload)
+			{
+				_song.Length = (int)AudioPlayerManager.GetDuration(_song.Data);
+				_onCreate.Invoke(_song);
+				return;
+			}
 			SongDAO dao = new SongDAO();
 			if (_song.Data == null)
 			{
