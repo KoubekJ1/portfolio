@@ -23,7 +23,8 @@ namespace musicplayer.dao
             LinkedList<int?> imageIDs = new LinkedList<int?>();
 
 			SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("SELECT ar_id, ar_name, ar_img_id FROM artists", connection);
             SqlDataReader reader = command.ExecuteReader();
@@ -36,6 +37,7 @@ namespace musicplayer.dao
 				imageIDs.AddLast(reader.IsDBNull(2) ? null : reader.GetInt32(2));
 				artists.AddLast(artist);
             }
+            reader.Close();
 
             var imageEnumerator = imageIDs.GetEnumerator();
 			foreach (Artist artist1 in artists)
@@ -44,7 +46,7 @@ namespace musicplayer.dao
 				artist1.Image = new IconImageDAO().GetByID((int)imageEnumerator.Current);
 			}
 
-            connection.Close();
+            if (!wasOpen) connection.Close();
 
             return artists;
         }
@@ -57,7 +59,8 @@ namespace musicplayer.dao
         public Artist? GetByID(int id)
         {
             SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             //SqlCommand command = new SqlCommand("SELECT ar_id, ar_name, ar_img_id FROM artists", connection);
             SqlCommand command = new SqlCommand("SELECT ar_id, ar_name, ar_img_id FROM artists WHERE ar_id = @id", connection);
@@ -65,14 +68,20 @@ namespace musicplayer.dao
 
             SqlDataReader reader = command.ExecuteReader();
 
-            if (!reader.Read()) return null;
+            if (!reader.Read()) 
+            {
+                reader.Close();
+                if (!wasOpen) connection.Close();
+                return null;
+            }
 
             Artist artist = new Artist(reader.GetString(1));
             artist.Id = reader.GetInt32(0);
             int? imgID = null;
 			if (!reader.IsDBNull(2)) imgID = reader.GetInt32(2);
 
-            connection.Close();
+            reader.Close();
+            if (!wasOpen) connection.Close();
 
             if (imgID != null)
             {
@@ -89,13 +98,14 @@ namespace musicplayer.dao
         public void Remove(int id)
         {
             SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("DELETE FROM artists WHERE ar_id = @id", connection);
             command.Parameters.AddWithValue("id", id);
             command.ExecuteNonQuery();
 
-            connection.Close();
+            if (!wasOpen) connection.Close();
         }
 
         /// <summary>
@@ -117,7 +127,8 @@ namespace musicplayer.dao
             }
 
             SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("INSERT INTO artists (ar_name, ar_img_id) OUTPUT INSERTED.ar_id VALUES (@name, @img_id)", connection);
             command.Parameters.AddWithValue("name", artist.Name);
@@ -125,7 +136,7 @@ namespace musicplayer.dao
 
             int id = (int)command.ExecuteScalar();
 
-            connection.Close();
+            if (!wasOpen) connection.Close();
 
             artist.Id = id;
 
@@ -146,7 +157,8 @@ namespace musicplayer.dao
             }
 
             SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("UPDATE artists SET ar_name = @name, ar_img_id = @img_id WHERE ar_id = @id", connection);
             command.Parameters.AddWithValue("id", artist.Id);
@@ -155,7 +167,7 @@ namespace musicplayer.dao
 
             command.ExecuteNonQuery();
 
-			connection.Close();
+			if (!wasOpen) connection.Close();
         }
 
 		public IEnumerable<Artist> GetByName(string name, int count = 10)
@@ -163,7 +175,8 @@ namespace musicplayer.dao
 			LinkedList<Artist> artists = new LinkedList<Artist>();
 
 			SqlConnection connection = DatabaseConnection.GetConnection();
-			connection.Open();
+			bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
 			SqlCommand command = new SqlCommand("SELECT TOP (@count) ar_id, ar_name, ar_img_id FROM artists WHERE ar_name LIKE @name + '%' ORDER BY ar_listening_time DESC", connection);
             command.Parameters.AddWithValue("name", name);
@@ -178,8 +191,9 @@ namespace musicplayer.dao
 				if (!reader.IsDBNull(2)) artist.ImageID = reader.GetInt32(2);
 				artists.AddLast(artist);
 			}
+            reader.Close();
 
-			connection.Close();
+			if (!wasOpen) connection.Close();
 
 			return artists;
 		}

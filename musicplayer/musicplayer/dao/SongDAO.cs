@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using musicplayer.dataobjects;
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,8 @@ namespace musicplayer.dao
             LinkedList<Song> songs = new LinkedList<Song>();
 
             SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("SELECT so_id, so_sd_id, so_name, so_length, so_rating, so_ar_id FROM songs", connection);
             
@@ -44,8 +45,7 @@ namespace musicplayer.dao
 				artistIDs.AddLast(reader[5] != DBNull.Value ? reader.GetInt32(5) : null);
 				songs.AddLast(song);
 			}
-
-            connection.Close();
+            reader.Close();
 
 			LinkedListNode<int?> currentArtistIdNode = artistIDs.First;
 
@@ -66,6 +66,8 @@ namespace musicplayer.dao
 				}
 			}
 
+            if (!wasOpen) connection.Close();
+
 			return songs;
         }
 
@@ -77,13 +79,19 @@ namespace musicplayer.dao
         public Song? GetByID(int id)
         {
             SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("SELECT so_id, so_sd_id, so_name, so_length, so_rating, so_ar_id FROM songs WHERE so_id = @id", connection);
             command.Parameters.AddWithValue("id", id);
 
             SqlDataReader reader = command.ExecuteReader();
-            if (!reader.Read()) return null;
+            if (!reader.Read()) 
+            {
+                reader.Close();
+                if (!wasOpen) connection.Close();
+                return null;
+            }
             Song song = new Song(reader.GetString(2));
             song.Id = reader.GetInt32(0);
 			song.Length = reader.GetInt32(3);
@@ -91,11 +99,13 @@ namespace musicplayer.dao
             song.Rating = Math.Round(reader.GetDouble(4), 1);
 			int? artistID = reader[5] != DBNull.Value ? reader.GetInt32(5) : null;
 
-			connection.Close();
+            reader.Close();
 
             if (artistID != null) song.Artist = new ArtistDAO().GetByID((int)artistID);
 
             //song.Data = GetSongData(dataID);
+
+            if (!wasOpen) connection.Close();
 
             return song;
         }
@@ -110,7 +120,8 @@ namespace musicplayer.dao
             LinkedList<int> songIDs = new LinkedList<int>();
 
             SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("SELECT so_id FROM songs INNER JOIN album_songs ON as_so_id = so_id WHERE as_alb_id = @id ORDER BY as_order ASC", connection);
             command.Parameters.AddWithValue("id", albumID);
@@ -121,8 +132,7 @@ namespace musicplayer.dao
             {
                 songIDs.AddLast(reader.GetInt32(0));
 			}
-
-			connection.Close();
+            reader.Close();
 
             List<Song> songs = new List<Song>(songIDs.Count);
 
@@ -132,6 +142,8 @@ namespace musicplayer.dao
                 if (song == null) continue;
                 songs.Add(song);
             }
+
+            if (!wasOpen) connection.Close();
 
             return songs;
         }
@@ -143,7 +155,8 @@ namespace musicplayer.dao
         public void Remove(int id)
         {
             SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
 
 			SqlCommand command1 = new SqlCommand("DELETE FROM song_data WHERE sd_id IN (SELECT so_sd_id FROM songs WHERE so_id = @id)", connection);
@@ -157,7 +170,7 @@ namespace musicplayer.dao
 			command.ExecuteNonQuery();*/
 
 
-            connection.Close();
+            if (!wasOpen) connection.Close();
         }
 
         /// <summary>
@@ -178,7 +191,8 @@ namespace musicplayer.dao
             if (dataID == null) return null;
 
             SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("INSERT INTO songs (so_sd_id, so_name, so_length, so_rating, so_ar_id) OUTPUT INSERTED.so_id VALUES (@data_id, @name, @length, @rating, @artistID)", connection);
             command.Parameters.AddWithValue("data_id", dataID);
@@ -191,7 +205,7 @@ namespace musicplayer.dao
 			int? id = (int?)command.ExecuteScalar();
             song.Id = id;
 
-            connection.Close();
+            if (!wasOpen) connection.Close();
 
             return id;
         }
@@ -215,7 +229,8 @@ namespace musicplayer.dao
 			}
 
 			SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();            
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("UPDATE songs SET so_sd_id = @sd_id, so_name = @name, so_length = @length, so_rating = @rating, so_ar_id = @artistID WHERE so_id = @id", connection);
             command.Parameters.AddWithValue("id", song.Id);
@@ -227,7 +242,7 @@ namespace musicplayer.dao
 
 			command.ExecuteNonQuery();
 
-			connection.Close();
+			if (!wasOpen) connection.Close();
         }
 
         /// <summary>
@@ -238,7 +253,8 @@ namespace musicplayer.dao
         public byte[]? GetSongData(int id)
         {
             SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
             SqlCommand cmd = new SqlCommand("SELECT sd_data FROM song_data WHERE sd_id = @id", connection);
             cmd.Parameters.AddWithValue("id", id);
 
@@ -246,12 +262,18 @@ namespace musicplayer.dao
 
             // First discover byte amount to prevent allocating 2GB worth of empty space
             byte[]? data = null;
-            if (!reader.Read()) return data;
+            if (!reader.Read()) 
+            {
+                reader.Close();
+                if (!wasOpen) connection.Close();
+                return data;
+            }
             long bufferSize = reader.GetBytes(0, 0, data, 0, 2147483647);
             data = new byte[bufferSize];
             reader.GetBytes(0, 0, data, 0, (int)bufferSize);
 
-            connection.Close();
+            reader.Close();
+            if (!wasOpen) connection.Close();
             return data;
         }
 
@@ -263,27 +285,29 @@ namespace musicplayer.dao
         public int? UploadSongData(byte[] data)
         {
             SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("INSERT INTO song_data (sd_data) OUTPUT INSERTED.sd_id VALUES (@data)", connection);
             command.Parameters.AddWithValue("data", data);
             int? id = (int?)command.ExecuteScalar();
 
-            connection.Close();
+            if (!wasOpen) connection.Close();
             return id;
         }
 
 		public void AddListeningTime(long time, int songID)
 		{
 			SqlConnection connection = DatabaseConnection.GetConnection();
-			connection.Open();
+			bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
 			SqlCommand command = new SqlCommand("UPDATE songs SET so_listening_time = so_listening_time + @time WHERE so_id = @id", connection);
 			command.Parameters.AddWithValue("time", time);
 			command.Parameters.AddWithValue("id", songID);
 			command.ExecuteNonQuery();
 
-			connection.Close();
+			if (!wasOpen) connection.Close();
 		}
 	}
 }

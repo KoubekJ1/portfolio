@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using musicplayer.dataobjects;
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,8 @@ namespace musicplayer.dao
             LinkedList<int?> artistIDs = new LinkedList<int?>();
 
 			SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("SELECT alb_id, alb_name, alb_img_id, alb_ar_id, alb_release_date, alb_type FROM albums", connection);
 
@@ -46,10 +47,10 @@ namespace musicplayer.dao
 				album.Type = reader.GetString(5);
 				albums.AddLast(album);
             }
+            reader.Close();
+			if (!wasOpen) connection.Close();
 
-            connection.Close();
-
-            var iconImageDAO = new IconImageDAO();
+			var iconImageDAO = new IconImageDAO();
             var albumEnumerator = albums.GetEnumerator();
             foreach (int? imgID in imgIDs)
             {
@@ -67,7 +68,8 @@ namespace musicplayer.dao
                 albumEnumerator.Current.Artist = arstistDAO.GetByID((int)artistID);
             }
 
-            return albums;
+
+			return albums;
         }
 
         /// <summary>
@@ -78,20 +80,27 @@ namespace musicplayer.dao
         public Album? GetByID(int id)
         {
             SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("SELECT alb_id, alb_name, alb_img_id, alb_release_date, alb_type FROM albums WHERE alb_id = @id", connection);
             command.Parameters.AddWithValue("id", id);
 
             SqlDataReader reader = command.ExecuteReader();
-            if (!reader.Read()) return null;
+            if (!reader.Read()) 
+            {
+                reader.Close();
+                if (!wasOpen) connection.Close();
+                return null;
+            }
             Album album = new Album(reader.GetString(1));
             album.Id = reader.GetInt32(0);
             int? imgID = reader.GetInt32(2);
             album.ReleaseDate = reader.GetFieldValue<DateOnly>(3);
             album.Type = reader.GetString(4);
 
-            connection.Close();
+            reader.Close();
+            if (!wasOpen) connection.Close();
 
             if (imgID != null)
             {
@@ -116,9 +125,8 @@ namespace musicplayer.dao
 
 			SqlConnection connection = DatabaseConnection.GetConnection();
 
-            
-
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("SELECT alb_id, alb_img_id, alb_name, alb_release_date, alb_type FROM albums WHERE alb_ar_id = @artist_id", connection);
             command.Parameters.AddWithValue("artist_id", artistID);
@@ -136,8 +144,9 @@ namespace musicplayer.dao
 				album.Type = reader.GetString(4);
 				albums.Add(album);
             }
+            reader.Close();
 
-			connection.Close();
+			if (!wasOpen) connection.Close();
 
 			int i = 0;
             foreach (int? id in imageIDs)
@@ -162,13 +171,14 @@ namespace musicplayer.dao
 		public void Remove(int id)
 		{
             SqlConnection connection = DatabaseConnection.GetConnection();
-			connection.Open();
+			bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("DELETE FROM albums WHERE alb_id = @id", connection);
 			command.Parameters.AddWithValue("@id", id);
 			command.ExecuteNonQuery();
 
-            connection.Close();
+            if (!wasOpen) connection.Close();
 		}
 
         /// <summary>
@@ -193,7 +203,8 @@ namespace musicplayer.dao
 			}
 
 			SqlConnection connection = DatabaseConnection.GetConnection();
-			connection.Open();
+			bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
 			SqlCommand command = new SqlCommand("INSERT INTO albums (alb_img_id, alb_ar_id, alb_name, alb_release_date, alb_type) OUTPUT INSERTED.alb_id VALUES (@img_id, @ar_id, @name, @release_date, @type)", connection);
 			command.Parameters.AddWithValue("img_id", data.Image != null && data.Image.Id != null ? data.Image.Id : DBNull.Value);
@@ -204,7 +215,7 @@ namespace musicplayer.dao
 
 			data.Id = (int?)command.ExecuteScalar();
 
-			connection.Close();
+			if (!wasOpen) connection.Close();
 
             for (int i = 0; i < data.Songs.Count; i++)
             {
@@ -229,7 +240,8 @@ namespace musicplayer.dao
 			}
 
 			SqlConnection connection = DatabaseConnection.GetConnection();
-			connection.Open();
+			bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
 			SqlCommand command = new SqlCommand("UPDATE albums SET alb_img_id = @img_id, alb_ar_id = @ar_id, alb_name = @name, alb_release_date = @release_date, alb_type = @type WHERE alb_id = @id", connection);
 			command.Parameters.AddWithValue("id", data.Id);
@@ -241,7 +253,7 @@ namespace musicplayer.dao
 
 			command.ExecuteNonQuery();
 
-			connection.Close();
+			if (!wasOpen) connection.Close();
 
 			for (int i = 0; i < data.Songs.Count; i++)
 			{
@@ -259,7 +271,8 @@ namespace musicplayer.dao
 		public void CreateSongConnectionRow(int albumID, int songID, int order)
         {
             SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("INSERT INTO album_songs (as_alb_id, as_so_id, as_order) VALUES (@albumID, @songID, @order)", connection);
             command.Parameters.AddWithValue("albumID", albumID);
@@ -267,7 +280,7 @@ namespace musicplayer.dao
             command.Parameters.AddWithValue("order", order);
 			command.ExecuteNonQuery();
 
-			connection.Close();
+			if (!wasOpen) connection.Close();
         }
 
         /// <summary>
@@ -277,13 +290,14 @@ namespace musicplayer.dao
         public void DeleteSongConnectionRows(int albumID)
         {
             SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("DELETE FROM album_songs WHERE as_alb_id = @id", connection);
             command.Parameters.AddWithValue("id", albumID);
 
             command.ExecuteNonQuery();
-            connection.Close();
+            if (!wasOpen) connection.Close();
         }
     }
 }

@@ -18,7 +18,7 @@ namespace musicplayer
 		public static SqlConnection GetConnection()
 		{
 			if (connection == null) initializeConnection();
-			if (connection.State == System.Data.ConnectionState.Open) connection.Close();
+			//if (connection.State == System.Data.ConnectionState.Open) connection.Close();
 			return connection;
 		}
 

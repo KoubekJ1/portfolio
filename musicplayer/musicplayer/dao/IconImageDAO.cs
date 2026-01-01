@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using musicplayer.dataobjects;
 using System;
 using System.Collections.Generic;
@@ -31,13 +31,19 @@ namespace musicplayer.dao
         public IconImage? GetByID(int id)
         {
             SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("SELECT img_data FROM image_data WHERE img_id = @id", connection);
             command.Parameters.AddWithValue("id", id);
 
             SqlDataReader reader = command.ExecuteReader();
-            if (!reader.Read()) return null;
+            if (!reader.Read()) 
+            {
+                reader.Close();
+                if (!wasOpen) connection.Close();
+                return null;
+            }
 
             byte[] buffer = null;
             long byteAmount = reader.GetBytes(0, 0, buffer, 0, 8000);
@@ -48,7 +54,8 @@ namespace musicplayer.dao
 
             IconImage image = new IconImage(bitmap, id);
 
-            connection.Close();
+            reader.Close();
+            if (!wasOpen) connection.Close();
 
             return image;
         }
@@ -70,7 +77,8 @@ namespace musicplayer.dao
         public int? Upload(IconImage data)
         {
             SqlConnection connection = DatabaseConnection.GetConnection();
-            connection.Open();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
 
             SqlCommand command = new SqlCommand("INSERT INTO image_data (img_data) OUTPUT INSERTED.img_id VALUES (@data)", connection);
             MemoryStream stream = new MemoryStream();
@@ -80,7 +88,7 @@ namespace musicplayer.dao
             int? id = (int?)command.ExecuteScalar();
             data.Id = id;
 
-            connection.Close();
+            if (!wasOpen) connection.Close();
             stream.Close();
 
 			return id;
