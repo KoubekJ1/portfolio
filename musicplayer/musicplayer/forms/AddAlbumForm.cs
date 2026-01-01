@@ -137,17 +137,34 @@ namespace musicplayer
 			ArtistDAO artistDAO = new ArtistDAO();
 			try
 			{
-				artistDAO.Upload(_album.Artist);
-				dao.Upload(_album);
-				if (_album.Id != null)
+				using var connection = DatabaseConnection.GetConnection();
+				connection.Open();
+				DatabaseConnection.CreateTransaction();
+				try
 				{
-					MessageBox.Show("Album \"" + _album.Name + "\" was successfully uploaded.", "Add Album");
-					this.Close();
+					artistDAO.Upload(_album.Artist);
+					dao.Upload(_album);
+					if (_album.Id != null)
+					{
+						MessageBox.Show("Album \"" + _album.Name + "\" was successfully uploaded.", "Add Album");
+						DatabaseConnection.CommitTransaction();
+						this.Close();
+					}
+					else
+					{
+						throw new Exception("ID is null!");
+					}
 				}
-				else
+				catch (Exception)
 				{
-					throw new Exception("ID is null!");
+					DatabaseConnection.RollbackTransaction();
+					throw;
 				}
+				finally
+				{
+					connection.Close();
+				}
+				
 			}
 			catch (Exception ex)
 			{
