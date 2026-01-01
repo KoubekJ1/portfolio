@@ -31,7 +31,7 @@ CREATE TABLE albums (
 	alb_img_id INT NULL FOREIGN KEY REFERENCES image_data(img_id) ON DELETE SET NULL,
 	alb_ar_id INT NULL FOREIGN KEY REFERENCES artists(ar_id) ON DELETE SET NULL,
 	alb_name NVARCHAR(100) NOT NULL,
-	alb_type NVARCHAR NOT NULL CHECK(alb_type IN ('lp', 'ep', 'sp')),
+	alb_type NCHAR(2) NOT NULL CHECK(alb_type IN ('lp', 'ep', 'sp')),
 	alb_release_date DATE NOT NULL
 );
 

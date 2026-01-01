@@ -34,6 +34,8 @@ namespace musicplayer.controls
 			lAlbumName.Text = album.Name;
 			lArtistName.Text = album.Artist != null ? album.Artist.Name : "Unknown artist";
 			pbAlbumImage.Image = album.Image != null ? IconImage.ResizeImage(album.Image.Image, pbAlbumImage.Width, pbAlbumImage.Height) : null;
+			lReleaseDate.Text = album.ReleaseDate.ToString();
+			lType.Text = album.Type.ToUpper();
 
 			if (album.Songs.Count <= 0 && album.Id != null)
 			{

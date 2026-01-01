@@ -34,6 +34,8 @@ namespace musicplayer
 			this.FormBorderStyle = FormBorderStyle.FixedSingle;
 			_album = new Album("");
 
+			cbType.DropDownStyle = ComboBoxStyle.DropDownList;
+
 			AddNewSongForm();
 
 			this.KeyPreview = true;
@@ -51,11 +53,23 @@ namespace musicplayer
 		{
 			InitializeComponent();
 			this.FormBorderStyle = FormBorderStyle.FixedSingle;
+			cbType.DropDownStyle = ComboBoxStyle.DropDownList;
+			cbType.Text = album.Type;
+			dtpReleaseDate.Value = album.ReleaseDate.ToDateTime(new TimeOnly(0, 0, 0));
 			this.Text = "Edit Album";
 			bAddAlbum.Text = "Save Changes";
 			_album = album;
 			tbName.Text = album.Name;
-			if (album.Artist != null) lArtistName.Text = album.Artist.Name;
+			if (album.Artist != null)
+			{
+				_artistControl = new NewArtistFormControl(album.Artist, true);
+			}
+			else
+			{
+				_artistControl = new NewArtistFormControl();
+			}
+			_artistControl.Dock = DockStyle.Fill;
+			pArtistContainer.Controls.Add(_artistControl);
 			if (album.Image != null) pbImage.Image = IconImage.ResizeImage(album.Image.Image, pbImage.Width, pbImage.Height);
 
 			foreach (Song song in album.Songs)
@@ -106,6 +120,8 @@ namespace musicplayer
 		/// <param name="e"></param>
 		private void bAddAlbum_Click(object sender, EventArgs e)
 		{
+			_album.ReleaseDate = DateOnly.FromDateTime(dtpReleaseDate.Value);
+			_album.Type = cbType.Text.ToLower();
 			_album.Songs.Clear();
 			foreach (var lbItem in lbSongs.Items)
 			{
@@ -114,9 +130,13 @@ namespace musicplayer
 				_album.Songs.Add(song);
 			}
 
+			_album.Artist = _artistControl.Artist;
+
 			AlbumDAO dao = new AlbumDAO();
+			ArtistDAO artistDAO = new ArtistDAO();
 			try
 			{
+				artistDAO.Upload(_album.Artist);
 				dao.Upload(_album);
 				if (_album.Id != null)
 				{
@@ -132,20 +152,6 @@ namespace musicplayer
 			{
 				ErrorHandler.HandleException(ex, "Error", "Unable to upload album due to an internal error");
 			}
-		}
-
-		/// <summary>
-		/// Opens an artist picker dialog to choose parent artist
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-
-		private void bClickArtist_Click(object sender, EventArgs e)
-		{
-			ArtistPicker picker = new ArtistPicker();
-			picker.ShowDialog();
-			_album.Artist = picker.Artist;
-			if (_album.Artist != null) lArtistName.Text = _album.Artist.ToString();
 		}
 
 		/// <summary>
@@ -210,6 +216,11 @@ namespace musicplayer
 		}
 
 		private void FormKeyDown(object sender, KeyEventArgs e)
+		{
+
+		}
+
+		private void label1_Click(object sender, EventArgs e)
 		{
 
 		}

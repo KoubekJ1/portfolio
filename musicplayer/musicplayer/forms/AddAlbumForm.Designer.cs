@@ -40,13 +40,14 @@
 			bRemove = new Button();
 			bAddAlbum = new Button();
 			lbSongs = new ListBox();
-			lArtist = new Label();
-			lArtistName = new Label();
-			bPickArtist = new Button();
 			pNewSongFormContainer = new Panel();
 			lNewSongLabel = new Label();
 			pArtistContainer = new Panel();
 			lArtistLabel = new Label();
+			dtpReleaseDate = new DateTimePicker();
+			label1 = new Label();
+			cbType = new ComboBox();
+			lTypeLabel = new Label();
 			((System.ComponentModel.ISupportInitialize)pbImage).BeginInit();
 			SuspendLayout();
 			// 
@@ -91,7 +92,7 @@
 			// lSongs
 			// 
 			lSongs.AutoSize = true;
-			lSongs.Location = new Point(189, 65);
+			lSongs.Location = new Point(274, 88);
 			lSongs.Name = "lSongs";
 			lSongs.Size = new Size(49, 20);
 			lSongs.TabIndex = 5;
@@ -99,7 +100,7 @@
 			// 
 			// bAddSong
 			// 
-			bAddSong.Location = new Point(189, 258);
+			bAddSong.Location = new Point(274, 281);
 			bAddSong.Name = "bAddSong";
 			bAddSong.Size = new Size(151, 29);
 			bAddSong.TabIndex = 9;
@@ -109,7 +110,7 @@
 			// 
 			// bUp
 			// 
-			bUp.Location = new Point(346, 123);
+			bUp.Location = new Point(431, 146);
 			bUp.Name = "bUp";
 			bUp.Size = new Size(43, 29);
 			bUp.TabIndex = 11;
@@ -119,7 +120,7 @@
 			// 
 			// bDown
 			// 
-			bDown.Location = new Point(347, 158);
+			bDown.Location = new Point(432, 181);
 			bDown.Name = "bDown";
 			bDown.Size = new Size(43, 29);
 			bDown.TabIndex = 12;
@@ -129,7 +130,7 @@
 			// 
 			// bRemove
 			// 
-			bRemove.Location = new Point(189, 293);
+			bRemove.Location = new Point(274, 316);
 			bRemove.Name = "bRemove";
 			bRemove.Size = new Size(151, 29);
 			bRemove.TabIndex = 13;
@@ -138,7 +139,7 @@
 			// 
 			// bAddAlbum
 			// 
-			bAddAlbum.Location = new Point(12, 293);
+			bAddAlbum.Location = new Point(12, 350);
 			bAddAlbum.Name = "bAddAlbum";
 			bAddAlbum.Size = new Size(125, 29);
 			bAddAlbum.TabIndex = 14;
@@ -149,38 +150,10 @@
 			// lbSongs
 			// 
 			lbSongs.FormattingEnabled = true;
-			lbSongs.Location = new Point(189, 88);
+			lbSongs.Location = new Point(274, 111);
 			lbSongs.Name = "lbSongs";
 			lbSongs.Size = new Size(151, 164);
 			lbSongs.TabIndex = 16;
-			// 
-			// lArtist
-			// 
-			lArtist.AutoSize = true;
-			lArtist.Location = new Point(346, 9);
-			lArtist.Name = "lArtist";
-			lArtist.Size = new Size(44, 20);
-			lArtist.TabIndex = 17;
-			lArtist.Text = "Artist";
-			// 
-			// lArtistName
-			// 
-			lArtistName.AutoSize = true;
-			lArtistName.Location = new Point(346, 32);
-			lArtistName.Name = "lArtistName";
-			lArtistName.Size = new Size(132, 20);
-			lArtistName.TabIndex = 18;
-			lArtistName.Text = "(no artist selected)";
-			// 
-			// bPickArtist
-			// 
-			bPickArtist.Location = new Point(346, 55);
-			bPickArtist.Name = "bPickArtist";
-			bPickArtist.Size = new Size(94, 29);
-			bPickArtist.TabIndex = 19;
-			bPickArtist.Text = "Pick Artist";
-			bPickArtist.UseVisualStyleBackColor = true;
-			bPickArtist.Click += bClickArtist_Click;
 			// 
 			// pNewSongFormContainer
 			// 
@@ -214,18 +187,55 @@
 			lArtistLabel.TabIndex = 23;
 			lArtistLabel.Text = "Artist";
 			// 
+			// dtpReleaseDate
+			// 
+			dtpReleaseDate.Location = new Point(12, 264);
+			dtpReleaseDate.Name = "dtpReleaseDate";
+			dtpReleaseDate.Size = new Size(250, 27);
+			dtpReleaseDate.TabIndex = 24;
+			// 
+			// label1
+			// 
+			label1.AutoSize = true;
+			label1.Location = new Point(12, 241);
+			label1.Name = "label1";
+			label1.Size = new Size(96, 20);
+			label1.TabIndex = 25;
+			label1.Text = "Release Date";
+			label1.Click += label1_Click;
+			// 
+			// cbType
+			// 
+			cbType.FormattingEnabled = true;
+			cbType.Items.AddRange(new object[] { "LP", "EP", "SP" });
+			cbType.Location = new Point(12, 316);
+			cbType.Name = "cbType";
+			cbType.Size = new Size(250, 28);
+			cbType.TabIndex = 26;
+			cbType.Text = "LP";
+			// 
+			// lTypeLabel
+			// 
+			lTypeLabel.AutoSize = true;
+			lTypeLabel.Location = new Point(12, 294);
+			lTypeLabel.Name = "lTypeLabel";
+			lTypeLabel.Size = new Size(40, 20);
+			lTypeLabel.TabIndex = 27;
+			lTypeLabel.Text = "Type";
+			// 
 			// AddAlbumForm
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
 			ClientSize = new Size(1720, 560);
+			Controls.Add(lTypeLabel);
+			Controls.Add(cbType);
+			Controls.Add(label1);
+			Controls.Add(dtpReleaseDate);
 			Controls.Add(lArtistLabel);
 			Controls.Add(pArtistContainer);
 			Controls.Add(lNewSongLabel);
 			Controls.Add(pNewSongFormContainer);
-			Controls.Add(bPickArtist);
-			Controls.Add(lArtistName);
-			Controls.Add(lArtist);
 			Controls.Add(lbSongs);
 			Controls.Add(bAddAlbum);
 			Controls.Add(bRemove);
@@ -258,12 +268,13 @@
 		private Button bRemove;
 		private Button bAddAlbum;
 		private ListBox lbSongs;
-		private Label lArtist;
-		private Label lArtistName;
-		private Button bPickArtist;
 		private Panel pNewSongFormContainer;
 		private Label lNewSongLabel;
 		private Panel pArtistContainer;
 		private Label lArtistLabel;
+		private DateTimePicker dtpReleaseDate;
+		private Label label1;
+		private ComboBox cbType;
+		private Label lTypeLabel;
 	}
 }

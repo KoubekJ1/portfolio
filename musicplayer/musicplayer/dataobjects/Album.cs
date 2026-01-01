@@ -17,6 +17,8 @@ namespace musicplayer.dataobjects
         private string _name;
         private IconImage? _image;
         private Artist? _artist;
+        private DateOnly _releaseDate;
+        private string _type = "lp";
 
         private List<Song> _songs;
 
@@ -47,6 +49,8 @@ namespace musicplayer.dataobjects
 		public string Name { get => _name; set => _name = value; }
 		public List<Song> Songs { get => _songs; set => _songs = value; }
 		public Artist? Artist { get => _artist; set => _artist = value; }
+		public DateOnly ReleaseDate { get => _releaseDate; set => _releaseDate = value; }
+		public string Type { get => _type; set => _type = value; }
 
 		public int? GetID()
         {

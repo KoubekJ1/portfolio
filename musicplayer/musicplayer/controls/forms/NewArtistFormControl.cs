@@ -17,7 +17,7 @@ namespace musicplayer.controls.forms
 	{
 		private Artist _artist;
 		private bool _isAutofill = false;
-		private bool _matched = true;
+		private bool _matched = false;
 		private Artist? _matchedArtist = null;
 		private IEnumerable<Artist> _potentionalMatches = [];
 
@@ -52,12 +52,27 @@ namespace musicplayer.controls.forms
 		/// Constructs a new AddArtistForm with the given artist to edit
 		/// </summary>
 		/// <param name="artist">Artist</param>
-		public NewArtistFormControl(Artist artist)
+		public NewArtistFormControl(Artist artist, bool isAutofill = false)
 		{
 			InitializeComponent();
 			OnCreate = delegate { };
 
 			_artist = artist;
+
+			if (_artist.Image != null) pbImage.Image = _artist.Image.Image;
+
+			_isAutofill = isAutofill;
+
+			if (isAutofill)
+			{
+				bAdd.Dispose();
+
+			}
+			else
+			{
+				lbArtists.Dispose();
+			}
+
 			tbName.Text = artist.Name;
 			if (_artist.Image != null) pbImage.Image = IconImage.ResizeImage(_artist.Image.Image, pbImage.Width, pbImage.Height);
 		}
@@ -153,6 +168,7 @@ namespace musicplayer.controls.forms
 					var dao = new IconImageDAO();
 					var iconImage = dao.GetByID((int)_artist.ImageID);
 					if (iconImage == null) return;
+					_artist.Image = iconImage;
 					pbImage.Image = IconImage.ResizeImage(iconImage.Image, pbImage.Width, pbImage.Height);
 					pbImage.SizeMode = PictureBoxSizeMode.StretchImage;
 				} catch (Exception) { }

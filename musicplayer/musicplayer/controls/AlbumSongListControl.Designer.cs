@@ -34,6 +34,8 @@
 			lArtistName = new Label();
 			bEdit = new Button();
 			bDelete = new Button();
+			lReleaseDate = new Label();
+			lType = new Label();
 			((System.ComponentModel.ISupportInitialize)pbAlbumImage).BeginInit();
 			SuspendLayout();
 			// 
@@ -96,10 +98,32 @@
 			bDelete.UseVisualStyleBackColor = true;
 			bDelete.Click += bDelete_Click;
 			// 
+			// lReleaseDate
+			// 
+			lReleaseDate.AutoSize = true;
+			lReleaseDate.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+			lReleaseDate.Location = new Point(209, 80);
+			lReleaseDate.Name = "lReleaseDate";
+			lReleaseDate.Size = new Size(96, 20);
+			lReleaseDate.TabIndex = 6;
+			lReleaseDate.Text = "Release Date";
+			// 
+			// lType
+			// 
+			lType.AutoSize = true;
+			lType.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+			lType.Location = new Point(209, 100);
+			lType.Name = "lType";
+			lType.Size = new Size(40, 20);
+			lType.TabIndex = 7;
+			lType.Text = "Type";
+			// 
 			// AlbumSongListControl
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
+			Controls.Add(lType);
+			Controls.Add(lReleaseDate);
 			Controls.Add(bDelete);
 			Controls.Add(bEdit);
 			Controls.Add(lArtistName);
@@ -121,5 +145,7 @@
 		private Label lArtistName;
 		private Button bEdit;
 		private Button bDelete;
+		private Label lReleaseDate;
+		private Label lType;
 	}
 }

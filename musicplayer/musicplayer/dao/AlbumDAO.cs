@@ -27,7 +27,7 @@ namespace musicplayer.dao
 			SqlConnection connection = DatabaseConnection.GetConnection();
             connection.Open();
 
-            SqlCommand command = new SqlCommand("SELECT alb_id, alb_name, alb_img_id, alb_ar_id FROM albums", connection);
+            SqlCommand command = new SqlCommand("SELECT alb_id, alb_name, alb_img_id, alb_ar_id, alb_release_date, alb_type FROM albums", connection);
 
             SqlDataReader reader = command.ExecuteReader();
 
@@ -42,7 +42,9 @@ namespace musicplayer.dao
 					imgIDs.AddLast(imgID);
 				}
                 if (!reader.IsDBNull(3)) artistIDs.AddLast(reader.GetInt32(3));
-                albums.AddLast(album);
+				album.ReleaseDate = reader.GetFieldValue<DateOnly>(4);
+				album.Type = reader.GetString(5);
+				albums.AddLast(album);
             }
 
             connection.Close();
@@ -78,14 +80,16 @@ namespace musicplayer.dao
             SqlConnection connection = DatabaseConnection.GetConnection();
             connection.Open();
 
-            SqlCommand command = new SqlCommand("SELECT alb_id, alb_name, alb_img_id FROM albums WHERE alb_id = @id", connection);
+            SqlCommand command = new SqlCommand("SELECT alb_id, alb_name, alb_img_id, alb_release_date, alb_type FROM albums WHERE alb_id = @id", connection);
             command.Parameters.AddWithValue("id", id);
 
             SqlDataReader reader = command.ExecuteReader();
             if (!reader.Read()) return null;
             Album album = new Album(reader.GetString(1));
             album.Id = reader.GetInt32(0);
-            int? imgID = reader.GetInt32(3);
+            int? imgID = reader.GetInt32(2);
+            album.ReleaseDate = reader.GetFieldValue<DateOnly>(3);
+            album.Type = reader.GetString(4);
 
             connection.Close();
 
@@ -116,7 +120,7 @@ namespace musicplayer.dao
 
             connection.Open();
 
-            SqlCommand command = new SqlCommand("SELECT alb_id, alb_img_id, alb_name FROM albums WHERE alb_ar_id = @artist_id", connection);
+            SqlCommand command = new SqlCommand("SELECT alb_id, alb_img_id, alb_name, alb_release_date, alb_type FROM albums WHERE alb_ar_id = @artist_id", connection);
             command.Parameters.AddWithValue("artist_id", artistID);
 
             SqlDataReader reader = command.ExecuteReader();
@@ -128,7 +132,9 @@ namespace musicplayer.dao
                 album.Id = reader.GetInt32(0);
                 imageIDs.AddLast(reader[1] == DBNull.Value ? null : reader.GetInt32(1));
                 album.Artist = artist;
-                albums.Add(album);
+				album.ReleaseDate = reader.GetFieldValue<DateOnly>(3);
+				album.Type = reader.GetString(4);
+				albums.Add(album);
             }
 
 			connection.Close();
@@ -177,6 +183,10 @@ namespace musicplayer.dao
                 Update(data);
                 return data.Id;
             }
+            if (data.Artist != null && data.Artist?.Id == null)
+            {
+                data.Artist!.Id = new ArtistDAO().Upload(data.Artist);
+            }
 			if (data.Image != null && data.Image.Id == null)
 			{
 				data.Image.Id = new IconImageDAO().Upload(data.Image);
@@ -185,10 +195,12 @@ namespace musicplayer.dao
 			SqlConnection connection = DatabaseConnection.GetConnection();
 			connection.Open();
 
-			SqlCommand command = new SqlCommand("INSERT INTO albums (alb_img_id, alb_ar_id, alb_name) OUTPUT INSERTED.alb_id VALUES (@img_id, @ar_id, @name)", connection);
+			SqlCommand command = new SqlCommand("INSERT INTO albums (alb_img_id, alb_ar_id, alb_name, alb_release_date, alb_type) OUTPUT INSERTED.alb_id VALUES (@img_id, @ar_id, @name, @release_date, @type)", connection);
 			command.Parameters.AddWithValue("img_id", data.Image != null && data.Image.Id != null ? data.Image.Id : DBNull.Value);
 			command.Parameters.AddWithValue("ar_id", data.Artist != null && data.Artist.Id != null ? data.Artist.Id : DBNull.Value);
 			command.Parameters.AddWithValue("name", data.Name);
+			command.Parameters.AddWithValue("release_date", data.ReleaseDate);
+			command.Parameters.AddWithValue("type", data.Type);
 
 			data.Id = (int?)command.ExecuteScalar();
 
@@ -222,13 +234,15 @@ namespace musicplayer.dao
 			SqlConnection connection = DatabaseConnection.GetConnection();
 			connection.Open();
 
-			SqlCommand command = new SqlCommand("UPDATE albums SET alb_img_id = @img_id, alb_ar_id = @ar_id, alb_name = @name WHERE alb_id = @id", connection);
+			SqlCommand command = new SqlCommand("UPDATE albums SET alb_img_id = @img_id, alb_ar_id = @ar_id, alb_name = @name, alb_release_date = @release_date, alb_type = @type WHERE alb_id = @id", connection);
 			command.Parameters.AddWithValue("id", data.Id);
 			command.Parameters.AddWithValue("img_id", data.Image != null && data.Image.Id != null ? data.Image.Id : DBNull.Value);
 			command.Parameters.AddWithValue("ar_id", data.Artist != null && data.Artist.Id != null ? data.Artist.Id : DBNull.Value);
 			command.Parameters.AddWithValue("name", data.Name);
+			command.Parameters.AddWithValue("release_date", data.ReleaseDate);
+			command.Parameters.AddWithValue("type", data.Type);
 
-            command.ExecuteNonQuery();
+			command.ExecuteNonQuery();
 
 			connection.Close();
 
