@@ -1,4 +1,4 @@
-﻿using musicplayer.dataobjects;
+using musicplayer.dataobjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,5 +39,11 @@ namespace musicplayer.dao
         /// </summary>
         /// <param name="id">instance ID</param>
         public void Remove(int id);
+
+        /// <summary>
+        /// Returns the amount of items in the database
+        /// </summary>
+        /// <returns>count</returns>
+        public int GetCount();
     }
 }

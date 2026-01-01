@@ -307,5 +307,20 @@ namespace musicplayer.dao
             command.ExecuteNonQuery();
             if (!wasOpen) connection.Close();
         }
+
+        public int GetCount()
+        {
+            SqlConnection connection = DatabaseConnection.GetConnection();
+            bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+            if (!wasOpen) connection.Open();
+
+            SqlCommand command = new SqlCommand("SELECT COUNT(*) FROM albums", connection);
+            command.Transaction = DatabaseConnection.GetTransaction();
+            int count = (int)command.ExecuteScalar();
+
+            if (!wasOpen) connection.Close();
+
+            return count;
+        }
     }
 }
