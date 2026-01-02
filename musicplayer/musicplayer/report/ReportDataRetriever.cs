@@ -61,8 +61,8 @@ namespace musicplayer.report
             var mostPopularAlbum = albumDAO.GetMostPopularAlbum();
             if (mostPopularAlbum != null)
             {
-                content.MostPopularAlbum = $"{mostPopularAlbum.Value.Item1} - {mostPopularAlbum.Value.Item2}";
-                content.MostPopularAlbumListeningTime = mostPopularAlbum.Value.Item3;
+                content.MostPopularAlbum = mostPopularAlbum.Value.Item1;
+                content.MostPopularAlbumListeningTime = mostPopularAlbum.Value.Item2;
             }
 
             // Least Popular Album

@@ -3,6 +3,7 @@ using Microsoft.VisualBasic;
 using musicplayer.controls;
 using musicplayer.dao;
 using musicplayer.forms;
+using musicplayer.report;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -160,6 +161,39 @@ namespace musicplayer
 			catch (Exception ex)
 			{
 				ErrorHandler.HandleException(ex, "Error", "Could not load songs.");
+			}
+		}
+
+		private void createReportToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+			{
+				// Force the user to stick to the format you support. 
+				// Don't let them save as .txt if you are writing HTML.
+				saveFileDialog.Filter = "HTML Files (*.html)|*.html|All Files (*.*)|*.*";
+				saveFileDialog.Title = "Select report file destination";
+				saveFileDialog.DefaultExt = "html";
+				saveFileDialog.AddExtension = true;
+				saveFileDialog.FileName = $"Report_{DateTime.Now:yyyyMMdd}"; // Suggest a decent default.
+
+				if (saveFileDialog.ShowDialog() == DialogResult.OK)
+				{
+					string filePath = saveFileDialog.FileName;
+
+					try
+					{
+						var content = new ReportDataRetriever().GetReportContent();
+						var generator = new ReportGenerator();
+						var reportText = generator.CreateReport(content);
+						File.WriteAllText(filePath, reportText);
+						MessageBox.Show("Report generated successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+					}
+					catch (Exception ex)
+					{
+						// Handle the inevitable IO errors (permissions, open files, etc.)
+						ErrorHandler.HandleException(ex, "Failed to save report", "Create report");
+					}
+				}
 			}
 		}
 	}

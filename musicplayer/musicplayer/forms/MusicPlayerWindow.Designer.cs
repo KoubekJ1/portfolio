@@ -40,6 +40,9 @@
 			bSongs = new Button();
 			bAlbums = new Button();
 			bArtists = new Button();
+			toolStripMenuItem1 = new ToolStripMenuItem();
+			createReportToolStripMenuItem = new ToolStripMenuItem();
+			importExportToolStripMenuItem = new ToolStripMenuItem();
 			menuStrip1.SuspendLayout();
 			panelMenu.SuspendLayout();
 			SuspendLayout();
@@ -56,7 +59,7 @@
 			// menuStrip1
 			// 
 			menuStrip1.ImageScalingSize = new Size(32, 32);
-			menuStrip1.Items.AddRange(new ToolStripItem[] { addToolStripMenuItem, helpToolStripMenuItem });
+			menuStrip1.Items.AddRange(new ToolStripItem[] { addToolStripMenuItem, importExportToolStripMenuItem, toolStripMenuItem1, helpToolStripMenuItem });
 			menuStrip1.Location = new Point(0, 0);
 			menuStrip1.Name = "menuStrip1";
 			menuStrip1.Padding = new Padding(4, 2, 0, 2);
@@ -74,21 +77,21 @@
 			// artistToolStripMenuItem
 			// 
 			artistToolStripMenuItem.Name = "artistToolStripMenuItem";
-			artistToolStripMenuItem.Size = new Size(136, 26);
+			artistToolStripMenuItem.Size = new Size(224, 26);
 			artistToolStripMenuItem.Text = "Artist";
 			artistToolStripMenuItem.Click += artistToolStripMenuItem_Click;
 			// 
 			// albumToolStripMenuItem
 			// 
 			albumToolStripMenuItem.Name = "albumToolStripMenuItem";
-			albumToolStripMenuItem.Size = new Size(136, 26);
+			albumToolStripMenuItem.Size = new Size(224, 26);
 			albumToolStripMenuItem.Text = "Album";
 			albumToolStripMenuItem.Click += albumToolStripMenuItem_Click;
 			// 
 			// songToolStripMenuItem
 			// 
 			songToolStripMenuItem.Name = "songToolStripMenuItem";
-			songToolStripMenuItem.Size = new Size(136, 26);
+			songToolStripMenuItem.Size = new Size(224, 26);
 			songToolStripMenuItem.Text = "Song";
 			songToolStripMenuItem.Click += songToolStripMenuItem_Click;
 			// 
@@ -102,7 +105,7 @@
 			// aboutToolStripMenuItem
 			// 
 			aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			aboutToolStripMenuItem.Size = new Size(133, 26);
+			aboutToolStripMenuItem.Size = new Size(224, 26);
 			aboutToolStripMenuItem.Text = "About";
 			aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
 			// 
@@ -150,6 +153,26 @@
 			bArtists.UseVisualStyleBackColor = true;
 			bArtists.Click += buttonArtists_Click;
 			// 
+			// toolStripMenuItem1
+			// 
+			toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { createReportToolStripMenuItem });
+			toolStripMenuItem1.Name = "toolStripMenuItem1";
+			toolStripMenuItem1.Size = new Size(68, 24);
+			toolStripMenuItem1.Text = "Report";
+			// 
+			// createReportToolStripMenuItem
+			// 
+			createReportToolStripMenuItem.Name = "createReportToolStripMenuItem";
+			createReportToolStripMenuItem.Size = new Size(224, 26);
+			createReportToolStripMenuItem.Text = "Create report";
+			createReportToolStripMenuItem.Click += createReportToolStripMenuItem_Click;
+			// 
+			// importExportToolStripMenuItem
+			// 
+			importExportToolStripMenuItem.Name = "importExportToolStripMenuItem";
+			importExportToolStripMenuItem.Size = new Size(117, 24);
+			importExportToolStripMenuItem.Text = "Import/Export";
+			// 
 			// MusicPlayerWindow
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
@@ -185,6 +208,9 @@
 		private Button bAlbums;
 		private ToolStripMenuItem albumToolStripMenuItem;
 		private ToolStripMenuItem songToolStripMenuItem;
+		private ToolStripMenuItem importExportToolStripMenuItem;
+		private ToolStripMenuItem toolStripMenuItem1;
+		private ToolStripMenuItem createReportToolStripMenuItem;
 	}
 }
 

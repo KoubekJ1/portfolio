@@ -232,7 +232,7 @@ namespace musicplayer.dao
             (string, long)? result = null;
             if (reader.Read())
             {
-                result = (reader.GetString(0), reader.GetInt64(1));
+                result = (reader.GetString(0), reader.GetInt32(1));
             }
             reader.Close();
 
@@ -254,7 +254,7 @@ namespace musicplayer.dao
             (string, long)? result = null;
             if (reader.Read())
             {
-                result = (reader.GetString(0), reader.GetInt64(1));
+                result = (reader.GetString(0), reader.GetInt32(1));
             }
             reader.Close();
 

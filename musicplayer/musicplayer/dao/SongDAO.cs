@@ -342,11 +342,11 @@ namespace musicplayer.dao
 
             SqlCommand command = new SqlCommand("SELECT SUM(so_listening_time) FROM songs", connection);
             command.Transaction = DatabaseConnection.GetTransaction();
-            object result = command.ExecuteScalar();
+            var reader = command.ExecuteReader();
             long time = 0;
-            if (result != DBNull.Value)
+            if (reader.Read())
             {
-                time = (long)result;
+                time = reader.GetInt32(0);
             }
 
             if (!wasOpen) connection.Close();
@@ -367,7 +367,7 @@ namespace musicplayer.dao
             (string, long)? result = null;
             if (reader.Read())
             {
-                result = (reader.GetString(0), reader.GetInt64(1));
+                result = (reader.GetString(0), reader.GetInt32(1));
             }
             reader.Close();
 
@@ -389,7 +389,7 @@ namespace musicplayer.dao
             (string, long)? result = null;
             if (reader.Read())
             {
-                result = (reader.GetString(0), reader.GetInt64(1));
+                result = (reader.GetString(0), reader.GetInt32(1));
             }
             reader.Close();
 
