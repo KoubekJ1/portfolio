@@ -34,15 +34,15 @@
 			artistToolStripMenuItem = new ToolStripMenuItem();
 			albumToolStripMenuItem = new ToolStripMenuItem();
 			songToolStripMenuItem = new ToolStripMenuItem();
+			importExportToolStripMenuItem = new ToolStripMenuItem();
+			toolStripMenuItem1 = new ToolStripMenuItem();
+			createReportToolStripMenuItem = new ToolStripMenuItem();
 			helpToolStripMenuItem = new ToolStripMenuItem();
 			aboutToolStripMenuItem = new ToolStripMenuItem();
 			panelMenu = new Panel();
 			bSongs = new Button();
 			bAlbums = new Button();
 			bArtists = new Button();
-			toolStripMenuItem1 = new ToolStripMenuItem();
-			createReportToolStripMenuItem = new ToolStripMenuItem();
-			importExportToolStripMenuItem = new ToolStripMenuItem();
 			menuStrip1.SuspendLayout();
 			panelMenu.SuspendLayout();
 			SuspendLayout();
@@ -77,23 +77,43 @@
 			// artistToolStripMenuItem
 			// 
 			artistToolStripMenuItem.Name = "artistToolStripMenuItem";
-			artistToolStripMenuItem.Size = new Size(224, 26);
+			artistToolStripMenuItem.Size = new Size(136, 26);
 			artistToolStripMenuItem.Text = "Artist";
 			artistToolStripMenuItem.Click += artistToolStripMenuItem_Click;
 			// 
 			// albumToolStripMenuItem
 			// 
 			albumToolStripMenuItem.Name = "albumToolStripMenuItem";
-			albumToolStripMenuItem.Size = new Size(224, 26);
+			albumToolStripMenuItem.Size = new Size(136, 26);
 			albumToolStripMenuItem.Text = "Album";
 			albumToolStripMenuItem.Click += albumToolStripMenuItem_Click;
 			// 
 			// songToolStripMenuItem
 			// 
 			songToolStripMenuItem.Name = "songToolStripMenuItem";
-			songToolStripMenuItem.Size = new Size(224, 26);
+			songToolStripMenuItem.Size = new Size(136, 26);
 			songToolStripMenuItem.Text = "Song";
 			songToolStripMenuItem.Click += songToolStripMenuItem_Click;
+			// 
+			// importExportToolStripMenuItem
+			// 
+			importExportToolStripMenuItem.Name = "importExportToolStripMenuItem";
+			importExportToolStripMenuItem.Size = new Size(117, 24);
+			importExportToolStripMenuItem.Text = "Import/Export";
+			// 
+			// toolStripMenuItem1
+			// 
+			toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { createReportToolStripMenuItem });
+			toolStripMenuItem1.Name = "toolStripMenuItem1";
+			toolStripMenuItem1.Size = new Size(68, 24);
+			toolStripMenuItem1.Text = "Report";
+			// 
+			// createReportToolStripMenuItem
+			// 
+			createReportToolStripMenuItem.Name = "createReportToolStripMenuItem";
+			createReportToolStripMenuItem.Size = new Size(180, 26);
+			createReportToolStripMenuItem.Text = "Create report";
+			createReportToolStripMenuItem.Click += createReportToolStripMenuItem_Click;
 			// 
 			// helpToolStripMenuItem
 			// 
@@ -105,7 +125,7 @@
 			// aboutToolStripMenuItem
 			// 
 			aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			aboutToolStripMenuItem.Size = new Size(224, 26);
+			aboutToolStripMenuItem.Size = new Size(133, 26);
 			aboutToolStripMenuItem.Text = "About";
 			aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
 			// 
@@ -153,26 +173,6 @@
 			bArtists.UseVisualStyleBackColor = true;
 			bArtists.Click += buttonArtists_Click;
 			// 
-			// toolStripMenuItem1
-			// 
-			toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { createReportToolStripMenuItem });
-			toolStripMenuItem1.Name = "toolStripMenuItem1";
-			toolStripMenuItem1.Size = new Size(68, 24);
-			toolStripMenuItem1.Text = "Report";
-			// 
-			// createReportToolStripMenuItem
-			// 
-			createReportToolStripMenuItem.Name = "createReportToolStripMenuItem";
-			createReportToolStripMenuItem.Size = new Size(224, 26);
-			createReportToolStripMenuItem.Text = "Create report";
-			createReportToolStripMenuItem.Click += createReportToolStripMenuItem_Click;
-			// 
-			// importExportToolStripMenuItem
-			// 
-			importExportToolStripMenuItem.Name = "importExportToolStripMenuItem";
-			importExportToolStripMenuItem.Size = new Size(117, 24);
-			importExportToolStripMenuItem.Text = "Import/Export";
-			// 
 			// MusicPlayerWindow
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
@@ -183,7 +183,6 @@
 			Controls.Add(menuStrip1);
 			MainMenuStrip = menuStrip1;
 			Margin = new Padding(2, 4, 2, 4);
-			MaximizeBox = false;
 			Name = "MusicPlayerWindow";
 			Text = "Music Player";
 			Load += MusicPlayerWindow_Load;

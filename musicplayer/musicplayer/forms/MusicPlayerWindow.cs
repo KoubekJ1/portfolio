@@ -28,7 +28,8 @@ namespace musicplayer
 		public MusicPlayerWindow()
 		{
 			InitializeComponent();
-			this.FormBorderStyle = FormBorderStyle.FixedSingle;
+			//this.FormBorderStyle = FormBorderStyle.FixedSingle;
+			this.MinimumSize = this.Size;
 			PlayerControl control = PlayerControl.GetPlayerControl();
 			control.Dock = DockStyle.Top;
 			this.Controls.Add(control);
