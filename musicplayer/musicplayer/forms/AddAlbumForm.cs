@@ -66,7 +66,7 @@ namespace musicplayer
 			}
 			else
 			{
-				_artistControl = new NewArtistFormControl();
+				_artistControl = new NewArtistFormControl(true);
 			}
 			_artistControl.Dock = DockStyle.Fill;
 			pArtistContainer.Controls.Add(_artistControl);
