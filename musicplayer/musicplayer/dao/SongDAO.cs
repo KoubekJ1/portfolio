@@ -72,6 +72,56 @@ namespace musicplayer.dao
 			return songs;
         }
 
+		public IEnumerable<Song> GetRange(int beginKey = 0, int count = 10)
+		{
+			LinkedList<Song> songs = new LinkedList<Song>();
+
+			SqlConnection connection = DatabaseConnection.GetConnection();
+			bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+			if (!wasOpen) connection.Open();
+
+			SqlCommand command = new SqlCommand("SELECT TOP (@count) so_id, so_sd_id, so_name, so_length, so_rating, so_ar_id FROM songs WHERE so_id >= @beginKey ORDER BY so_id ASC", connection);
+			command.Transaction = DatabaseConnection.GetTransaction();
+			command.Parameters.AddWithValue("beginKey", beginKey);
+			command.Parameters.AddWithValue("count", count);
+
+			SqlDataReader reader = command.ExecuteReader();
+
+			LinkedList<int?> artistIDs = new LinkedList<int?>();
+
+			while (reader.Read())
+			{
+				var song = new Song(reader.GetString(2));
+				song.Id = reader.GetInt32(0);
+				song.Length = reader.GetInt32(3);
+				song.DataID = reader[1] != DBNull.Value ? reader.GetInt32(1) : null;
+				song.Rating = Math.Round(reader.GetDouble(4), 1);
+				artistIDs.AddLast(reader[5] != DBNull.Value ? reader.GetInt32(5) : null);
+				songs.AddLast(song);
+			}
+			reader.Close();
+
+			LinkedListNode<int?> currentArtistIdNode = artistIDs.First;
+
+			var artistDao = new ArtistDAO();
+			foreach (Song s in songs)
+			{
+				if (currentArtistIdNode != null && currentArtistIdNode.Value.HasValue)
+				{
+					s.Artist = artistDao.GetByID(currentArtistIdNode.Value.Value);
+				}
+
+				if (currentArtistIdNode != null)
+				{
+					currentArtistIdNode = currentArtistIdNode.Next;
+				}
+			}
+
+			if (!wasOpen) connection.Close();
+
+			return songs;
+		}
+
         /// <summary>
         /// Retrieves a song based on the given ID
         /// </summary>

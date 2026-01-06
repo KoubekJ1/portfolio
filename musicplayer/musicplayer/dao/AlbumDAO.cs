@@ -73,6 +73,62 @@ namespace musicplayer.dao
 			return albums;
         }
 
+		public IEnumerable<Album> GetRange(int beginKey = 0, int count = 10)
+		{
+			LinkedList<Album> albums = new LinkedList<Album>();
+			LinkedList<int?> imgIDs = new LinkedList<int?>();
+			LinkedList<int?> artistIDs = new LinkedList<int?>();
+
+			SqlConnection connection = DatabaseConnection.GetConnection();
+			bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+			if (!wasOpen) connection.Open();
+
+			SqlCommand command = new SqlCommand("SELECT TOP (@count) alb_id, alb_name, alb_img_id, alb_ar_id, alb_release_date, alb_type FROM albums WHERE alb_id >= @beginKey ORDER BY alb_id ASC", connection);
+			command.Transaction = DatabaseConnection.GetTransaction();
+			command.Parameters.AddWithValue("beginKey", beginKey);
+			command.Parameters.AddWithValue("count", count);
+
+			SqlDataReader reader = command.ExecuteReader();
+
+			while (reader.Read())
+			{
+				var album = new Album(reader.GetString(1));
+				album.Id = reader.GetInt32(0);
+				if (!reader.IsDBNull(2))
+				{
+					int? imgID = reader.GetInt32(2);
+					imgIDs.AddLast(imgID);
+				}
+				if (!reader.IsDBNull(3)) artistIDs.AddLast(reader.GetInt32(3));
+				album.ReleaseDate = reader.GetFieldValue<DateOnly>(4);
+				album.Type = reader.GetString(5);
+				albums.AddLast(album);
+			}
+			reader.Close();
+
+			if (!wasOpen) connection.Close();
+
+			var iconImageDAO = new IconImageDAO();
+			var albumEnumerator = albums.GetEnumerator();
+			foreach (int? imgID in imgIDs)
+			{
+				if (!albumEnumerator.MoveNext()) break;
+				if (imgID == null) continue;
+				albumEnumerator.Current.Image = iconImageDAO.GetByID((int)imgID);
+			}
+
+			var artistDAO = new ArtistDAO();
+			albumEnumerator = albums.GetEnumerator();
+			foreach (int? artistID in artistIDs)
+			{
+				if (!albumEnumerator.MoveNext()) break;
+				if (artistID == null) continue;
+				albumEnumerator.Current.Artist = artistDAO.GetByID((int)artistID);
+			}
+
+			return albums;
+		}
+
         /// <summary>
         /// Retrieves an album based on its ID
         /// </summary>

@@ -204,6 +204,44 @@ namespace musicplayer.dao
 			return artists;
 		}
 
+		public IEnumerable<Artist> GetRange(int beginKey = 0, int count = 10)
+		{
+			LinkedList<Artist> artists = new LinkedList<Artist>();
+			LinkedList<int?> imageIDs = new LinkedList<int?>();
+
+			SqlConnection connection = DatabaseConnection.GetConnection();
+			bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+			if (!wasOpen) connection.Open();
+
+			SqlCommand command = new SqlCommand("SELECT TOP (@count) ar_id, ar_name, ar_img_id FROM artists WHERE ar_id >= @beginKey ORDER BY ar_id ASC", connection);
+			command.Transaction = DatabaseConnection.GetTransaction();
+			command.Parameters.AddWithValue("beginKey", beginKey);
+			command.Parameters.AddWithValue("count", count);
+			SqlDataReader reader = command.ExecuteReader();
+
+			while (reader.Read())
+			{
+				var artist = new Artist(reader.GetString(1));
+				artist.Id = reader.GetInt32(0);
+				imageIDs.AddLast(reader.IsDBNull(2) ? null : reader.GetInt32(2));
+				artists.AddLast(artist);
+			}
+			reader.Close();
+
+			var imageEnumerator = imageIDs.GetEnumerator();
+			foreach (Artist a in artists)
+			{
+				if (imageEnumerator.MoveNext() && imageEnumerator.Current != null)
+				{
+					a.Image = new IconImageDAO().GetByID((int)imageEnumerator.Current);
+				}
+			}
+
+			if (!wasOpen) connection.Close();
+
+			return artists;
+		}
+
         public int GetCount()
         {
             SqlConnection connection = DatabaseConnection.GetConnection();

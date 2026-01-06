@@ -27,12 +27,14 @@ namespace musicplayer.dao
         /// <returns>All instances</returns>
         public IEnumerable<T> GetAll();
 
-        /// <summary>
-        /// Uploads the instance into the database
-        /// </summary>
-        /// <param name="data">instance</param>
-        /// <returns>instance ID</returns>
-        public int? Upload(T data);
+		public IEnumerable<T> GetRange(int beginKey = 0, int count = 10);
+
+		/// <summary>
+		/// Uploads the instance into the database
+		/// </summary>
+		/// <param name="data">instance</param>
+		/// <returns>instance ID</returns>
+		public int? Upload(T data);
 
         /// <summary>
         /// Removes the instance from the database

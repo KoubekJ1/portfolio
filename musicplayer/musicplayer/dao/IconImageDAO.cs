@@ -23,6 +23,40 @@ namespace musicplayer.dao
             throw new NotImplementedException();
         }
 
+		public IEnumerable<IconImage> GetRange(int beginKey = 0, int count = 10)
+		{
+			LinkedList<IconImage> images = new LinkedList<IconImage>();
+
+			SqlConnection connection = DatabaseConnection.GetConnection();
+			bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+			if (!wasOpen) connection.Open();
+
+			SqlCommand command = new SqlCommand("SELECT TOP (@count) img_id, img_data FROM image_data WHERE img_id >= @beginKey ORDER BY img_id ASC", connection);
+			command.Transaction = DatabaseConnection.GetTransaction();
+			command.Parameters.AddWithValue("beginKey", beginKey);
+			command.Parameters.AddWithValue("count", count);
+
+			SqlDataReader reader = command.ExecuteReader();
+
+			while (reader.Read())
+			{
+				int id = reader.GetInt32(0);
+				byte[] buffer = null;
+				long byteAmount = reader.GetBytes(1, 0, buffer, 0, 8000);
+				buffer = new byte[byteAmount];
+				reader.GetBytes(1, 0, buffer, 0, (int)byteAmount);
+				MemoryStream stream = new MemoryStream(buffer);
+				Bitmap bitmap = new Bitmap(stream);
+				images.AddLast(new IconImage(bitmap, id));
+				stream.Close();
+			}
+			reader.Close();
+
+			if (!wasOpen) connection.Close();
+
+			return images;
+		}
+
         /// <summary>
         /// Retrieves an IconImage based on its ID
         /// </summary>
