@@ -3,6 +3,7 @@ using Microsoft.VisualBasic;
 using musicplayer.controls;
 using musicplayer.dao;
 using musicplayer.forms;
+using musicplayer.import;
 using musicplayer.report;
 using System;
 using System.Collections.Generic;
@@ -195,6 +196,48 @@ namespace musicplayer
 						ErrorHandler.HandleException(ex, "Failed to save report", "Create report");
 					}
 				}
+			}
+		}
+
+		private void importJSONToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				using var dialog = new OpenFileDialog
+				{
+					Title = "Select a JSON file",
+					Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*",
+					FilterIndex = 1,
+					Multiselect = false
+				};
+
+				if (dialog.ShowDialog() != DialogResult.OK) return;
+
+				var json = File.ReadAllText(dialog.FileName);
+				ImportData? data = null;
+				try
+				{
+					data = new ImportDataLoader().LoadFromJson(json);
+					if (data == null) throw new ArgumentException();
+				}
+				catch (ArgumentException ex)
+				{
+					ErrorHandler.HandleException(ex, "Invalid file", "Selected file is not valid!");
+					return;
+				}
+				try
+				{
+					new ImportUploader().UploadData(data);
+				}
+				catch (Exception ex)
+				{
+					ErrorHandler.HandleException(ex, "Import JSON", "An error occured when uploading the data to the database");
+				}
+
+			}
+			catch (Exception ex)
+			{
+				ErrorHandler.HandleException(ex, "Import JSON", "An error occured when uploading the data to the database");
 			}
 		}
 	}
