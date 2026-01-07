@@ -14,7 +14,6 @@ namespace musicplayer.io.model
         public int Length;
         public double Rating;
 
-        public int? AlbumID;
 		public int? ArtistID;
 	}
 }

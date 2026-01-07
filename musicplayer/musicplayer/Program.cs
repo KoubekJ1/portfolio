@@ -1,4 +1,5 @@
-﻿using musicplayer.tools;
+﻿using musicplayer.io.export;
+using musicplayer.tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,11 @@ namespace musicplayer
 		[STAThread]
 		static void Main()
 		{
+			// TEST
+
+			var data = new ExportDataRetriever().GetExport();
+
+			// ENDTEST
 
 			try
 			{

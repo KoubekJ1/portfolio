@@ -9,17 +9,16 @@ namespace musicplayer.io
 {
 	public class DataCollection
 	{
-		public Dictionary<string, Artist> Artists { get; private set; }
+		public Dictionary<int, Artist> Artists { get; private set; } = new Dictionary<int, Artist>();
 		
-		public IEnumerable<Album> Albums { get; private set; }
+		public Dictionary<int, Album> Albums { get; private set; } = new Dictionary<int, Album>();
 
-		public IEnumerable<Song> Songs { get; private set; }
+		public Dictionary<int, Song> Songs { get; private set; } = new Dictionary<int, Song>();
 
-		public DataCollection(IEnumerable<Album> albums, IEnumerable<Song> songs, Dictionary<string, Artist>? artists = null)
+		public LinkedList<AlbumSong> AlbumSongs { get; private set; } = new LinkedList<AlbumSong>();
+
+		public DataCollection()
 		{
-			Albums = albums;
-			Songs = songs;
-			Artists = artists == null ? new Dictionary<string, Artist>() : artists;
 		}
 	}
 }

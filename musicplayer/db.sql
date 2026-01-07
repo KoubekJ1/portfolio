@@ -32,18 +32,8 @@ CREATE TABLE albums (
 	alb_ar_id INT NULL FOREIGN KEY REFERENCES artists(ar_id) ON DELETE SET NULL,
 	alb_name NVARCHAR(100) NOT NULL CHECK(LEN(alb_name) >= 3),
 	alb_type NCHAR(2) NOT NULL CHECK(alb_type IN ('lp', 'ep', 'sp')),
-	alb_release_date DATE NOT NULL
-);
-
-CREATE TABLE genres (
-	ge_id INT IDENTITY(1,1) PRIMARY KEY,
-	ge_name NVARCHAR(100) NOT NULL CHECK(LEN(ge_name) >= 3),
-);
-
-CREATE TABLE albums_genres (
-	ag_id INT IDENTITY(1,1) PRIMARY KEY,
-	ag_alb_id INT NOT NULL FOREIGN KEY REFERENCES albums(alb_id) ON DELETE CASCADE,
-	ag_ge_id INT NOT NULL FOREIGN KEY REFERENCES genres(ge_id) ON DELETE CASCADE
+	alb_release_date DATE NOT NULL,
+	alb_featured BIT NOT NULL DEFAULT(0)
 );
 
 CREATE TABLE songs (

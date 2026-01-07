@@ -3,7 +3,8 @@ using Microsoft.VisualBasic;
 using musicplayer.controls;
 using musicplayer.dao;
 using musicplayer.forms;
-using musicplayer.import;
+using musicplayer.io;
+using musicplayer.io.import;
 using musicplayer.report;
 using System;
 using System.Collections.Generic;
@@ -214,7 +215,7 @@ namespace musicplayer
 				if (dialog.ShowDialog() != DialogResult.OK) return;
 
 				var json = File.ReadAllText(dialog.FileName);
-				ImportData? data = null;
+				DataCollection? data = null;
 				try
 				{
 					data = new ImportDataLoader().LoadFromJson(json);

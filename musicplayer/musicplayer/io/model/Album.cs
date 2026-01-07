@@ -10,12 +10,10 @@ namespace musicplayer.io.model
 {
 	public class Album
 	{
-		public int Id { get; set; }
-
 		public required string Name { get; set; }
 
 		public int? ImageId { get; set; }
-		public int ArtistID { get; set; }
+		public int? ArtistID { get; set; }
 
 		public DateOnly ReleaseDate { get; set; }
 
