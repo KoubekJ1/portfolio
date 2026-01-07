@@ -10,7 +10,7 @@ namespace musicplayer.io.model
 {
     public class Artist
     {
-        public required string Name;
-        public int? ImageID;
+        public required string Name { get; set; }
+        public int? ImageID { get; set; }
 	}
 }

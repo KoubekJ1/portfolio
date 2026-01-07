@@ -9,11 +9,11 @@ namespace musicplayer.io.model
 {
     public class Song
     {
-        public required string Name;
-        public int? DataID;
-        public int Length;
-        public double Rating;
+        public required string Name { get; set; }
+        public int? DataID { get; set; }
+		public int Length { get; set; }
+        public double Rating { get; set; }
 
-		public int? ArtistID;
+		public int? ArtistID { get; set; }
 	}
 }

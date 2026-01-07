@@ -1,8 +1,10 @@
 ﻿using musicplayer.io.export;
+using musicplayer.io.model;
 using musicplayer.tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -19,6 +21,13 @@ namespace musicplayer
 			// TEST
 
 			//var data = new ExportDataRetriever().GetExport();
+
+			/*var artist = new Artist()
+			{
+				Name = "test",
+				ImageID = 2
+			};
+			var json = JsonSerializer.Serialize(artist);*/
 
 			// ENDTEST
 
