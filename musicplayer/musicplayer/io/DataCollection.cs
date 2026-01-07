@@ -1,13 +1,13 @@
-﻿using musicplayer.dataobjects;
+﻿using musicplayer.io.model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace musicplayer.import
+namespace musicplayer.io
 {
-	public class ImportData
+	public class DataCollection
 	{
 		public Dictionary<string, Artist> Artists { get; private set; }
 		
@@ -15,7 +15,7 @@ namespace musicplayer.import
 
 		public IEnumerable<Song> Songs { get; private set; }
 
-		public ImportData(IEnumerable<Album> albums, IEnumerable<Song> songs, Dictionary<string, Artist>? artists = null)
+		public DataCollection(IEnumerable<Album> albums, IEnumerable<Song> songs, Dictionary<string, Artist>? artists = null)
 		{
 			Albums = albums;
 			Songs = songs;
