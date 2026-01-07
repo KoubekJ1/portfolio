@@ -18,7 +18,7 @@ namespace musicplayer
 		{
 			// TEST
 
-			var data = new ExportDataRetriever().GetExport();
+			//var data = new ExportDataRetriever().GetExport();
 
 			// ENDTEST
 

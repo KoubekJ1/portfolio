@@ -4,6 +4,7 @@ using musicplayer.controls;
 using musicplayer.dao;
 using musicplayer.forms;
 using musicplayer.io;
+using musicplayer.io.export;
 using musicplayer.io.import;
 using musicplayer.report;
 using System;
@@ -14,6 +15,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -171,13 +173,11 @@ namespace musicplayer
 		{
 			using (SaveFileDialog saveFileDialog = new SaveFileDialog())
 			{
-				// Force the user to stick to the format you support. 
-				// Don't let them save as .txt if you are writing HTML.
 				saveFileDialog.Filter = "HTML Files (*.html)|*.html|All Files (*.*)|*.*";
 				saveFileDialog.Title = "Select report file destination";
 				saveFileDialog.DefaultExt = "html";
 				saveFileDialog.AddExtension = true;
-				saveFileDialog.FileName = $"Report_{DateTime.Now:yyyyMMdd}"; // Suggest a decent default.
+				saveFileDialog.FileName = $"Report_{DateTime.Now:yyyyMMdd}";
 
 				if (saveFileDialog.ShowDialog() == DialogResult.OK)
 				{
@@ -193,7 +193,6 @@ namespace musicplayer
 					}
 					catch (Exception ex)
 					{
-						// Handle the inevitable IO errors (permissions, open files, etc.)
 						ErrorHandler.HandleException(ex, "Failed to save report", "Create report");
 					}
 				}
@@ -239,6 +238,87 @@ namespace musicplayer
 			catch (Exception ex)
 			{
 				ErrorHandler.HandleException(ex, "Import JSON", "An error occured when uploading the data to the database");
+			}
+		}
+
+		private void exportJSONToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+				{
+					saveFileDialog.Filter = "JSON Files (*.json)|*.json|All Files (*.*)|*.*";
+					saveFileDialog.Title = "Select export destination";
+					saveFileDialog.DefaultExt = "json";
+					saveFileDialog.AddExtension = true;
+					saveFileDialog.FileName = $"Export_{DateTime.Now:yyyyMMdd}";
+
+					if (saveFileDialog.ShowDialog() != DialogResult.OK) return;
+					
+					string filePath = saveFileDialog.FileName;
+					DataCollection? data = null;
+					
+					try
+					{
+						data = new ExportDataRetriever().GetExport();
+					}
+					catch (Exception ex)
+					{
+						ErrorHandler.HandleException(ex, "Export JSON", "Unable to retrieve data from the database.");
+					}
+					if (data == null) throw new Exception();
+
+					var directory = Path.GetDirectoryName(filePath);
+					if (directory != null) Directory.CreateDirectory(directory);
+					else directory = "";
+					using (FileStream fs = File.Create(filePath))
+					{
+						JsonSerializer.Serialize(fs, data, new JsonSerializerOptions()
+						{
+							WriteIndented = true
+						});
+					}
+
+					var musicDirectory = $"{directory}/music";
+					Directory.CreateDirectory(musicDirectory);
+					var imageDirectory = $"{directory}/images";
+					Directory.CreateDirectory(imageDirectory);
+
+					var songDao = new SongDAO();
+					foreach (var song in data.Songs)
+					{
+						var dataId = song.Value.DataID;
+						if (dataId == null) continue;
+						var songData = songDao.GetSongData((int)dataId);
+						if (songData == null) continue;
+						File.WriteAllBytes($"{musicDirectory}/{dataId}", songData);
+					}
+
+					var imageDao = new IconImageDAO();
+					foreach (var album in data.Albums)
+					{
+						var dataId = album.Value.ImageId;
+						if (dataId == null) continue;
+						var image = imageDao.GetByID((int)dataId);
+						if (image == null) continue;
+						image.Image.Save($"{imageDirectory}/{dataId}");
+					}
+
+					foreach (var artist in data.Artists)
+					{
+						var dataId = artist.Value.ImageID;
+						if (dataId == null) continue;
+						var image = imageDao.GetByID((int)dataId);
+						if (image == null) continue;
+						image.Image.Save($"{imageDirectory}/{dataId}");
+					}
+				}
+
+				MessageBox.Show("Successfully exported JSON!", "Export JSON");
+			}
+			catch (Exception ex)
+			{
+				ErrorHandler.HandleException(ex, "Export JSON", "An error occured when uploading the data to the database.");
 			}
 		}
 	}
