@@ -9,13 +9,13 @@ namespace musicplayer.io
 {
 	public class DataCollection
 	{
-		public Dictionary<int, Artist> Artists { get; private set; } = new Dictionary<int, Artist>();
+		public Dictionary<int, Artist> Artists { get; set; } = new Dictionary<int, Artist>();
 		
-		public Dictionary<int, Album> Albums { get; private set; } = new Dictionary<int, Album>();
+		public Dictionary<int, Album> Albums { get; set; } = new Dictionary<int, Album>();
 
-		public Dictionary<int, Song> Songs { get; private set; } = new Dictionary<int, Song>();
+		public Dictionary<int, Song> Songs { get; set; } = new Dictionary<int, Song>();
 
-		public LinkedList<AlbumSong> AlbumSongs { get; private set; } = new LinkedList<AlbumSong>();
+		public LinkedList<AlbumSong> AlbumSongs { get; set; } = new LinkedList<AlbumSong>();
 
 		public DataCollection()
 		{

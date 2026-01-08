@@ -227,7 +227,10 @@ namespace musicplayer
 				}
 				try
 				{
-					new ImportUploader().UploadData(data);
+					var directory = Path.GetDirectoryName(dialog.FileName);
+					if (directory == null) directory = "";
+					new ImportUploader().UploadData(data, directory + "/music", directory + "/images");
+					MessageBox.Show("Successfully imported JSON data!", "Import JSON");
 				}
 				catch (Exception ex)
 				{

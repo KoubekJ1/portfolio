@@ -1,4 +1,4 @@
-USE [musicplayer]
+--USE [musicplayer]
 
 DROP TABLE IF EXISTS album_songs;
 DROP TABLE IF EXISTS songs;
@@ -50,7 +50,7 @@ CREATE TABLE album_songs (
 	as_id INT IDENTITY(1,1) PRIMARY KEY,
 	as_alb_id INT NOT NULL FOREIGN KEY REFERENCES albums(alb_id) ON DELETE CASCADE,
 	as_so_id INT NOT NULL FOREIGN KEY REFERENCES songs(so_id) ON DELETE CASCADE,
-	as_order INT NOT NULL DEFAULT(0) CHECK(as_order > 0)
+	as_order INT NOT NULL DEFAULT(0) CHECK(as_order >= 0)
 );
 
 CREATE INDEX idx_autofill ON artists (ar_name, ar_listening_time DESC);
