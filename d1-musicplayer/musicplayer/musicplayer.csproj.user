@@ -17,6 +17,9 @@
     <Compile Update="controls\ArtistViewControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="controls\FeaturedAlbumsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="controls\forms\NewArtistFormControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

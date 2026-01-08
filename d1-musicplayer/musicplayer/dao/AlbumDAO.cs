@@ -422,5 +422,60 @@ namespace musicplayer.dao
 
             return result;
         }
-    }
+
+		public IEnumerable<Album> GetFeaturedAlbums()
+		{
+			LinkedList<Album> albums = new LinkedList<Album>();
+			LinkedList<int?> imgIDs = new LinkedList<int?>();
+			LinkedList<int?> artistIDs = new LinkedList<int?>();
+
+			SqlConnection connection = DatabaseConnection.GetConnection();
+			bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+			if (!wasOpen) connection.Open();
+
+			SqlCommand command = new SqlCommand("SELECT alb_id, alb_name, alb_img_id, alb_ar_id, alb_release_date, alb_type FROM albums WHERE alb_featured = 1", connection);
+			command.Transaction = DatabaseConnection.GetTransaction();
+
+			SqlDataReader reader = command.ExecuteReader();
+
+			Album album;
+			while (reader.Read())
+			{
+				album = new Album(reader.GetString(1));
+				album.Id = reader.GetInt32(0);
+				if (!reader.IsDBNull(2))
+				{
+					int? imgID = reader.GetInt32(2);
+					imgIDs.AddLast(imgID);
+				}
+				if (!reader.IsDBNull(3)) artistIDs.AddLast(reader.GetInt32(3));
+				album.ReleaseDate = reader.GetFieldValue<DateOnly>(4);
+				album.Type = reader.GetString(5);
+				albums.AddLast(album);
+			}
+			reader.Close();
+			if (!wasOpen) connection.Close();
+
+			var iconImageDAO = new IconImageDAO();
+			var albumEnumerator = albums.GetEnumerator();
+			foreach (int? imgID in imgIDs)
+			{
+				if (!albumEnumerator.MoveNext()) break;
+				if (imgID == null) continue;
+				albumEnumerator.Current.Image = iconImageDAO.GetByID((int)imgID);
+			}
+
+			var arstistDAO = new ArtistDAO();
+			albumEnumerator = albums.GetEnumerator();
+			foreach (int? artistID in artistIDs)
+			{
+				if (!albumEnumerator.MoveNext()) break;
+				if (artistID == null) continue;
+				albumEnumerator.Current.Artist = arstistDAO.GetByID((int)artistID);
+			}
+
+
+			return albums;
+		}
+	}
 }

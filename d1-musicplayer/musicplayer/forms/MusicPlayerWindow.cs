@@ -38,6 +38,10 @@ namespace musicplayer
 			control.Dock = DockStyle.Top;
 			this.Controls.Add(control);
 			this.FormClosing += DisposeAudioManager;
+
+			var featuredAlbumsControl = new FeaturedAlbumsControl(panelContent);
+			featuredAlbumsControl.Dock = DockStyle.Fill;
+			panelContent.Controls.Add(featuredAlbumsControl);
 		}
 
 		/// <summary>
@@ -257,10 +261,10 @@ namespace musicplayer
 					saveFileDialog.FileName = $"Export_{DateTime.Now:yyyyMMdd}";
 
 					if (saveFileDialog.ShowDialog() != DialogResult.OK) return;
-					
+
 					string filePath = saveFileDialog.FileName;
 					DataCollection? data = null;
-					
+
 					try
 					{
 						data = new ExportDataRetriever().GetExport();
@@ -323,6 +327,14 @@ namespace musicplayer
 			{
 				ErrorHandler.HandleException(ex, "Export JSON", "An error occured when uploading the data to the database.");
 			}
+		}
+
+		private void bFeatured_Click(object sender, EventArgs e)
+		{
+			panelContent.Controls.Clear();
+			var featuredAlbumsControl = new FeaturedAlbumsControl(panelContent);
+			featuredAlbumsControl.Dock = DockStyle.Fill;
+			panelContent.Controls.Add(featuredAlbumsControl);
 		}
 	}
 }

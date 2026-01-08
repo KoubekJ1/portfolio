@@ -10,5 +10,6 @@ namespace musicplayer.dao
 	public interface IAlbumDAO : IDAO<Album>
 	{
 		List<Album> GetArtistAlbums(int artistID);
+		IEnumerable<Album> GetFeaturedAlbums();
 	}
 }

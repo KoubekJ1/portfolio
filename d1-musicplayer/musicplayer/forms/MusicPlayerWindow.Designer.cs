@@ -36,6 +36,7 @@
 			songToolStripMenuItem = new ToolStripMenuItem();
 			importExportToolStripMenuItem = new ToolStripMenuItem();
 			importJSONToolStripMenuItem = new ToolStripMenuItem();
+			exportJSONToolStripMenuItem = new ToolStripMenuItem();
 			toolStripMenuItem1 = new ToolStripMenuItem();
 			createReportToolStripMenuItem = new ToolStripMenuItem();
 			helpToolStripMenuItem = new ToolStripMenuItem();
@@ -44,7 +45,7 @@
 			bSongs = new Button();
 			bAlbums = new Button();
 			bArtists = new Button();
-			exportJSONToolStripMenuItem = new ToolStripMenuItem();
+			bFeatured = new Button();
 			menuStrip1.SuspendLayout();
 			panelMenu.SuspendLayout();
 			SuspendLayout();
@@ -53,7 +54,7 @@
 			// 
 			panelContent.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 			panelContent.Location = new Point(210, 155);
-			panelContent.Margin = new Padding(2, 2, 2, 2);
+			panelContent.Margin = new Padding(2);
 			panelContent.Name = "panelContent";
 			panelContent.Size = new Size(1141, 657);
 			panelContent.TabIndex = 2;
@@ -107,9 +108,16 @@
 			// importJSONToolStripMenuItem
 			// 
 			importJSONToolStripMenuItem.Name = "importJSONToolStripMenuItem";
-			importJSONToolStripMenuItem.Size = new Size(224, 26);
+			importJSONToolStripMenuItem.Size = new Size(176, 26);
 			importJSONToolStripMenuItem.Text = "Import JSON";
 			importJSONToolStripMenuItem.Click += importJSONToolStripMenuItem_Click;
+			// 
+			// exportJSONToolStripMenuItem
+			// 
+			exportJSONToolStripMenuItem.Name = "exportJSONToolStripMenuItem";
+			exportJSONToolStripMenuItem.Size = new Size(176, 26);
+			exportJSONToolStripMenuItem.Text = "Export JSON";
+			exportJSONToolStripMenuItem.Click += exportJSONToolStripMenuItem_Click;
 			// 
 			// toolStripMenuItem1
 			// 
@@ -141,19 +149,20 @@
 			// 
 			// panelMenu
 			// 
+			panelMenu.Controls.Add(bFeatured);
 			panelMenu.Controls.Add(bSongs);
 			panelMenu.Controls.Add(bAlbums);
 			panelMenu.Controls.Add(bArtists);
 			panelMenu.Location = new Point(8, 155);
-			panelMenu.Margin = new Padding(2, 2, 2, 2);
+			panelMenu.Margin = new Padding(2);
 			panelMenu.Name = "panelMenu";
 			panelMenu.Size = new Size(200, 657);
 			panelMenu.TabIndex = 4;
 			// 
 			// bSongs
 			// 
-			bSongs.Location = new Point(2, 130);
-			bSongs.Margin = new Padding(2, 2, 2, 2);
+			bSongs.Location = new Point(2, 194);
+			bSongs.Margin = new Padding(2);
 			bSongs.Name = "bSongs";
 			bSongs.Size = new Size(196, 60);
 			bSongs.TabIndex = 2;
@@ -163,8 +172,8 @@
 			// 
 			// bAlbums
 			// 
-			bAlbums.Location = new Point(2, 66);
-			bAlbums.Margin = new Padding(2, 2, 2, 2);
+			bAlbums.Location = new Point(2, 130);
+			bAlbums.Margin = new Padding(2);
 			bAlbums.Name = "bAlbums";
 			bAlbums.Size = new Size(196, 60);
 			bAlbums.TabIndex = 1;
@@ -174,8 +183,8 @@
 			// 
 			// bArtists
 			// 
-			bArtists.Location = new Point(2, 2);
-			bArtists.Margin = new Padding(2, 2, 2, 2);
+			bArtists.Location = new Point(2, 66);
+			bArtists.Margin = new Padding(2);
 			bArtists.Name = "bArtists";
 			bArtists.Size = new Size(196, 60);
 			bArtists.TabIndex = 0;
@@ -183,12 +192,16 @@
 			bArtists.UseVisualStyleBackColor = true;
 			bArtists.Click += buttonArtists_Click;
 			// 
-			// exportJSONToolStripMenuItem
+			// bFeatured
 			// 
-			exportJSONToolStripMenuItem.Name = "exportJSONToolStripMenuItem";
-			exportJSONToolStripMenuItem.Size = new Size(224, 26);
-			exportJSONToolStripMenuItem.Text = "Export JSON";
-			exportJSONToolStripMenuItem.Click += exportJSONToolStripMenuItem_Click;
+			bFeatured.Location = new Point(2, 2);
+			bFeatured.Margin = new Padding(2);
+			bFeatured.Name = "bFeatured";
+			bFeatured.Size = new Size(196, 60);
+			bFeatured.TabIndex = 3;
+			bFeatured.Text = "Featured";
+			bFeatured.UseVisualStyleBackColor = true;
+			bFeatured.Click += bFeatured_Click;
 			// 
 			// MusicPlayerWindow
 			// 
@@ -229,6 +242,7 @@
 		private ToolStripMenuItem createReportToolStripMenuItem;
 		private ToolStripMenuItem importJSONToolStripMenuItem;
 		private ToolStripMenuItem exportJSONToolStripMenuItem;
+		private Button bFeatured;
 	}
 }
 
