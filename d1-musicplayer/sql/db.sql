@@ -1,4 +1,4 @@
---USE [musicplayer]
+USE [musicplayer]
 
 DROP TABLE IF EXISTS album_songs;
 DROP TABLE IF EXISTS songs;
