@@ -222,7 +222,7 @@ namespace musicplayer
 				}
 				catch (ArgumentException ex)
 				{
-					ErrorHandler.HandleException(ex, "Invalid file", "Selected file is not valid!");
+					ErrorHandler.HandleException(ex, "Invalid file", "Selected file is not valid, please verify it is a valid JSON file with correct unmodified data inside.");
 					return;
 				}
 				try
@@ -234,13 +234,13 @@ namespace musicplayer
 				}
 				catch (Exception ex)
 				{
-					ErrorHandler.HandleException(ex, "Import JSON", "An error occured when uploading the data to the database");
+					ErrorHandler.HandleException(ex, "Import JSON", "An error occured when uploading the data to the database, please verify the JSON file correctness.");
 				}
 
 			}
 			catch (Exception ex)
 			{
-				ErrorHandler.HandleException(ex, "Import JSON", "An error occured when uploading the data to the database");
+				ErrorHandler.HandleException(ex, "Import JSON", "An unknown error occured when importing data.");
 			}
 		}
 
