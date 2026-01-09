@@ -162,7 +162,10 @@ namespace musicplayer.controls.forms
 					{
 						var selectionStart = tbName.SelectionStart;
 						var selectionLength = tbName.SelectionLength;
+						lbArtists.SelectedIndexChanged -= lbArtists_SelectedIndexChanged;
+						lbArtists.SelectedIndex = lbArtists.Items.Count - 1;
 						MatchArtist(match);
+						lbArtists.SelectedIndexChanged += lbArtists_SelectedIndexChanged;
 						tbName.SelectionStart = selectionStart;
 						tbName.SelectionLength = selectionLength;
 					}
