@@ -66,11 +66,14 @@ Ovládání momentálního přehrávání se ovládá pomocí horní sekce uživ
 
 ## Implementace
 
-### Struktura tříd (přehled)
-  - Models: Artist, Album, Song, ImageData, SongData (obsahují vlastnosti odpovídající schématu DB).
-  - Data Access: SongRepository, ArtistRepository, AlbumRepository (CRUD operace, mapování na modely).
-  - Services: MusicService (správa knihovny), PlaybackService / AudioPlayer (ovládání přehrávání, události), ImportService (načítání MP3 metadat).
-  - UI (WinForms): MainForm, ArtistForm, AlbumForm, SongForm, Add/Edit dialogy, komponenty pro ovládání přehrávání.
+### Struktura tříd
+#### Models
+Artist, Album, Song, ImageData, SongData (obsahují vlastnosti odpovídající schématu DB).
+
+#### Data Access (DAO)
+ArtistDAO, AlbumDAO, SongDAO, IconImageDAO
+#### UI (WinForms)
+MusicPlayerWindow, Add/Edit dialogy, komponenty pro ovládání přehrávání.
 ### Použité návrhové vzory
   - Data Access Object Pattern pro oddělení perzistence.
   - Singleton pro správu globální instance přehrávače a připojení k databázi.
@@ -78,9 +81,6 @@ Ovládání momentálního přehrávání se ovládá pomocí horní sekce uživ
 ### Použité NuGet balíčky
   - NAudio — přehrávání a zpracování audio formátů.
   - Microsoft.Data.SqlClient (nebo System.Data.SqlClient) — připojení k MS SQL Serveru.
-
-Diagramy tříd:
-- [ZDE VLOŽÍTE Class Diagram]
 
 ## Databáze
 
