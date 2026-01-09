@@ -38,12 +38,14 @@ namespace musicplayer
 		public static void CommitTransaction()
 		{
 			transaction?.Commit();
+			transaction?.Dispose();
 			transaction = null;
 		}
 
 		public static void RollbackTransaction()
 		{
 			transaction?.Rollback();
+			transaction?.Dispose();
 			transaction = null;
 		}
 

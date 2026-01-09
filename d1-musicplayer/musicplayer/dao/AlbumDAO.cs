@@ -276,13 +276,13 @@ namespace musicplayer.dao
 
 			data.Id = (int?)command.ExecuteScalar();
 
-			if (!wasOpen) connection.Close();
-
             for (int i = 0; i < data.Songs.Count; i++)
             {
                 new SongDAO().Upload(data.Songs[i]);
                 CreateSongConnectionRow((int)data.Id, (int)data.Songs[i].Id, i);
             }
+
+			if (!wasOpen) connection.Close();
 
 			return data.Id;
 		}
@@ -315,13 +315,13 @@ namespace musicplayer.dao
 
 			command.ExecuteNonQuery();
 
-			if (!wasOpen) connection.Close();
-
 			for (int i = 0; i < data.Songs.Count; i++)
 			{
 				new SongDAO().Upload(data.Songs[i]);
 				CreateSongConnectionRow((int)data.Id, (int)data.Songs[i].Id, i);
 			}
+
+			if (!wasOpen) connection.Close();
 		}
 
         /// <summary>

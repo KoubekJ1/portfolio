@@ -144,7 +144,7 @@ namespace musicplayer
 			ArtistDAO artistDAO = new ArtistDAO();
 			try
 			{
-				using var connection = DatabaseConnection.GetConnection();
+				var connection = DatabaseConnection.GetConnection();
 				connection.Open();
 				DatabaseConnection.CreateTransaction();
 				try
@@ -155,23 +155,22 @@ namespace musicplayer
 					{
 						MessageBox.Show("Album \"" + _album.Name + "\" was successfully uploaded.", "Add Album");
 						DatabaseConnection.CommitTransaction();
+						connection.Close();
 						this.Close();
 					}
 					else
 					{
+						DatabaseConnection.RollbackTransaction();
+						connection.Close();
 						throw new Exception("ID is null!");
 					}
 				}
 				catch (Exception)
 				{
 					DatabaseConnection.RollbackTransaction();
+					connection.Close();
 					throw;
 				}
-				finally
-				{
-					connection.Close();
-				}
-				
 			}
 			catch (Exception ex)
 			{
