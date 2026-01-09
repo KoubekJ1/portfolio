@@ -48,6 +48,7 @@
 			label1 = new Label();
 			cbType = new ComboBox();
 			lTypeLabel = new Label();
+			lNameValidation = new Label();
 			((System.ComponentModel.ISupportInitialize)pbImage).BeginInit();
 			SuspendLayout();
 			// 
@@ -175,7 +176,7 @@
 			// 
 			pArtistContainer.Location = new Point(838, 112);
 			pArtistContainer.Name = "pArtistContainer";
-			pArtistContainer.Size = new Size(320, 300);
+			pArtistContainer.Size = new Size(340, 300);
 			pArtistContainer.TabIndex = 22;
 			// 
 			// lArtistLabel
@@ -223,11 +224,24 @@
 			lTypeLabel.TabIndex = 27;
 			lTypeLabel.Text = "Type";
 			// 
+			// lNameValidation
+			// 
+			lNameValidation.AutoSize = true;
+			lNameValidation.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 238);
+			lNameValidation.ForeColor = Color.Red;
+			lNameValidation.Location = new Point(67, 9);
+			lNameValidation.Name = "lNameValidation";
+			lNameValidation.Size = new Size(331, 20);
+			lNameValidation.TabIndex = 28;
+			lNameValidation.Text = "Name must be between 3 and 100 characters!";
+			lNameValidation.Visible = false;
+			// 
 			// AddAlbumForm
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
 			ClientSize = new Size(1187, 560);
+			Controls.Add(lNameValidation);
 			Controls.Add(lTypeLabel);
 			Controls.Add(cbType);
 			Controls.Add(label1);
@@ -276,5 +290,6 @@
 		private Label label1;
 		private ComboBox cbType;
 		private Label lTypeLabel;
+		private Label lNameValidation;
 	}
 }

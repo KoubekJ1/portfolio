@@ -35,6 +35,7 @@
 			tbName = new TextBox();
 			labelName = new Label();
 			lbArtists = new ListBox();
+			lNameValidation = new Label();
 			((System.ComponentModel.ISupportInitialize)pbImage).BeginInit();
 			SuspendLayout();
 			// 
@@ -100,10 +101,23 @@
 			lbArtists.TabIndex = 10;
 			lbArtists.SelectedIndexChanged += lbArtists_SelectedIndexChanged;
 			// 
+			// lNameValidation
+			// 
+			lNameValidation.AutoSize = true;
+			lNameValidation.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 238);
+			lNameValidation.ForeColor = Color.Red;
+			lNameValidation.Location = new Point(54, 0);
+			lNameValidation.Name = "lNameValidation";
+			lNameValidation.Size = new Size(285, 20);
+			lNameValidation.TabIndex = 29;
+			lNameValidation.Text = "Must be between 3 and 100 characters!";
+			lNameValidation.Visible = false;
+			// 
 			// NewArtistFormControl
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
+			Controls.Add(lNameValidation);
 			Controls.Add(lbArtists);
 			Controls.Add(bAdd);
 			Controls.Add(bChangeImage);
@@ -111,7 +125,7 @@
 			Controls.Add(tbName);
 			Controls.Add(labelName);
 			Name = "NewArtistFormControl";
-			Size = new Size(320, 300);
+			Size = new Size(340, 300);
 			((System.ComponentModel.ISupportInitialize)pbImage).EndInit();
 			ResumeLayout(false);
 			PerformLayout();
@@ -125,5 +139,6 @@
 		private TextBox tbName;
 		private Label labelName;
 		private ListBox lbArtists;
+		private Label lNameValidation;
 	}
 }

@@ -155,7 +155,7 @@ namespace musicplayer.dao
         {
             if (artist.Id == null) return;
 
-            if (artist.Image?.Id == null)
+            if (artist.Image != null && artist.Image.Id == null)
             {
                 artist.Image.Id = new IconImageDAO().Upload(artist.Image);
             }

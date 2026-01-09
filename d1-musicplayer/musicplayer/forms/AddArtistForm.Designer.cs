@@ -34,7 +34,7 @@
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
-			ClientSize = new Size(261, 310);
+			ClientSize = new Size(322, 310);
 			Margin = new Padding(2);
 			MaximizeBox = false;
 			Name = "AddArtistForm";

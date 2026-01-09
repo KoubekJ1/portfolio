@@ -120,6 +120,13 @@ namespace musicplayer
 		/// <param name="e"></param>
 		private void bAddAlbum_Click(object sender, EventArgs e)
 		{
+			bool albumValid = IsValid(true);
+			bool artistValid = _artistControl.IsValid(true);
+			if (!albumValid || !artistValid)
+			{
+				MessageBox.Show("Please fix all validation errors", "Add album");
+				return;
+			}
 			_album.ReleaseDate = DateOnly.FromDateTime(dtpReleaseDate.Value);
 			_album.Type = cbType.Text.ToLower();
 			_album.Songs.Clear();
@@ -230,7 +237,22 @@ namespace musicplayer
 		/// <param name="e"></param>
 		private void tbName_TextChanged(object sender, EventArgs e)
 		{
+			lNameValidation.Visible = false;
+			var length = tbName.Text.Length;
+			if (length < 3 || length > 100)
+			{
+				lNameValidation.Visible = true;
+			}
+
 			_album.Name = tbName.Text;
+		}
+
+		public bool IsValid(bool flag = true)
+		{
+			var length = tbName.Text.Length;
+			bool invalid = length < 3 || length > 100;
+			if (invalid && flag) lNameValidation.Visible = true;
+			return !invalid;
 		}
 
 		private void FormKeyDown(object sender, KeyEventArgs e)

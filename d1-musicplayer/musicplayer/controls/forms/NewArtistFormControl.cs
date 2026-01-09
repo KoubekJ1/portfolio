@@ -107,6 +107,12 @@ namespace musicplayer.controls.forms
 		/// <param name="e"></param>
 		private void bAdd_Click(object sender, EventArgs e)
 		{
+			if (!IsValid(true))
+			{
+				MessageBox.Show("Please fix all validation errors", "Add album");
+				return;
+			}
+
 			try
 			{
 				new ArtistDAO().Upload(_artist);
@@ -125,6 +131,13 @@ namespace musicplayer.controls.forms
 		/// <param name="e"></param>
 		private void tbName_TextChanged(object sender, EventArgs e)
 		{
+			lNameValidation.Visible = false;
+			var length = tbName.Text.Length;
+			if (length < 3 || length > 100)
+			{
+				lNameValidation.Visible = true;
+			}
+
 			if (_matched)
 			{
 				_matched = false;
@@ -173,6 +186,14 @@ namespace musicplayer.controls.forms
 					pbImage.SizeMode = PictureBoxSizeMode.StretchImage;
 				} catch (Exception) { }
 			}
+		}
+
+		public bool IsValid(bool flag = true)
+		{
+			var length = tbName.Text.Length;
+			bool invalid = length < 3 || length > 100;
+			if (invalid && flag) lNameValidation.Visible = true;
+			return !invalid;
 		}
 	}
 }
