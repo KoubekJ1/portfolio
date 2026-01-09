@@ -76,6 +76,7 @@
 			// 
 			// pAlbumlist
 			// 
+			pAlbumlist.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 			pAlbumlist.Location = new Point(3, 209);
 			pAlbumlist.Name = "pAlbumlist";
 			pAlbumlist.Size = new Size(834, 438);

@@ -41,8 +41,8 @@
 			// 
 			// flpSongs
 			// 
+			flpSongs.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 			flpSongs.AutoScroll = true;
-			flpSongs.Dock = DockStyle.Bottom;
 			flpSongs.FlowDirection = FlowDirection.TopDown;
 			flpSongs.Location = new Point(0, 209);
 			flpSongs.Name = "flpSongs";

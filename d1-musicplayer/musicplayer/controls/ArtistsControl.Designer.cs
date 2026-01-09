@@ -43,7 +43,7 @@
 			// 
 			// pArtistContent
 			// 
-			pArtistContent.Dock = DockStyle.Right;
+			pArtistContent.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 			pArtistContent.Location = new Point(306, 0);
 			pArtistContent.Name = "pArtistContent";
 			pArtistContent.Size = new Size(835, 711);
