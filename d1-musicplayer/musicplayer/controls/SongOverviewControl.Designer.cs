@@ -31,6 +31,8 @@
 			lSearch = new Label();
 			tbSearch = new TextBox();
 			flpSongs = new FlowLayoutPanel();
+			bBack = new Button();
+			bNext = new Button();
 			SuspendLayout();
 			// 
 			// lSearch
@@ -52,15 +54,41 @@
 			// 
 			// flpSongs
 			// 
+			flpSongs.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 			flpSongs.Location = new Point(3, 56);
 			flpSongs.Name = "flpSongs";
-			flpSongs.Size = new Size(1135, 598);
+			flpSongs.Size = new Size(1135, 563);
 			flpSongs.TabIndex = 2;
+			// 
+			// bBack
+			// 
+			bBack.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+			bBack.Enabled = false;
+			bBack.Location = new Point(3, 625);
+			bBack.Name = "bBack";
+			bBack.Size = new Size(94, 29);
+			bBack.TabIndex = 3;
+			bBack.Text = "<";
+			bBack.UseVisualStyleBackColor = true;
+			bBack.Click += bBack_Click;
+			// 
+			// bNext
+			// 
+			bNext.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+			bNext.Location = new Point(103, 625);
+			bNext.Name = "bNext";
+			bNext.Size = new Size(94, 29);
+			bNext.TabIndex = 4;
+			bNext.Text = ">";
+			bNext.UseVisualStyleBackColor = true;
+			bNext.Click += bNext_Click;
 			// 
 			// SongOverviewControl
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
+			Controls.Add(bNext);
+			Controls.Add(bBack);
 			Controls.Add(flpSongs);
 			Controls.Add(tbSearch);
 			Controls.Add(lSearch);
@@ -75,5 +103,7 @@
 		private Label lSearch;
 		private TextBox tbSearch;
 		private FlowLayoutPanel flpSongs;
+		private Button bBack;
+		private Button bNext;
 	}
 }

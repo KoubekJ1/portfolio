@@ -99,6 +99,7 @@ namespace musicplayer.dao
 				artistIDs.AddLast(reader[5] != DBNull.Value ? reader.GetInt32(5) : null);
 				songs.AddLast(song);
 			}
+
 			reader.Close();
 
 			LinkedListNode<int?> currentArtistIdNode = artistIDs.First;
@@ -447,5 +448,60 @@ namespace musicplayer.dao
 
             return result;
         }
+
+		/// <summary>
+		/// Retrieves songs by name, ordered by listening time (most popular first), limited to 10 results
+		/// </summary>
+		/// <param name="name">song name to search for</param>
+		/// <returns>list of songs matching the name</returns>
+		public IEnumerable<Song> GetByName(string name)
+		{
+			LinkedList<Song> songs = new LinkedList<Song>();
+
+			SqlConnection connection = DatabaseConnection.GetConnection();
+			bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+			if (!wasOpen) connection.Open();
+
+			SqlCommand command = new SqlCommand("SELECT TOP 10 so_id, so_sd_id, so_name, so_length, so_rating, so_ar_id FROM songs WHERE so_name LIKE @name ORDER BY so_listening_time DESC", connection);
+			command.Transaction = DatabaseConnection.GetTransaction();
+			command.Parameters.AddWithValue("name", $"%{name}%");
+
+			SqlDataReader reader = command.ExecuteReader();
+
+			LinkedList<int?> artistIDs = new LinkedList<int?>();
+
+			Song song;
+			while (reader.Read())
+			{
+				song = new Song(reader.GetString(2));
+				song.Id = reader.GetInt32(0);
+				song.Length = reader.GetInt32(3);
+				song.DataID = reader[1] != DBNull.Value ? reader.GetInt32(1) : null;
+				song.Rating = Math.Round(reader.GetDouble(4), 1);
+				artistIDs.AddLast(reader[5] != DBNull.Value ? reader.GetInt32(5) : null);
+				songs.AddLast(song);
+			}
+			reader.Close();
+
+			LinkedListNode<int?> currentArtistIdNode = artistIDs.First;
+
+			var artistDao = new ArtistDAO();
+			foreach (Song s in songs)
+			{
+				if (currentArtistIdNode != null && currentArtistIdNode.Value.HasValue)
+				{
+					s.Artist = artistDao.GetByID(currentArtistIdNode.Value.Value);
+				}
+
+				if (currentArtistIdNode != null)
+				{
+					currentArtistIdNode = currentArtistIdNode.Next;
+				}
+			}
+
+			if (!wasOpen) connection.Close();
+
+			return songs;
+		}
 	}
 }

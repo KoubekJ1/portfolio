@@ -82,7 +82,8 @@ CREATE TABLE album_songs (
     CONSTRAINT ck_as_order CHECK (as_order >= 0)
 );
 
-CREATE INDEX idx_autofill ON artists (ar_name, ar_listening_time DESC);
+CREATE INDEX idx_ar_autofill ON artists (ar_name, ar_listening_time DESC);
+CREATE INDEX idx_so_autofill ON songs (so_name, so_listening_time DESC);
 
 GO
 

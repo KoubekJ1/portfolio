@@ -1,4 +1,5 @@
-﻿using musicplayer.dataobjects;
+﻿using musicplayer.dao;
+using musicplayer.dataobjects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,17 +20,20 @@ namespace musicplayer.controls
 		private IEnumerable<Song> _songs;
 		private Control _artistDisplayControl;
 
+		private int _currentPage = 0;
+		private int _lastIndex = 0;
+		private Stack<int> _lastIndexHistory = new Stack<int>();
+
 		/// <summary>
 		/// Constructs a new SongOverviewControl instance with the given songs
 		/// </summary>
 		/// <param name="songs">songs</param>
 		/// <param name="artistDisplayControl">parent control containing this instance</param>
-		public SongOverviewControl(IEnumerable<Song> songs, Control artistDisplayControl)
+		public SongOverviewControl(Control artistDisplayControl)
 		{
 			InitializeComponent();
-			_songs = songs;
 			_artistDisplayControl = artistDisplayControl;
-			SetSongs(songs);
+			Next();
 		}
 
 		/// <summary>
@@ -38,12 +42,73 @@ namespace musicplayer.controls
 		/// <param name="songs">songs</param>
 		private void SetSongs(IEnumerable<Song> songs)
 		{
+			_songs = songs;
 			flpSongs.Controls.Clear();
 			foreach (Song song in songs)
 			{
 				var control = new SongControl(song, _artistDisplayControl);
 				flpSongs.Controls.Add(control);
 			}
+		}
+
+		private void Next()
+		{
+			MessageBox.Show(_lastIndex.ToString());
+			if (_lastIndex > 0) bBack.Enabled = true;
+
+			var songs = new SongDAO().GetRange(_lastIndex + 1);
+			SetSongs(songs);
+			if (songs.Count() < 10)
+				bNext.Enabled = false;
+			if (songs.Count() < 1)
+			{
+				_currentPage++;
+				_lastIndexHistory.Push(_lastIndex);
+				_lastIndex += 1;
+				return;
+			}
+			var id = songs.Last().Id;
+			if (id == null)
+			{
+				return;
+			}
+			_currentPage++;
+			_lastIndexHistory.Push(_lastIndex);
+			_lastIndex = (int)id;
+		}
+
+		private void Back()
+		{
+			MessageBox.Show(_lastIndex.ToString());
+			MessageBox.Show(_currentPage.ToString());
+			if (_currentPage <= 0)
+			{
+				bBack.Enabled = false;
+			}
+
+			bNext.Enabled = true;
+
+			if (_lastIndexHistory.Count < 1) return;
+
+			_lastIndex = _lastIndexHistory.Pop();
+
+			var songs = new SongDAO().GetRange(_lastIndex + 1);
+			
+			_currentPage--;
+			SetSongs(songs);
+		}
+
+		private void LoadSongsByName(string name)
+		{
+			_lastIndex = 0;
+			_currentPage = 0;
+			_lastIndexHistory.Clear();
+			if (name.Trim() == string.Empty)
+			{
+					
+			}
+			var songs = new SongDAO().GetByName(name);
+			SetSongs(songs);
 		}
 
 		/// <summary>
@@ -53,8 +118,17 @@ namespace musicplayer.controls
 		/// <param name="e"></param>
 		private void tbSearch_TextChanged(object sender, EventArgs e)
 		{
-			IEnumerable<Song> songs = _songs.Where(song => song.Name.IndexOf (tbSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0);
-			SetSongs(songs);
+			LoadSongsByName(tbSearch.Text);
+		}
+
+		private void bBack_Click(object sender, EventArgs e)
+		{
+			Back();
+		}
+
+		private void bNext_Click(object sender, EventArgs e)
+		{
+			Next();
 		}
 	}
 }
