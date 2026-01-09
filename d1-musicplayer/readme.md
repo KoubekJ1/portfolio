@@ -69,11 +69,16 @@ Ovládání momentálního přehrávání se ovládá pomocí horní sekce uživ
 ### Struktura tříd
 #### Models
 Artist, Album, Song, ImageData, SongData (obsahují vlastnosti odpovídající schématu DB).
+![Model Class Diagram](https://github.com/KoubekJ1/portfolio/blob/main/d1-musicplayer/docs/model_class.png "Model Class Diagram")
 
 #### Data Access (DAO)
 ArtistDAO, AlbumDAO, SongDAO, IconImageDAO
+![DAO Class Diagram](https://github.com/KoubekJ1/portfolio/blob/main/d1-musicplayer/docs/dao_class.png "DAO Class Diagram")
+
 #### UI (WinForms)
 MusicPlayerWindow, Add/Edit dialogy, komponenty pro ovládání přehrávání.
+![UI Class Diagram](https://github.com/KoubekJ1/portfolio/blob/main/d1-musicplayer/docs/ui_class.png "UI Class Diagram")
+
 ### Použité návrhové vzory
   - Data Access Object Pattern pro oddělení perzistence.
   - Singleton pro správu globální instance přehrávače a připojení k databázi.
@@ -83,6 +88,7 @@ MusicPlayerWindow, Add/Edit dialogy, komponenty pro ovládání přehrávání.
   - Microsoft.Data.SqlClient (nebo System.Data.SqlClient) — připojení k MS SQL Serveru.
 
 ## Databáze
+![ER Diagram](https://github.com/KoubekJ1/portfolio/blob/main/d1-musicplayer/docs/er.png "ER Diagram")
 
 - Přehled tabulek
   - image_data, song_data, artists, albums, songs, album_songs, genres, albums_genres (viz SQL skript níže).
