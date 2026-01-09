@@ -40,7 +40,7 @@
 			// 
 			// bAdd
 			// 
-			bAdd.Location = new Point(0, 268);
+			bAdd.Location = new Point(0, 269);
 			bAdd.Margin = new Padding(2);
 			bAdd.Name = "bAdd";
 			bAdd.Size = new Size(92, 29);
@@ -51,7 +51,7 @@
 			// 
 			// bChangeImage
 			// 
-			bChangeImage.Location = new Point(0, 220);
+			bChangeImage.Location = new Point(0, 224);
 			bChangeImage.Margin = new Padding(2);
 			bChangeImage.Name = "bChangeImage";
 			bChangeImage.Size = new Size(92, 29);
@@ -67,7 +67,7 @@
 			pbImage.Location = new Point(0, 56);
 			pbImage.Margin = new Padding(2);
 			pbImage.Name = "pbImage";
-			pbImage.Size = new Size(160, 160);
+			pbImage.Size = new Size(160, 164);
 			pbImage.SizeMode = PictureBoxSizeMode.StretchImage;
 			pbImage.TabIndex = 7;
 			pbImage.TabStop = false;
@@ -111,7 +111,7 @@
 			Controls.Add(tbName);
 			Controls.Add(labelName);
 			Name = "NewArtistFormControl";
-			Size = new Size(398, 299);
+			Size = new Size(320, 300);
 			((System.ComponentModel.ISupportInitialize)pbImage).EndInit();
 			ResumeLayout(false);
 			PerformLayout();

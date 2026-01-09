@@ -104,7 +104,7 @@
 			bAddSong.Name = "bAddSong";
 			bAddSong.Size = new Size(151, 29);
 			bAddSong.TabIndex = 9;
-			bAddSong.Text = "Add";
+			bAddSong.Text = "Add existing";
 			bAddSong.UseVisualStyleBackColor = true;
 			bAddSong.Click += bAddSong_Click;
 			// 
@@ -157,9 +157,9 @@
 			// 
 			// pNewSongFormContainer
 			// 
-			pNewSongFormContainer.Location = new Point(481, 111);
+			pNewSongFormContainer.Location = new Point(481, 112);
 			pNewSongFormContainer.Name = "pNewSongFormContainer";
-			pNewSongFormContainer.Size = new Size(513, 282);
+			pNewSongFormContainer.Size = new Size(296, 149);
 			pNewSongFormContainer.TabIndex = 20;
 			// 
 			// lNewSongLabel
@@ -173,15 +173,15 @@
 			// 
 			// pArtistContainer
 			// 
-			pArtistContainer.Location = new Point(1113, 111);
+			pArtistContainer.Location = new Point(838, 112);
 			pArtistContainer.Name = "pArtistContainer";
-			pArtistContainer.Size = new Size(511, 282);
+			pArtistContainer.Size = new Size(320, 300);
 			pArtistContainer.TabIndex = 22;
 			// 
 			// lArtistLabel
 			// 
 			lArtistLabel.AutoSize = true;
-			lArtistLabel.Location = new Point(1113, 88);
+			lArtistLabel.Location = new Point(838, 88);
 			lArtistLabel.Name = "lArtistLabel";
 			lArtistLabel.Size = new Size(44, 20);
 			lArtistLabel.TabIndex = 23;
@@ -227,7 +227,7 @@
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
-			ClientSize = new Size(1720, 560);
+			ClientSize = new Size(1187, 560);
 			Controls.Add(lTypeLabel);
 			Controls.Add(cbType);
 			Controls.Add(label1);
