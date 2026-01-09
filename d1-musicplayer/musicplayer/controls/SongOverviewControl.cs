@@ -20,102 +20,96 @@ namespace musicplayer.controls
 		private IEnumerable<Song> _songs;
 		private Control _artistDisplayControl;
 
-		private int _currentPage = 0;
 		private int _lastIndex = 0;
-		private Stack<int> _lastIndexHistory = new Stack<int>();
+		private Stack<int> _cursorHistory = new Stack<int>();
 
-		/// <summary>
-		/// Constructs a new SongOverviewControl instance with the given songs
-		/// </summary>
-		/// <param name="songs">songs</param>
-		/// <param name="artistDisplayControl">parent control containing this instance</param>
 		public SongOverviewControl(Control artistDisplayControl)
 		{
 			InitializeComponent();
 			_artistDisplayControl = artistDisplayControl;
-			Next();
+
+			LoadPage();
 		}
 
-		/// <summary>
-		/// Sets the songs that are to be displayed
-		/// </summary>
-		/// <param name="songs">songs</param>
 		private void SetSongs(IEnumerable<Song> songs)
 		{
 			_songs = songs;
-			flpSongs.Controls.Clear();
+
+			while (flpSongs.Controls.Count > 0)
+			{
+				Control c = flpSongs.Controls[0];
+				flpSongs.Controls.Remove(c);
+				c.Dispose();
+			}
+
+			flpSongs.SuspendLayout();
+
 			foreach (Song song in songs)
 			{
 				var control = new SongControl(song, _artistDisplayControl);
 				flpSongs.Controls.Add(control);
 			}
+
+			flpSongs.ResumeLayout();
+		}
+
+		private void LoadPage()
+		{
+			var dao = new SongDAO();
+			var songs = dao.GetRange(_lastIndex);
+
+			SetSongs(songs);
+			UpdatePaginationState(songs.Count());
+		}
+
+		private void UpdatePaginationState(int count)
+		{
+			bBack.Enabled = _cursorHistory.Count > 0;
+
+			bNext.Enabled = count >= 10;
 		}
 
 		private void Next()
 		{
-			MessageBox.Show(_lastIndex.ToString());
-			if (_lastIndex > 0) bBack.Enabled = true;
+			if (_songs == null || !_songs.Any()) return;
 
-			var songs = new SongDAO().GetRange(_lastIndex + 1);
-			SetSongs(songs);
-			if (songs.Count() < 10)
-				bNext.Enabled = false;
-			if (songs.Count() < 1)
+			_cursorHistory.Push(_lastIndex);
+
+			int? lastId = _songs.Last().Id;
+
+			if (lastId.HasValue)
 			{
-				_currentPage++;
-				_lastIndexHistory.Push(_lastIndex);
-				_lastIndex += 1;
-				return;
+				_lastIndex = lastId.Value;
+				LoadPage();
 			}
-			var id = songs.Last().Id;
-			if (id == null)
-			{
-				return;
-			}
-			_currentPage++;
-			_lastIndexHistory.Push(_lastIndex);
-			_lastIndex = (int)id;
 		}
 
 		private void Back()
 		{
-			MessageBox.Show(_lastIndex.ToString());
-			MessageBox.Show(_currentPage.ToString());
-			if (_currentPage <= 0)
-			{
-				bBack.Enabled = false;
-			}
+			if (_cursorHistory.Count == 0) return;
 
-			bNext.Enabled = true;
-
-			if (_lastIndexHistory.Count < 1) return;
-
-			_lastIndex = _lastIndexHistory.Pop();
-
-			var songs = new SongDAO().GetRange(_lastIndex + 1);
-			
-			_currentPage--;
-			SetSongs(songs);
+			_lastIndex = _cursorHistory.Pop();
+			LoadPage();
 		}
 
 		private void LoadSongsByName(string name)
 		{
 			_lastIndex = 0;
-			_currentPage = 0;
-			_lastIndexHistory.Clear();
-			if (name.Trim() == string.Empty)
+			_cursorHistory.Clear();
+
+			if (string.IsNullOrWhiteSpace(name))
 			{
-					
+				LoadPage();
+				return;
 			}
+
 			var songs = new SongDAO().GetByName(name);
 			SetSongs(songs);
+
+			bBack.Enabled = false;
+			bNext.Enabled = false;
 		}
 
-		/// <summary>
-		/// EventHandler that filters songs based on value of the search textbox
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
 		private void tbSearch_TextChanged(object sender, EventArgs e)
 		{
 			LoadSongsByName(tbSearch.Text);
