@@ -64,6 +64,44 @@ Po přidání dat do databáze naleznete v uživatelském rozhraní přidanou hu
 #### Ovládání přehrávání
 Ovládání momentálního přehrávání se ovládá pomocí horní sekce uživatelského rozhraní. Při poslechu skladby lze skladbu pozastavit stiskem "Stop" a následně znovu pustit stiskem "Play". Pro přechod do jiné části skladby přesuňte posuvník na požadovanou pozici. Pro úpravu hlasitosti přesuňte posuvník "Volume" na požadovanou polohu. Pro přeskočení písně či přehrání předchozí písně stiskněte tlačítko s šipkami v požadovaném směru.
 
+## Implementace
+
+### Struktura tříd (přehled)
+  - Models: Artist, Album, Song, ImageData, SongData (obsahují vlastnosti odpovídající schématu DB).
+  - Data Access: SongRepository, ArtistRepository, AlbumRepository (CRUD operace, mapování na modely).
+  - Services: MusicService (správa knihovny), PlaybackService / AudioPlayer (ovládání přehrávání, události), ImportService (načítání MP3 metadat).
+  - UI (WinForms): MainForm, ArtistForm, AlbumForm, SongForm, Add/Edit dialogy, komponenty pro ovládání přehrávání.
+### Použité návrhové vzory
+  - Data Access Object Pattern pro oddělení perzistence.
+  - Singleton pro správu globální instance přehrávače a připojení k databázi.
+  - Observer / Event-driven pro notifikace stavu přehrávání (play, pause, progress).
+### Použité NuGet balíčky
+  - NAudio — přehrávání a zpracování audio formátů.
+  - Microsoft.Data.SqlClient (nebo System.Data.SqlClient) — připojení k MS SQL Serveru.
+
+Diagramy tříd:
+- [ZDE VLOŽÍTE Class Diagram]
+
+## Databáze
+
+- Přehled tabulek
+  - image_data, song_data, artists, albums, songs, album_songs, genres, albums_genres (viz SQL skript níže).
+- Indexy a jejich dopad na výkon
+  - idx_ar_autofill ON artists(ar_name, ar_listening_time DESC)
+    - Zrychluje vyhledávání a autocompletion podle jména umělce a zároveň upřednostňuje často poslouchané položky.
+  - idx_so_autofill ON songs(so_name, so_listening_time DESC)
+    - Podobně zrychluje vyhledávání skladeb a dotazy, které vybírají top dle poslechů.
+- Trigger(y)
+  - tr_updatelistneningtime ON songs AFTER UPDATE
+    - Účel: Po aktualizaci záznamu skladby upraví souhrnné poslechové časy asociovaného umělce (ar_listening_time).
+- Views (pohledy)
+  - least_popular_song, most_popular_song, least_popular_artist, most_popular_artist, least_popular_album, most_popular_album
+    - Poskytují předpřipravené dotazy pro rychlé získání "top" či "bottom" položek bez opakovaného psaní logiky.
+    - V kombinaci s indexy a předpočítanými sloupci (např. ar_listening_time, so_listening_time) lze získat výsledky velmi rychle.
+
+## Databázové schéma
+Níže je uvedeno databázové schéma.
+
 ## SQL skript pro vytvoření databáze
 ```
 USE [musicplayer]

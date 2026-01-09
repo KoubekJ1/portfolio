@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="musicplayer.dao.AlbumDAO">
+    <Position X="14.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAACAABAwAAAAQAAAEAggAgACgAAA=</HashCode>
+      <FileName>dao\AlbumDAO.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="musicplayer.dao.ArtistDAO">
+    <Position X="9.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAgIAAAAAAAABAgAAAAAAAAAAggAgAAAAAg=</HashCode>
+      <FileName>dao\ArtistDAO.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="musicplayer.dao.IconImageDAO">
+    <Position X="14" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAABAgAAAAAAAAAAggAgAAAAAA=</HashCode>
+      <FileName>dao\IconImageDAO.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="musicplayer.dao.SongDAO">
+    <Position X="12" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABQAAAAAAAAAAAAAAAQABAkAAAAAACgAAghggAAAAAg=</HashCode>
+      <FileName>dao\SongDAO.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="musicplayer.dao.IAlbumDAO">
+    <Position X="14.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>dao\IAlbumDAO.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="musicplayer.dao.IArtistDAO" Collapsed="true">
+    <Position X="9.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>dao\IArtistDAO.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="musicplayer.dao.IDAO&lt;T&gt;">
+    <Position X="12" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAABAgAAAAAAAAAAggAgAAAAAA=</HashCode>
+      <FileName>dao\IDAO.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="musicplayer.dao.ISongDAO">
+    <Position X="12" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAABAAAAAAAA=</HashCode>
+      <FileName>dao\ISongDAO.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
