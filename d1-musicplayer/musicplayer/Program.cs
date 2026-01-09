@@ -1,4 +1,5 @@
-﻿using musicplayer.io.export;
+﻿using Microsoft.Data.SqlClient;
+using musicplayer.io.export;
 using musicplayer.io.model;
 using musicplayer.tools;
 using System;
@@ -35,9 +36,15 @@ namespace musicplayer
 			{
 				DatabaseConnection.GetConnection();
 			}
+			catch (SqlException e)
+			{
+				var mapper = new SqlErrorMessageMapper();
+				MessageBox.Show(mapper.GetMessage(e.Number), "Unable to initialize connection to the database");
+				return;
+			}
 			catch (Exception e)
 			{
-				MessageBox.Show(e.Message, "Unable to initialize connection to the database");
+				MessageBox.Show("An unknown database-related error occured. Please verify the database configuration and try again.", "Unable to initialize connection to the database");
 				return;
 			}
 
