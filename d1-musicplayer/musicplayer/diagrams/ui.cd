@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="musicplayer.controls.forms.NewArtistFormControl">
+    <Position X="17.5" Y="2.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAwAAAAAACAFAgBEMAiAABAKAOAAAAAAIAQAAABAAAA=</HashCode>
+      <FileName>controls\forms\NewArtistFormControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="musicplayer.controls.forms.NewSongFormControl">
+    <Position X="14.5" Y="2.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAIAkCAEEhAABAqAIBgCAACAIAAIAAACAABAIBA=</HashCode>
+      <FileName>controls\forms\NewSongFormControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="musicplayer.AlbumDisplayControl">
+    <Position X="5.75" Y="2.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAACAAAJAAAACAAAACAAABIAAAAAAABAAAAAA=</HashCode>
+      <FileName>controls\AlbumDisplayControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="musicplayer.AlbumsListControl">
+    <Position X="12.25" Y="2.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAECAABAAgAACEAAECAAAAAAACAAAAAQAAAAA=</HashCode>
+      <FileName>controls\AlbumsListControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="musicplayer.ArtistsControl">
+    <Position X="8" Y="9.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IQEAAAAAACAAAAAAAACAAAACIAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>controls\ArtistsControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="musicplayer.controls.AlbumSongListControl">
+    <Position X="12.25" Y="6" Width="2" />
+    <TypeIdentifier>
+      <HashCode>BQAAAAAAECAAAAEAAACAAAAiAABIIAAABEAABAAAAAA=</HashCode>
+      <FileName>controls\AlbumSongListControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="musicplayer.controls.ArtistViewControl">
+    <Position X="8" Y="2.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAACAAAAAAIACEAAAiAAAAAAACJEAAQAAAAAA=</HashCode>
+      <FileName>controls\ArtistViewControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="musicplayer.controls.FeaturedAlbumsControl">
+    <Position X="8" Y="6.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAABAAAAACEAAECAAAAAAACAEAAAAAAAAA=</HashCode>
+      <FileName>controls\FeaturedAlbumsControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="musicplayer.controls.PlayerControl">
+    <Position X="10.25" Y="2.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAECAGABAAAAIwCCiCAKRAAgAIGEAAAgggIAEBQ=</HashCode>
+      <FileName>controls\PlayerControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="musicplayer.controls.SongControl">
+    <Position X="10.25" Y="10.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAACAAAAAAAAKkAAAiBAAAAAAADEAAAAAAAAA=</HashCode>
+      <FileName>controls\SongControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="musicplayer.controls.SongOverviewControl">
+    <Position X="5.75" Y="5.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IwAMIAAAECAQAAAgAQKAACACAAAAAIQEAAAABAAIAAA=</HashCode>
+      <FileName>controls\SongOverviewControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

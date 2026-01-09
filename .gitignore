@@ -18,7 +18,7 @@ jtar/*.tar
 *.tar.zstd
 
 # musicplayer
-musicplayer/musicplayer/bin
-musicplayer/musicplayer/obj
-musicplayer/global.json
-musicplayer/.vs/
+d1-musicplayer/musicplayer/bin
+d1-musicplayer/musicplayer/obj
+d1-musicplayer/global.json
+d1-musicplayer/.vs/
