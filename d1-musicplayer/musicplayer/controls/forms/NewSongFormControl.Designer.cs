@@ -36,6 +36,7 @@
 			trbRating = new TrackBar();
 			lRatingValue = new Label();
 			lRatingLabel = new Label();
+			lNameValidation = new Label();
 			((System.ComponentModel.ISupportInitialize)trbRating).BeginInit();
 			SuspendLayout();
 			// 
@@ -120,10 +121,23 @@
 			lRatingLabel.TabIndex = 12;
 			lRatingLabel.Text = "Rating";
 			// 
+			// lNameValidation
+			// 
+			lNameValidation.AutoSize = true;
+			lNameValidation.Font = new Font("Segoe UI", 7.8F, FontStyle.Bold, GraphicsUnit.Point, 238);
+			lNameValidation.ForeColor = Color.Red;
+			lNameValidation.Location = new Point(56, 0);
+			lNameValidation.Name = "lNameValidation";
+			lNameValidation.Size = new Size(247, 17);
+			lNameValidation.TabIndex = 29;
+			lNameValidation.Text = "Must be between 3 and 100 characters!";
+			lNameValidation.Visible = false;
+			// 
 			// NewSongFormControl
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
+			Controls.Add(lNameValidation);
 			Controls.Add(lRatingLabel);
 			Controls.Add(lRatingValue);
 			Controls.Add(trbRating);
@@ -150,5 +164,6 @@
 		private TrackBar trbRating;
 		private Label lRatingValue;
 		private Label lRatingLabel;
+		private Label lNameValidation;
 	}
 }

@@ -99,6 +99,11 @@ namespace musicplayer.controls.forms
 		/// <param name="e"></param>
 		private void bAdd_Click_1(object sender, EventArgs e)
 		{
+			if (!IsValid(true))
+			{
+				MessageBox.Show("Please fix all validation errors.", "Add song");
+				return;
+			}
 			if (_preventUpload)
 			{
 				if (_song.Data == null)
@@ -182,6 +187,13 @@ namespace musicplayer.controls.forms
 		/// <param name="e"></param>
 		private void tbName_TextChanged_1(object sender, EventArgs e)
 		{
+			lNameValidation.Visible = false;
+			var length = tbName.Text.Length;
+			if (length < 3 || length > 100)
+			{
+				lNameValidation.Visible = true;
+			}
+
 			_song.Name = tbName.Text;
 		}
 
@@ -200,6 +212,14 @@ namespace musicplayer.controls.forms
 		private void lRatingValue_Click(object sender, EventArgs e)
 		{
 
+		}
+
+		public bool IsValid(bool flag = true)
+		{
+			var length = tbName.Text.Length;
+			bool invalid = length < 3 || length > 100;
+			if (invalid && flag) lNameValidation.Visible = true;
+			return !invalid;
 		}
 	}
 }

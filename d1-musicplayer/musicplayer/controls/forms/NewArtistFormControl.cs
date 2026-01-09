@@ -20,6 +20,7 @@ namespace musicplayer.controls.forms
 		private bool _matched = false;
 		private Artist? _matchedArtist = null;
 		private IEnumerable<Artist> _potentionalMatches = [];
+		private bool _editing = false;
 
 		public Artist Artist { get => _artist; }
 
@@ -44,7 +45,7 @@ namespace musicplayer.controls.forms
 			}
 			else
 			{
-				lbArtists.Dispose();
+				lbArtists.Visible = false;
 			}
 		}
 
@@ -55,6 +56,9 @@ namespace musicplayer.controls.forms
 		public NewArtistFormControl(Artist artist, bool isAutofill = false)
 		{
 			InitializeComponent();
+
+			_editing = true;
+
 			OnCreate = delegate { };
 
 			_artist = artist;
@@ -146,8 +150,6 @@ namespace musicplayer.controls.forms
 			}
 			_artist.Name = tbName.Text;
 			bChangeImage.Enabled = true;
-			if (_isAutofill)
-			{
 				try
 				{
 					var dao = new ArtistDAO();
@@ -156,10 +158,17 @@ namespace musicplayer.controls.forms
 					foreach (var match in _potentionalMatches)
 					{
 						lbArtists.Items.Add(match);
+					if (tbName.Text.ToLower() == match.Name.ToLower())
+					{
+						var selectionStart = tbName.SelectionStart;
+						var selectionLength = tbName.SelectionLength;
+						MatchArtist(match);
+						tbName.SelectionStart = selectionStart;
+						tbName.SelectionLength = selectionLength;
+					}
 					}
 				}
 				catch (Exception) { }
-			}
 		}
 
 		private void lbArtists_SelectedIndexChanged(object sender, EventArgs e)
@@ -169,22 +178,7 @@ namespace musicplayer.controls.forms
 			_artist = new Artist("");
 			pbImage.Image = null;
 			if (lbArtists.SelectedItem != null) {
-				_artist = (Artist)lbArtists.SelectedItem;
-				bChangeImage.Enabled = false;
-				tbName.TextChanged -= tbName_TextChanged;
-				tbName.Text = _artist.Name;
-				tbName.TextChanged += tbName_TextChanged;
-				_matched = true;
-				if (_artist.ImageID == null) return;
-				try
-				{
-					var dao = new IconImageDAO();
-					var iconImage = dao.GetByID((int)_artist.ImageID);
-					if (iconImage == null) return;
-					_artist.Image = iconImage;
-					pbImage.Image = IconImage.ResizeImage(iconImage.Image, pbImage.Width, pbImage.Height);
-					pbImage.SizeMode = PictureBoxSizeMode.StretchImage;
-				} catch (Exception) { }
+				MatchArtist((Artist)lbArtists.SelectedItem);
 			}
 		}
 
@@ -194,6 +188,28 @@ namespace musicplayer.controls.forms
 			bool invalid = length < 3 || length > 100;
 			if (invalid && flag) lNameValidation.Visible = true;
 			return !invalid;
+		}
+
+		private void MatchArtist(Artist artist)
+		{
+			lNameValidation.Visible = false;
+			_artist = artist;
+			if (!_editing) bChangeImage.Enabled = false;
+			tbName.TextChanged -= tbName_TextChanged;
+			tbName.Text = _artist.Name;
+			tbName.TextChanged += tbName_TextChanged;
+			_matched = true;
+			if (_artist.ImageID == null) return;
+			try
+			{
+				var dao = new IconImageDAO();
+				var iconImage = dao.GetByID((int)_artist.ImageID);
+				if (iconImage == null) return;
+				_artist.Image = iconImage;
+				pbImage.Image = IconImage.ResizeImage(iconImage.Image, pbImage.Width, pbImage.Height);
+				pbImage.SizeMode = PictureBoxSizeMode.StretchImage;
+			}
+			catch (Exception) { }
 		}
 	}
 }
