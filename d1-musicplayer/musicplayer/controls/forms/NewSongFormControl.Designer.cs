@@ -46,7 +46,7 @@
 			bAdd.Name = "bAdd";
 			bAdd.Size = new Size(92, 29);
 			bAdd.TabIndex = 9;
-			bAdd.Text = "Add";
+			bAdd.Text = "Add Song";
 			bAdd.UseVisualStyleBackColor = true;
 			bAdd.Click += bAdd_Click_1;
 			// 
@@ -92,7 +92,7 @@
 			// 
 			// trbRating
 			// 
-			trbRating.Location = new Point(157, 104);
+			trbRating.Location = new Point(157, 118);
 			trbRating.Maximum = 50;
 			trbRating.Name = "trbRating";
 			trbRating.Size = new Size(130, 56);
@@ -102,7 +102,7 @@
 			// lRatingValue
 			// 
 			lRatingValue.AutoSize = true;
-			lRatingValue.Location = new Point(157, 79);
+			lRatingValue.Location = new Point(157, 95);
 			lRatingValue.Margin = new Padding(2, 0, 2, 0);
 			lRatingValue.Name = "lRatingValue";
 			lRatingValue.Size = new Size(17, 20);
@@ -113,7 +113,7 @@
 			// lRatingLabel
 			// 
 			lRatingLabel.AutoSize = true;
-			lRatingLabel.Location = new Point(157, 59);
+			lRatingLabel.Location = new Point(157, 70);
 			lRatingLabel.Margin = new Padding(2, 0, 2, 0);
 			lRatingLabel.Name = "lRatingLabel";
 			lRatingLabel.Size = new Size(52, 20);

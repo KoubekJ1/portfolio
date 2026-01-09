@@ -101,7 +101,26 @@ namespace musicplayer.controls.forms
 		{
 			if (_preventUpload)
 			{
-				_song.Length = (int)AudioPlayerManager.GetDuration(_song.Data);
+				if (_song.Data == null)
+				{
+					MessageBox.Show("Please load an MP3 file containing the song data.", "No song data");
+					return;
+				}
+				try
+				{
+					var songLength = AudioPlayerManager.GetDuration(_song.Data);
+					if (songLength != null) _song.Length = (int)songLength;
+					else
+					{
+						MessageBox.Show("Selected MP3 file is invalid! Please make sure the selected file is in the MP3 format.", "Error");
+						return;
+					}
+				}
+				catch (Exception)
+				{
+					MessageBox.Show("Selected MP3 file is invalid! Please make sure the selected file is in the MP3 format.", "Error");
+					return;
+				}
 				_onCreate.Invoke(_song);
 				return;
 			}
@@ -113,6 +132,7 @@ namespace musicplayer.controls.forms
 					try
 					{
 						_song.Data = dao.GetSongData((int)_song.DataID);
+						if (_song.Data == null) throw new Exception();
 					}
 					catch (Exception ex)
 					{
@@ -127,7 +147,21 @@ namespace musicplayer.controls.forms
 				}
 			}
 
-			_song.Length = (int)AudioPlayerManager.GetDuration(_song.Data);
+			try
+			{
+				var length = AudioPlayerManager.GetDuration(_song.Data);
+				if (length != null) _song.Length = (int)length;
+				else
+				{
+					MessageBox.Show("Selected MP3 file is invalid! Please make sure the selected file is in the MP3 format.", "Error");
+					return;
+				}
+			}
+			catch (Exception)
+			{
+				MessageBox.Show("Selected MP3 file is invalid! Please make sure the selected file is in the MP3 format.", "Error");
+				return;
+			}
 
 			_song.Id = dao.Upload(_song);
 
