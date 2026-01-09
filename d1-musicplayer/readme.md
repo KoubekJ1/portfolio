@@ -105,9 +105,6 @@ MusicPlayerWindow, Add/Edit dialogy, komponenty pro ovládání přehrávání.
     - Poskytují předpřipravené dotazy pro rychlé získání "top" či "bottom" položek bez opakovaného psaní logiky.
     - V kombinaci s indexy a předpočítanými sloupci (např. ar_listening_time, so_listening_time) lze získat výsledky velmi rychle.
 
-## Databázové schéma
-Níže je uvedeno databázové schéma.
-
 ## SQL skript pro vytvoření databáze
 ```
 USE [musicplayer]
