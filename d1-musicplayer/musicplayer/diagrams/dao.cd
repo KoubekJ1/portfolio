@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="musicplayer.dao.AlbumDAO">
-    <Position X="14.25" Y="7" Width="1.5" />
+    <Position X="14.25" Y="7" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAQAAAAAAAAAAAAAACAABAwAAAAQAAAEAggAgACgAAA=</HashCode>
       <FileName>dao\AlbumDAO.cs</FileName>
@@ -9,7 +9,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="musicplayer.dao.ArtistDAO">
-    <Position X="9.75" Y="6.25" Width="1.5" />
+    <Position X="9.5" Y="6.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAQAAAAAAAgIAAAAAAAABAgAAAAAAAAAAggAgAAAAAg=</HashCode>
       <FileName>dao\ArtistDAO.cs</FileName>
@@ -25,7 +25,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="musicplayer.dao.SongDAO">
-    <Position X="12" Y="7" Width="1.5" />
+    <Position X="11.75" Y="7" Width="2" />
     <TypeIdentifier>
       <HashCode>ABQAAAAAAAAAAAAAAAQABAkAAAAAACgAAghggAAAAAg=</HashCode>
       <FileName>dao\SongDAO.cs</FileName>
