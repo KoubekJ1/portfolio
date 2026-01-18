@@ -23,6 +23,6 @@ public class CreateAccountCommand : ICommand
 
         dbContext.SaveChanges();
 
-        return $"{account.Number}/{context.ServerIP}";
+        return $"{account.Number}/{context.ServerIP.Address}";
     }
 }

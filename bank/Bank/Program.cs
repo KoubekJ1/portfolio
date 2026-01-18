@@ -12,12 +12,20 @@ class Program
         var context = new BankDbContext();
         context.Database.EnsureCreated();
 
-        CreateAccountCommand command = new CreateAccountCommand();
+        var connectionContext = new ConnectionContext()
+        {
+            ServerIP = new System.Net.IPEndPoint(0, 0)
+        };
+
+        /*CreateAccountCommand command = new CreateAccountCommand();
         command.Execute(new ConnectionContext()
         {
             ServerIP = new System.Net.IPEndPoint(0, 0)
-        });
+        });*/
 
+        //var command = new AccountDepositCommand(10003, long.MaxValue);
+        var command = new BankClientCountCommand();
+        Console.WriteLine(command.Execute(connectionContext));
         
         /*for (int i = 11539; i < 100000; i++)
         {
