@@ -22,3 +22,8 @@ d1-musicplayer/musicplayer/bin
 d1-musicplayer/musicplayer/obj
 d1-musicplayer/global.json
 d1-musicplayer/.vs/
+
+bank/Bank/bin
+bank/Bank/obj
+bank/global.json
+bank/.vs/
