@@ -1,4 +1,4 @@
-namespace Bank.Util.Logging;
+namespace Bank.Services.Logger;
 
 public enum LogType
 {

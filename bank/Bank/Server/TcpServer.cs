@@ -1,21 +1,25 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using Bank.Util.Logging;
+using Bank.RequestHandling;
+using Bank.Services.Logger;
 
-namespace Bank.Connection;
+namespace Bank.Server;
 
 public class TcpServer : IDisposable
 {
     private TcpListener listener;
-
     private CancellationTokenSource tokenSource = new CancellationTokenSource();
-
     private bool running = false;
 
-    public TcpServer(IPAddress address, int port)
+    private IRequestHandler requestHandler;
+    private ILogger logger;
+
+    public TcpServer(IPAddress address, int port, IRequestHandler handler, ILogger? logger = null)
     {
         listener = new TcpListener(address, port);
+        this.requestHandler = handler;
+        this.logger = logger != null ? logger : new NoLogger();
     }
 
     public void Dispose()
@@ -60,23 +64,29 @@ public class TcpServer : IDisposable
             using var reader = new StreamReader(handler.GetStream());
 
             bool clientRunning = true;
-            var buffer = new byte[1024];
+            var context = new ConnectionContext()
+            {
+                ServerIP = (handler.Client.LocalEndPoint as IPEndPoint)!
+            };
+            if (context.ServerIP == null) throw new InvalidOperationException("Server IP couldn't be matched to IPEndPoint!");
             while (clientRunning)
             {
                 var data = reader.ReadLine();
-                if (data == null) clientRunning = false;
-                
-                
+                if (data == null)
+                {
+                    clientRunning = false;
+                    break;
+                }
+                var response = requestHandler.HandleRequest(data, context);
             }
         }
         catch (Exception ex)
         {
-            Logger.Log(LogType.Error, "exception");
-            Logger.Log(ex);
+            logger.Log(LogType.Debug, ex.Message);
         }
         finally
         {
-            Logger.Log(LogType.Info, "Client connection ended.");
+            logger.Log(LogType.Info, "Client connection ended.");
         }
     }
 

@@ -1,12 +1,30 @@
-﻿using Bank.Connection;
+﻿using Bank.Domain;
+using Bank.Logic.Commands;
+using Bank.Persistence;
+using Bank.Server;
 
 namespace Bank;
 
 class Program
 {
-    static async Task Main(string[] args)
+    static void Main(string[] args)
     {
-        using var server = new TcpServer(new System.Net.IPAddress([0, 0, 0, 0]), 65250);
-        await server.Listen();
+        var context = new BankDbContext();
+        context.Database.EnsureCreated();
+
+        CreateAccountCommand command = new CreateAccountCommand();
+        command.Execute(new ConnectionContext()
+        {
+            ServerIP = new System.Net.IPEndPoint(0, 0)
+        });
+
+        
+        /*for (int i = 11539; i < 100000; i++)
+        {
+            var account = new Account();
+            account.Number = i;
+            context.Accounts.Add(account);
+        }
+        context.SaveChanges();*/
     }
 }

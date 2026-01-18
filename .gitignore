@@ -27,3 +27,6 @@ bank/Bank/bin
 bank/Bank/obj
 bank/global.json
 bank/.vs/
+bank/*.db
+bank/*.db-shm
+bank/*.db-wal
